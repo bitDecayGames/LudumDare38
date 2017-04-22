@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.Launcher;
 import com.bitdecay.game.MyGame;
 import com.bitdecay.game.gameobject.MyGameObjectFactory;
-import com.bitdecay.game.room.DemoRoom;
+import com.bitdecay.game.room.GameRoom;
 import com.bitdecay.game.trait.ICanSetRoom;
 import com.bitdecay.game.trait.ICanSetScreen;
 import com.bitdecay.game.trait.IHasScreenSize;
@@ -17,7 +17,6 @@ import com.bitdecay.game.util.Tilesets;
 import com.bitdecay.jump.collision.BitWorld;
 import com.bitdecay.jump.gdx.level.EditorIdentifierObject;
 import com.bitdecay.jump.gdx.level.RenderableLevelObject;
-import com.bitdecay.jump.level.FileUtils;
 import com.bitdecay.jump.level.Level;
 import com.bitdecay.jump.leveleditor.EditorHook;
 
@@ -35,7 +34,7 @@ public class GameScreen implements Screen, EditorHook, IHasScreenSize, ICanSetSc
 
     public GameScreen(MyGame game){
         this.game = game;
-        setRoom(new DemoRoom(this, FileUtils.loadFileAs(Level.class, Gdx.files.classpath("level/simple.level").readString())));
+        setRoom(new GameRoom(this));
     }
     public GameScreen(MyGame game, com.bitdecay.game.room.AbstractRoom room){
         this.game = game;

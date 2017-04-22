@@ -29,7 +29,7 @@ public class GameRoom extends AbstractRoom {
         carFixtureDef.shape = shape;
         carFixtureDef.friction = 0.5f;
 
-        PhysicsComponent phys = new PhysicsComponent(carBodyDef, shape, carFixtureDef);
+//        PhysicsComponent phys = new PhysicsComponent(carBodyDef, shape, carFixtureDef);
     }
 
     @Override

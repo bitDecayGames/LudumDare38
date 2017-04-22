@@ -10,24 +10,29 @@ public class Body extends Group {
     Image body;
     FillRect foodRect;
     FillRect poopRect;
+    float poopStartY;
 
     public Body(Vector2 screenSize) {
         super();
 
-        // Build body
+        // Body
         body = new Image(MyGame.ATLAS.findRegion("uiStuff/foodBio"));
-
-        // Food
-        foodRect = new FillRect();
-        foodRect.setColor(Color.GREEN);
-        // MAGIC
-        foodRect.setBounds(body.getWidth() / 5, body.getHeight() * 0.37f, body.getWidth() * 0.60f, body.getHeight() * 0.33f);
 
         // Poop
         poopRect = new FillRect();
         poopRect.setColor(Color.BROWN);
         // MAGIC
-        poopRect.setBounds(body.getWidth() / 5, 5, body.getWidth() * 0.60f, body.getHeight() * 0.37f);
+        poopRect.setBounds(body.getWidth() / 5, body.getHeight() * 0.09f, body.getWidth() * 0.60f, 1);
+
+        // Food
+        foodRect = new FillRect();
+        foodRect.setColor(Color.GREEN);
+        // MAGIC
+        foodRect.setBounds(poopRect.getX(), poopRect.getY() + poopMax(), poopRect.getWidth(), foodMax());
+
+        // Make poop start at bottom of food to make it fill from the top.
+        poopStartY = foodRect.getY() - poopRect.getHeight();
+        poopRect.setY(poopStartY);
 
         addActor(foodRect);
         addActor(poopRect);
@@ -40,5 +45,31 @@ public class Body extends Group {
     @Override
     public float getWidth() {
         return body.getWidth();
+    }
+
+    public float poopMax() {
+        return body.getHeight() * 0.30f;
+    }
+
+    public float foodMax() {
+        return body.getHeight() * 0.31f;
+    }
+
+    public void act(float delta) {
+        // Poop
+        poopRect.setY(poopRect.getY() - 1);
+        poopRect.setHeight(poopRect.getHeight() + 1);
+        if (poopRect.getHeight() > poopMax()) {
+            // TODO Die
+            poopRect.setY(poopStartY);
+            poopRect.setHeight(1);
+        }
+
+        // Food
+        foodRect.setHeight(foodRect.getHeight() - 1);
+        if (foodRect.getHeight() <= 1) {
+            // TODO Die
+            foodRect.setHeight(foodMax());
+        }
     }
 }

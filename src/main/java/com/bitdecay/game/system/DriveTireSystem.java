@@ -10,12 +10,9 @@ import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractForEachUpdatableSystem;
 import com.bitdecay.game.util.InputHelper;
 import com.bitdecay.game.util.VectorMath;
+import com.bitdecay.game.util.Xbox360Pad;
 
-/**
- * Created by Monday on 4/22/2017.
- */
 public class DriveTireSystem extends AbstractForEachUpdatableSystem {
-
 
     public DriveTireSystem(AbstractRoom room) {
         super(room);
@@ -45,8 +42,8 @@ public class DriveTireSystem extends AbstractForEachUpdatableSystem {
             neededForce *= drive.acceleration;
             Vector2 tirePowerVector = normal.scl(neededForce);
 
-            if (InputHelper.isKeyPressed(Input.Keys.UP, Input.Keys.W)) phys.body.applyForce(tirePowerVector, back, true);
-            if (InputHelper.isKeyPressed(Input.Keys.DOWN, Input.Keys.S)) phys.body.applyForce(tirePowerVector.cpy().scl(-1), back, true);
+            if (InputHelper.isKeyPressed(Input.Keys.UP, Input.Keys.W) || InputHelper.isButtonPressed(Xbox360Pad.A, Xbox360Pad.RT, Xbox360Pad.UP)) phys.body.applyForce(tirePowerVector, back, true);
+            if (InputHelper.isKeyPressed(Input.Keys.DOWN, Input.Keys.S) || InputHelper.isButtonPressed(Xbox360Pad.B, Xbox360Pad.LT, Xbox360Pad.DOWN)) phys.body.applyForce(tirePowerVector.cpy().scl(-1), back, true);
         }));
     }
 

@@ -86,6 +86,10 @@ public class DemoRoom extends AbstractRoom {
         carPhysics.body = carBody;
         if (!npc) car.addComponent(new CameraFollowComponent());
         if (addWayPoint) car.addComponent(new WaypointComponent(Color.GREEN.cpy()));
+        car.addComponent(new StaticImageComponent("player/taxi/taxi"));
+        car.addComponent(new SizeComponent(2, 4));
+        car.addComponent(new RotationComponent(0));
+        car.addComponent(new OriginComponent(.5f, .5f));
         gobs.add(car);
 
         // TIRE DATA

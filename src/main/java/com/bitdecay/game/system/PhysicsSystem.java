@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.bitdecay.game.component.PhysicsComponent;
 import com.bitdecay.game.component.PositionComponent;
+import com.bitdecay.game.component.RotationComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractUpdatableSystem;
@@ -22,7 +23,7 @@ public class PhysicsSystem extends AbstractUpdatableSystem {
 
     @Override
     protected boolean validateGob(MyGameObject gob) {
-        return gob.hasComponents(PhysicsComponent.class, PositionComponent.class);
+        return gob.hasComponents(PhysicsComponent.class);
     }
 
     @Override
@@ -35,6 +36,7 @@ public class PhysicsSystem extends AbstractUpdatableSystem {
                 phy.body = body;
             }
             gob.forEachComponentDo(PositionComponent.class, pos -> pos.set(phy.body.getPosition()));
+            gob.forEachComponentDo(RotationComponent.class, rot -> rot.set(phy.body.getAngle()));
         }));
     }
 }

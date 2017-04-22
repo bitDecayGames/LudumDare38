@@ -2,9 +2,8 @@ package com.bitdecay.game.system;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.bitdecay.game.component.DrawableComponent;
-import com.bitdecay.game.component.PositionComponent;
-import com.bitdecay.game.component.SizeComponent;
+import com.badlogic.gdx.math.Vector2;
+import com.bitdecay.game.component.*;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractDrawableSystem;
@@ -24,11 +23,11 @@ public class DrawSystem extends AbstractDrawableSystem {
     public void draw(SpriteBatch spriteBatch, OrthographicCamera camera) {
         spriteBatch.setProjectionMatrix(camera.combined);
         spriteBatch.begin();
-        gobs.forEach(gob ->
-                gob.forEach(DrawableComponent.class, drawable ->
-                        gob.forEach(PositionComponent.class, pos ->
-                                gob.forEach(SizeComponent.class, size ->
-                                        spriteBatch.draw(drawable.image(), pos.x, pos.y, size.w, size.h)))));
+        gobs.forEach(gob -> gob.forEach(DrawableComponent.class, drawable -> gob.forEach(PositionComponent.class, pos -> gob.forEach(SizeComponent.class, size -> {
+            float rotation = gob.getComponent(RotationComponent.class).map(RotationComponent::toDegrees).orElseGet(() -> 0f);
+            Vector2 origin = gob.getComponent(OriginComponent.class).map(OriginComponent::toVector2).orElseGet(() -> new Vector2(0, 0)).scl(size.w, size.h);
+            spriteBatch.draw(drawable.image(), pos.x - origin.x, pos.y - origin.y, origin.x, origin.y, size.w, size.h, 1, 1, rotation);
+        }))));
         spriteBatch.end();
     }
 }

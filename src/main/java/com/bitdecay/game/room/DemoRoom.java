@@ -93,6 +93,10 @@ public class DemoRoom extends AbstractRoom {
         }
         car.addComponent(carHealth);
 
+        //car damage section
+        DamageComponent carDamage = new DamageComponent(2);
+        car.addComponent(carDamage);
+
         //camera section
         if (!npc) car.addComponent(new CameraFollowComponent());
 

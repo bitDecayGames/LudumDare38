@@ -29,13 +29,14 @@ public class HealthSystem extends AbstractSystem implements ContactListener {
     public void beginContact(Contact contact) {
         MyGameObject objectA = (MyGameObject) contact.getFixtureA().getBody().getUserData();
         MyGameObject objectB = (MyGameObject) contact.getFixtureB().getBody().getUserData();
+        if(objectA != null && objectB != null){
+            applyDamage(objectA, objectB);
+            applyDamage(objectB, objectA);
 
-        applyDamage(objectA, objectB);
-        applyDamage(objectB, objectA);
-
-        //for testing only
-        objectA.forEachComponentDo(HealthComponent.class, health -> System.out.println(health.currentHealth));
-        objectB.forEachComponentDo(HealthComponent.class, health -> System.out.println(health.currentHealth));
+            //for testing only
+            objectA.forEachComponentDo(HealthComponent.class, health -> System.out.println(health.currentHealth));
+            objectB.forEachComponentDo(HealthComponent.class, health -> System.out.println(health.currentHealth));
+        }
     }
 
     @Override

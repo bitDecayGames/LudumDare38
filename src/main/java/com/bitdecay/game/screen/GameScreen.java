@@ -22,6 +22,7 @@ public class GameScreen implements Screen, IHasScreenSize, ICanSetScreen, ICanSe
 
     private MyGame game;
     private Stage stage;
+    private HUD hud;
 
     private com.bitdecay.game.room.AbstractRoom room;
 
@@ -40,7 +41,7 @@ public class GameScreen implements Screen, IHasScreenSize, ICanSetScreen, ICanSe
         this.stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        HUD hud = new HUD(screenSize());
+        hud = new HUD(screenSize());
         stage.addActor(hud);
 
         stage.addListener(new InputListener() {
@@ -60,7 +61,12 @@ public class GameScreen implements Screen, IHasScreenSize, ICanSetScreen, ICanSe
     public void render(float delta) {
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        if (room != null) room.render(delta);
+        if (room != null) {
+            room.render(delta);
+            // Sync HUD and game objects
+            hud.update(room.getGameObjects());
+        }
+
         stage.act(delta);
         stage.draw();
     }

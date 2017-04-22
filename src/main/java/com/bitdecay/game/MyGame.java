@@ -3,6 +3,7 @@ package com.bitdecay.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.utils.GdxNativesLoader;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.screen.SplashScreen;
 import com.bitdecay.game.trait.ICanSetScreen;
@@ -19,6 +20,9 @@ public class MyGame extends Game implements ICanSetScreen{
     public static AnimagicTextureAtlas ATLAS;
     public static RunMode RUN_MODE;
 
+    static {
+        GdxNativesLoader.load();
+    }
 
     public MyGame(RunMode runMode){
         super();

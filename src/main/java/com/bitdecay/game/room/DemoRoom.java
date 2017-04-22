@@ -3,15 +3,14 @@ package com.bitdecay.game.room;
 
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
-import com.bitdecay.jump.level.Level;
 
 /**
  * The demo room is just a super simple example of how to add systems and game objects to a room.
  */
 public class DemoRoom extends AbstractRoom {
 
-    public DemoRoom(GameScreen gameScreen, Level level) {
-        super(gameScreen, level);
+    public DemoRoom(GameScreen gameScreen) {
+        super(gameScreen);
 
         // systems must be added before game objects
         new InitializationSystem(this);
@@ -26,6 +25,5 @@ public class DemoRoom extends AbstractRoom {
 
         // this is required to be at the end here so that the systems have the latest gobs
         systemManager.cleanup();
-        levelChanged(level);
     }
 }

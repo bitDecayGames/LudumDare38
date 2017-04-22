@@ -10,6 +10,7 @@ import com.bitdecay.game.component.*;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
+import com.bitdecay.game.util.ContactDistributer;
 
 /**
  * The demo room is just a super simple example of how to add systems and game objects to a room.
@@ -22,8 +23,10 @@ public class DemoRoom extends AbstractRoom {
         super(gameScreen);
 
         // systems must be added before game objects
-        new InitializationSystem(this);
         phys = new PhysicsSystem(this);
+        ContactDistributer contactDistrib = new ContactDistributer();
+        phys.world.setContactListener(contactDistrib);
+        new InitializationSystem(this);
         new TireSteeringSystem(this);
         new DriveTireSystem(this);
         new TireFrictionSystem(this);
@@ -38,14 +41,16 @@ public class DemoRoom extends AbstractRoom {
         new DrawSystem(this);
         new WaypointSystem(this);
         new RemovalSystem(this);
-        new HealthSystem(this, phys.world);
+        new HealthSystem(this, contactDistrib);
+        new ZoneUpdateSystem(this, contactDistrib);
 
         createCar(0, 0, false, false);
 
-        for (int x = -2; x < 2; x += 1)
-            for (int y = -2; y < 2; y += 1) {
-                createCar(x * 30, y * 30, true, x % 2 == 0 && y % 2 == 0);
-            }
+        for (int x = -2; x < 2; x += 1) for (int y = -2; y < 2; y += 1) createCar(x * 30, y * 30, true, x % 2 == 0 && y % 2 == 0);
+
+        createZone(10, 0, 6, 10, 0, () -> {
+
+        });
 
         // this is required to be at the end here so that the systems have the latest gobs
         systemManager.cleanup();
@@ -81,9 +86,8 @@ public class DemoRoom extends AbstractRoom {
         // create car entity
         MyGameObject car = new MyGameObject();
         car.addComponent(new PositionComponent(0, 0));
-        PhysicsComponent carPhysics = new PhysicsComponent(null, null, null);
+        PhysicsComponent carPhysics = new PhysicsComponent(carBody);
         car.addComponent(carPhysics);
-        carPhysics.body = carBody;
         carPhysics.body.setUserData(car);
 
         //car health section
@@ -100,7 +104,10 @@ public class DemoRoom extends AbstractRoom {
         car.addComponent(carDamage);
 
         //camera section
-        if (!npc) car.addComponent(new CameraFollowComponent());
+        if (!npc){
+            car.addComponent(new CameraFollowComponent());
+            car.addComponent(new PlayerControlComponent());
+        }
 
         //waypoint section
         if (addWayPoint) car.addComponent(new WaypointComponent(Color.GREEN.cpy()));
@@ -218,8 +225,7 @@ public class DemoRoom extends AbstractRoom {
         float acceleration = 5;
 
         MyGameObject tire = new MyGameObject();
-        PhysicsComponent tirePhysics = new PhysicsComponent(null, null, null);
-        tirePhysics.body = body;
+        PhysicsComponent tirePhysics = new PhysicsComponent(body);
         tire.addComponent(tirePhysics);
         tire.addComponent(new TireFrictionComponent(tireData));
         if (rear && !npc) tire.addComponent(new DriveTireComponent(maxSpeed, acceleration));
@@ -237,5 +243,29 @@ public class DemoRoom extends AbstractRoom {
         tire.addComponent(new RotationComponent(0));
         tire.addComponent(new OriginComponent(.5f, .5f));
         return tire;
+    }
+
+    private void createZone(float x, float y, float width, float length, float rotation, Runnable func){
+        BodyDef zoneBodyDef = new BodyDef();
+        zoneBodyDef.type = BodyDef.BodyType.StaticBody;
+        zoneBodyDef.position.set(x, y);
+        Body zoneBody = phys.world.createBody(zoneBodyDef);
+
+        PolygonShape zoneShape = new PolygonShape();
+        zoneShape.setAsBox(width / 2, length / 2);
+
+        Fixture zoneFix = zoneBody.createFixture(zoneShape, 0);
+        zoneFix.setSensor(true);
+
+        MyGameObject zone = new MyGameObject();
+        PhysicsComponent zonePhys = new PhysicsComponent(zoneBody);
+        zone.addComponent(zonePhys);
+        zonePhys.body.setUserData(zone);
+
+        ZoneComponent zComp = new ZoneComponent(func);
+        zComp.active = true;
+        zone.addComponent(zComp);
+
+        gobs.add(zone);
     }
 }

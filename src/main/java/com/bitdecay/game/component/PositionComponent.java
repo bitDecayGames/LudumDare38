@@ -21,4 +21,14 @@ public class PositionComponent extends AbstractComponent {
     public Vector2 toVector2(){
         return new Vector2(x, y);
     }
+
+    public PositionComponent set(float x, float y) {
+        this.x = x;
+        this.y = y;
+        return this;
+    }
+
+    public PositionComponent set(Vector2 v) {
+        return set(v.x, v.y);
+    }
 }

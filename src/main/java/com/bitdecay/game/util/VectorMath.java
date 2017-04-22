@@ -1,5 +1,6 @@
 package com.bitdecay.game.util;
 
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -368,5 +369,10 @@ public class VectorMath
     private static float sign(Vector2 p1, Vector2 p2, Vector2 p3)
     {
         return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
+    }
+
+    public static Vector2 intersection(Vector2 ray, Vector2 a, Vector2 b){
+        Vector2 ret = new Vector2(0, 0);
+        if (Intersector.intersectSegments(new Vector2(0, 0), ray, a, b, ret)) return ret; else return null;
     }
 }

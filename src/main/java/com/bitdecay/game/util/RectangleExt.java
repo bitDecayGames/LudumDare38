@@ -419,6 +419,21 @@ public class RectangleExt
         return intersection(rectangle.rect());
     }
 
+    /**
+     * Get the vector intersection from a ray cast from the center of the rectangle outwards
+     *
+     * @param ray the ray direction from the center
+     * @return the point on the ray that the ray intersects one of the sides of the rectangle
+     */
+    public Vector2 intersectionFromCenter(Vector2 ray){
+        Vector2[] points = points();
+        Vector2[] shiftedPoints = new Vector2[]{points[1], points[2], points[3], points[0]};
+        for (int i = 0; i < 4; i += 1){
+            Vector2 v = VectorMath.intersection(ray.cpy().scl(100000), points[i].cpy().sub(position()).sub(width / 2f, height / 2f), shiftedPoints[i].cpy().sub(position()).sub(width / 2f, height / 2f));
+            if (v != null) return v.cpy().add(position()).add(width / 2f, height / 2f);
+        }
+        return null;
+    }
 
     /**
      * Creates a deep copy clone of this rectangle (same as cpy)

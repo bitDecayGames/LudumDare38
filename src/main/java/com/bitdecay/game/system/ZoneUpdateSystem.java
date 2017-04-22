@@ -27,7 +27,13 @@ public class ZoneUpdateSystem extends AbstractUpdatableSystem implements Contact
         for (Map.Entry<Fixture, Fixture> zoneToPlayer : ongoingZoneToPlayerCollisions.entrySet()) {
             if(checkPlayerStoppedInZone(zoneToPlayer.getValue(), zoneToPlayer.getKey())){
                 if(zoneToPlayer.getValue().getBody().getLinearVelocity().len() < .1){
-                    ((MyGameObject) zoneToPlayer.getKey().getBody().getUserData()).getComponent(ZoneComponent.class).get().execute();
+                    ZoneComponent theZone = ((MyGameObject) zoneToPlayer.getKey().getBody().getUserData()).getComponent(ZoneComponent.class).get();
+                    if(theZone.active) {
+                        theZone.execute();
+                    }
+                    if(theZone.canDeactivate){
+                        theZone.active = false;
+                    }
                 }
             }
         }

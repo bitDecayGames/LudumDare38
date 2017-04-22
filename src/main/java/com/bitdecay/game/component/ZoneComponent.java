@@ -1,6 +1,7 @@
 package com.bitdecay.game.component;
 
 public class ZoneComponent extends AbstractComponent {
+    public boolean canDeactivate = true;
     public boolean active = false;
     private Runnable func;
 

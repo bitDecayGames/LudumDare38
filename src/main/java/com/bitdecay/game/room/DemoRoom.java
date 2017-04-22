@@ -72,7 +72,7 @@ public class DemoRoom extends AbstractRoom {
         FixtureDef carFixtureDef = new FixtureDef();
         carFixtureDef.shape = shape;
         carFixtureDef.friction = 0f;
-        carFixtureDef.density = 10;
+        carFixtureDef.density = 1;
 
         carBody.createFixture(carFixtureDef);
 
@@ -85,7 +85,7 @@ public class DemoRoom extends AbstractRoom {
         gobs.add(car);
 
         // create our front left tire
-        Body frontLeftTire = makeTire();
+        Body frontLeftTire = makeTire(6);
 
         RevoluteJointDef frontLeftTireJointDef = new RevoluteJointDef();
         frontLeftTireJointDef.bodyA = carBody;
@@ -95,7 +95,7 @@ public class DemoRoom extends AbstractRoom {
         frontLeftTireJointDef.localAnchorB.setZero();
 
         frontLeftTireJointDef.bodyB = frontLeftTire;
-        frontLeftTireJointDef.localAnchorA.set(-1, 2.5f);
+        frontLeftTireJointDef.localAnchorA.set(-1, 3.5f);
         RevoluteJoint frontLeftJoint = (RevoluteJoint) phys.world.createJoint(frontLeftTireJointDef);
 
         // create front left tire entity
@@ -106,10 +106,10 @@ public class DemoRoom extends AbstractRoom {
         tire1.addComponent(tire1Physics);
         tire1.addComponent(new SteerableComponent(MathUtils.PI/4));
         tire1.addComponent(new RevoluteJointComponent(frontLeftJoint));
-        tire1.addComponent(new TireFrictionComponent(2));
+        tire1.addComponent(new TireFrictionComponent(8, .5f, 0));
         gobs.add(tire1);
 
-        Body frontRightTire = makeTire();
+        Body frontRightTire = makeTire(6);
 
         RevoluteJointDef frontRightTireJointDef = new RevoluteJointDef();
         frontRightTireJointDef.bodyA = carBody;
@@ -119,7 +119,7 @@ public class DemoRoom extends AbstractRoom {
         frontRightTireJointDef.localAnchorB.setZero();
 
         frontRightTireJointDef.bodyB = frontRightTire;
-        frontRightTireJointDef.localAnchorA.set(1, 2.5f);
+        frontRightTireJointDef.localAnchorA.set(1, 3.5f);
         RevoluteJoint frontRightJoint = (RevoluteJoint) phys.world.createJoint(frontRightTireJointDef);
 
         // create front right tire entity
@@ -130,10 +130,10 @@ public class DemoRoom extends AbstractRoom {
         tire2.addComponent(tire2Physics);
         tire2.addComponent(new SteerableComponent(MathUtils.PI/4));
         tire2.addComponent(new RevoluteJointComponent(frontRightJoint));
-        tire2.addComponent(new TireFrictionComponent(2));
+        tire2.addComponent(new TireFrictionComponent(8, .5f, 0));
         gobs.add(tire2);
 
-        Body backRightTire = makeTire();
+        Body backRightTire = makeTire(1);
 
         RevoluteJointDef backRightTireJointDef = new RevoluteJointDef();
         backRightTireJointDef.bodyA = carBody;
@@ -143,8 +143,8 @@ public class DemoRoom extends AbstractRoom {
         backRightTireJointDef.localAnchorB.setZero();
 
         backRightTireJointDef.bodyB = backRightTire;
-        backRightTireJointDef.localAnchorA.set(1, .5f);
-        phys.world.createJoint(backRightTireJointDef);
+        backRightTireJointDef.localAnchorA.set(1, -1.5f);
+        RevoluteJoint backRightTireJoint = (RevoluteJoint) phys.world.createJoint(backRightTireJointDef);
 
         // create back right tire entity
         MyGameObject tire3 = new MyGameObject();
@@ -153,10 +153,12 @@ public class DemoRoom extends AbstractRoom {
         tire3Physics.body = backRightTire;
         tire3.addComponent(tire3Physics);
         tire3.addComponent(new DriveTireComponent(100, 3));
-        tire3.addComponent(new TireFrictionComponent(2));
+//        tire3.addComponent(new SteerableComponent(-MathUtils.PI/16));
+//        tire3.addComponent(new RevoluteJointComponent(backRightTireJoint));
+        tire3.addComponent(new TireFrictionComponent(8, 0f, 1));
         gobs.add(tire3);
 
-        Body backLeftTire = makeTire();
+        Body backLeftTire = makeTire(1);
 
         RevoluteJointDef backLeftTireJointDef = new RevoluteJointDef();
         backLeftTireJointDef.bodyA = carBody;
@@ -166,8 +168,8 @@ public class DemoRoom extends AbstractRoom {
         backLeftTireJointDef.localAnchorB.setZero();
 
         backLeftTireJointDef.bodyB = backLeftTire;
-        backLeftTireJointDef.localAnchorA.set(-1, .5f);
-        phys.world.createJoint(backLeftTireJointDef);
+        backLeftTireJointDef.localAnchorA.set(-1, -1.5f);
+        RevoluteJoint backLeftTireJoint = (RevoluteJoint) phys.world.createJoint(backLeftTireJointDef);
 
         // create back left tire entity
         MyGameObject tire4 = new MyGameObject();
@@ -176,7 +178,9 @@ public class DemoRoom extends AbstractRoom {
         tire4Physics.body = backLeftTire;
         tire4.addComponent(tire4Physics);
         tire4.addComponent(new DriveTireComponent(100, 3));
-        tire4.addComponent(new TireFrictionComponent(2));
+//        tire4.addComponent(new SteerableComponent(-MathUtils.PI/16));
+//        tire4.addComponent(new RevoluteJointComponent(backLeftTireJoint));
+        tire4.addComponent(new TireFrictionComponent(8, 0f, 1));
         gobs.add(tire4);
     }
 
@@ -272,7 +276,7 @@ public class DemoRoom extends AbstractRoom {
 //        return new PhysicsComponent(carBodyDef, shape, carFixtureDef);
 //    }
 
-    public Body makeTire() {
+    public Body makeTire(float density) {
         BodyDef tireBodyDef = new BodyDef();
         tireBodyDef.type = BodyDef.BodyType.DynamicBody;
         Body tireBody = phys.world.createBody(tireBodyDef);
@@ -282,6 +286,7 @@ public class DemoRoom extends AbstractRoom {
 
         Fixture tireFix = tireBody.createFixture(tireShape, 1);
         tireFix.setFriction(5);
+        tireFix.setDensity(density);
 
         return tireBody;
     }

@@ -5,9 +5,13 @@ package com.bitdecay.game.component;
  */
 public class TireFrictionComponent extends AbstractComponent {
     public float maxForce;
+    public float driftingMaxForce;
+    public float lockedTireGripVelocity;
     public boolean tireLocked = false;
 
-    public TireFrictionComponent(float maxForce){
-        this.maxForce = maxForce;
+    public TireFrictionComponent(float rollingMaxForce, float driftingMaxForce, float lockedTireGripVelocity){
+        this.maxForce = rollingMaxForce;
+        this.driftingMaxForce = driftingMaxForce;
+        this.lockedTireGripVelocity = lockedTireGripVelocity;
     }
 }

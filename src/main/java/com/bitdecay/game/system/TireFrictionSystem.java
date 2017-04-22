@@ -28,25 +28,30 @@ public class TireFrictionSystem extends AbstractForEachUpdatableSystem {
     @Override
     protected void forEach(float delta, MyGameObject gob) {
         gob.forEachComponentDo(TireFrictionComponent.class, friction -> gob.forEachComponentDo(PhysicsComponent.class, phys -> {
-            Vector2 lateralVelocity = getLateralVelocity(phys);
-            updateFriction(phys, friction, lateralVelocity);
+            updateFriction(phys, friction);
         }));
     }
 
-    private void updateFriction(PhysicsComponent phys, TireFrictionComponent friction, Vector2 lateralVelocity) {
-        if (!friction.tireLocked) {
-            updateLateralFriction(phys, friction, lateralVelocity);
-        }
+    private void updateFriction(PhysicsComponent phys, TireFrictionComponent friction) {
         updateRollingFriction(phys, friction);
+        updateLateralFriction(phys, friction);
     }
 
     private void updateRollingFriction(PhysicsComponent phys, TireFrictionComponent friction) {
-        phys.body.applyLinearImpulse(phys.body.getLinearVelocity().cpy().scl(-0.05f), phys.body.getWorldCenter(), true);
+        Vector2 rollingVelocity = getRollingVelocity(phys);
+        Vector2 neededImpulse = rollingVelocity.scl(-phys.body.getMass());
+        phys.body.applyLinearImpulse(neededImpulse.scl(0.05f), phys.body.getWorldCenter(), true);
     }
 
-    private void updateLateralFriction(PhysicsComponent phys, TireFrictionComponent friction, Vector2 lateralVelocity) {
+    private void updateLateralFriction(PhysicsComponent phys, TireFrictionComponent friction) {
+        Vector2 lateralVelocity = getLateralVelocity(phys);
         Vector2 neededImpulse = lateralVelocity.scl(-phys.body.getMass());
-        if (neededImpulse.len() > friction.maxForce) {
+        if (friction.tireLocked && phys.body.getLinearVelocity().len() > friction.lockedTireGripVelocity) {
+            // let the tires slide around if the tires are locked up
+            if (neededImpulse.len() > friction.driftingMaxForce) {
+                neededImpulse.nor().scl(friction.driftingMaxForce);
+            }
+        } else if (neededImpulse.len() > friction.maxForce) {
             neededImpulse.nor().scl(friction.maxForce);
         }
         phys.body.applyLinearImpulse(neededImpulse, phys.body.getWorldCenter(), true);
@@ -56,5 +61,10 @@ public class TireFrictionSystem extends AbstractForEachUpdatableSystem {
     private Vector2 getLateralVelocity(PhysicsComponent phys) {
         Vector2 currentRightVector = phys.body.getWorldVector(new Vector2(1, 0));
         return currentRightVector.scl(currentRightVector.dot(phys.body.getLinearVelocity()));
+    }
+
+    private Vector2 getRollingVelocity(PhysicsComponent phys) {
+        Vector2 currentRollingVector = phys.body.getWorldVector(new Vector2(0, 1));
+        return currentRollingVector.scl(currentRollingVector.dot(phys.body.getLinearVelocity()));
     }
 }

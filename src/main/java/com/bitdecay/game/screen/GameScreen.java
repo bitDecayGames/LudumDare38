@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.Launcher;
 import com.bitdecay.game.MyGame;
-import com.bitdecay.game.room.DemoRoom;
+import com.bitdecay.game.room.GameRoom;
 import com.bitdecay.game.trait.ICanSetRoom;
 import com.bitdecay.game.trait.ICanSetScreen;
 import com.bitdecay.game.trait.IHasScreenSize;
@@ -23,7 +23,7 @@ public class GameScreen implements Screen, IHasScreenSize, ICanSetScreen, ICanSe
 
     public GameScreen(MyGame game){
         this.game = game;
-        setRoom(new DemoRoom(this));
+        setRoom(new GameRoom(this));
     }
     public GameScreen(MyGame game, com.bitdecay.game.room.AbstractRoom room){
         this.game = game;

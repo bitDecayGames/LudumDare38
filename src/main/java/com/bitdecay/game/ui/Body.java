@@ -7,10 +7,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.bitdecay.game.MyGame;
 
 public class Body extends Group {
+    // UI
     Image body;
     FillRect foodRect;
     FillRect poopRect;
     float poopStartY;
+    // Values
+    float foodLevel;
+    float foodLevelMax;
+    float poopLevel;
+    float poopLevelMax;
 
     public Body(Vector2 screenSize) {
         super();
@@ -47,29 +53,42 @@ public class Body extends Group {
         return body.getWidth();
     }
 
-    public float poopMax() {
+    private float poopMax() {
         return body.getHeight() * 0.30f;
     }
 
-    public float foodMax() {
+    private float foodMax() {
         return body.getHeight() * 0.31f;
+    }
+
+    public void setFoodLevel(float value) {
+        foodLevel = value;
+    }
+
+    public void setPoopLevel(float value) {
+        poopLevel = value;
+    }
+
+    public void setFoodLevelMax(float value) {
+        foodLevelMax = value;
+    }
+
+    public void setPoopLevelMax(float value) {
+        poopLevelMax = value;
     }
 
     public void act(float delta) {
         // Poop
-        poopRect.setY(poopRect.getY() - 1);
-        poopRect.setHeight(poopRect.getHeight() + 1);
-        if (poopRect.getHeight() > poopMax()) {
-            // TODO Die
-            poopRect.setY(poopStartY);
-            poopRect.setHeight(1);
-        }
+        float poopScale = poopLevel / poopLevelMax;
+        float poopDisplayHeight = poopMax() * poopScale;
+
+        poopRect.setY(-poopDisplayHeight + poopStartY);
+        poopRect.setHeight(poopDisplayHeight);
 
         // Food
-        foodRect.setHeight(foodRect.getHeight() - 1);
-        if (foodRect.getHeight() <= 1) {
-            // TODO Die
-            foodRect.setHeight(foodMax());
-        }
+        float foodScale = foodLevel / foodLevelMax;
+        float foodDisplayHeight = foodMax() * foodScale;
+
+        foodRect.setHeight(foodDisplayHeight);
     }
 }

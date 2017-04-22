@@ -29,6 +29,7 @@ public class DemoRoom extends AbstractRoom {
         new TireFrictionSystem(this);
         new EBrakeSystem(this);
         new TimerSystem(this);
+        new SimpleUpdateSystem(this);
         new CameraUpdateSystem(this);
         new RespawnSystem(this, Integer.MIN_VALUE, Integer.MAX_VALUE, -1000, Integer.MAX_VALUE);
         new DespawnSystem(this, Integer.MIN_VALUE, Integer.MAX_VALUE, -1000, Integer.MAX_VALUE);
@@ -206,7 +207,9 @@ public class DemoRoom extends AbstractRoom {
             tire.addComponent(new RevoluteJointComponent(joint));
         }
         tire.addComponent(new PositionComponent(0, 0));
-        if (right) tire.addComponent(new StaticImageComponent("player/tireRight/0")); else tire.addComponent(new StaticImageComponent("player/tireLeft/0"));
+        String path = null;
+        if (right) path = "player/tireRight"; else path = "player/tireLeft";
+        tire.addComponent(new AnimatedImageComponent(path, 0.1f));
         tire.addComponent(new DrawOrderComponent(90));
         tire.addComponent(new SizeComponent(.5f, .8f));
         tire.addComponent(new RotationComponent(0));

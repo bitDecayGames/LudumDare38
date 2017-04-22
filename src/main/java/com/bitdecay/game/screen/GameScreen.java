@@ -12,6 +12,7 @@ import com.bitdecay.game.room.DemoRoom;
 import com.bitdecay.game.trait.ICanSetRoom;
 import com.bitdecay.game.trait.ICanSetScreen;
 import com.bitdecay.game.trait.IHasScreenSize;
+import com.bitdecay.game.ui.Body;
 import com.bitdecay.game.ui.Phone;
 import com.bitdecay.game.util.SoundLibrary;
 
@@ -40,8 +41,13 @@ public class GameScreen implements Screen, IHasScreenSize, ICanSetScreen, ICanSe
         this.stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        Phone phone = new Phone(screenSize());
+        Vector2 size = screenSize();
+
+        Phone phone = new Phone(size);
         stage.addActor(phone);
+
+        Body body = new Body(size);
+        stage.addActor(body);
 
         stage.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {

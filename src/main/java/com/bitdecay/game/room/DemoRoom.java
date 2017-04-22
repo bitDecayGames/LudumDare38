@@ -46,10 +46,7 @@ public class DemoRoom extends AbstractRoom {
 
         createCar(0, 0, false, false);
 
-        for (int x = -2; x < 2; x += 1)
-            for (int y = -2; y < 2; y += 1) {
-                createCar(x * 30, y * 30, true, x % 2 == 0 && y % 2 == 0);
-            }
+        for (int x = -2; x < 2; x += 1) for (int y = -2; y < 2; y += 1) createCar(x * 30, y * 30, true, x % 2 == 0 && y % 2 == 0);
 
         createZone(10, 0, 6, 10, 0, () -> {
 

@@ -1,23 +1,21 @@
 package com.bitdecay.game.system;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.bitdecay.game.component.DamageComponent;
 import com.bitdecay.game.component.HealthComponent;
-import com.bitdecay.game.component.PhysicsComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractSystem;
-import com.bitdecay.game.system.abstracted.AbstractUpdatableSystem;
+import com.bitdecay.game.util.ContactDistributer;
 
 /**
  * Created by Luke on 4/22/2017.
  */
 public class HealthSystem extends AbstractSystem implements ContactListener {
 
-    public HealthSystem(AbstractRoom room, World datWorld) {
+    public HealthSystem(AbstractRoom room, ContactDistributer contactDistrib) {
         super(room);
-        datWorld.setContactListener(this);
+        contactDistrib.listeners.add(this);
     }
 
     @Override

@@ -1,18 +1,18 @@
 package com.bitdecay.game.component;
 
-import com.bitdecay.game.ui.Fuel;
-
 /**
  * Created by Luke on 4/22/2017.
  */
 public class FuelComponent extends AbstractComponent {
 
-    public int maxFuel;
-    public int currentFuel;
+    public float maxFuel;
+    public float currentFuel;
+    public float fuelBurnRate;
 
-    public FuelComponent(int max, int current){
+    public FuelComponent(float max, float burnRate){
         maxFuel = max;
-        currentFuel = current;
+        currentFuel = max;
+        fuelBurnRate = burnRate;
     }
 
 }

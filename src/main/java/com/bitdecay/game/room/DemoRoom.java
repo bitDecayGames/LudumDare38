@@ -176,7 +176,13 @@ public class DemoRoom extends AbstractRoom {
         backRightTireJointDef.localAnchorA.set(-1f, -1.25f);
         RevoluteJoint backRightTireJoint = (RevoluteJoint) phys.world.createJoint(backRightTireJointDef);
 
-        gobs.add(makeTireObject(backRightTire, backRightTireJoint, rearTireData, npc, true, true));
+
+        FuelComponent sharedFuelComponent = new FuelComponent(100, 2);
+
+        MyGameObject BRtire = makeTireObject(backRightTire, backRightTireJoint, rearTireData, npc, true, true);
+        BRtire.addComponent(sharedFuelComponent);
+        gobs.add(BRtire);
+
 
         // /////////////////////////////////
         // create back left tire
@@ -194,8 +200,10 @@ public class DemoRoom extends AbstractRoom {
         backLeftTireJointDef.localAnchorA.set(1f, -1.25f);
         RevoluteJoint backLeftTireJoint = (RevoluteJoint) phys.world.createJoint(backLeftTireJointDef);
 
+        MyGameObject BLtire = makeTireObject(backLeftTire, backLeftTireJoint, rearTireData, npc, true, false);
+        BLtire.addComponent(sharedFuelComponent);
 
-        gobs.add(makeTireObject(backLeftTire, backLeftTireJoint, rearTireData, npc, true, false));
+        gobs.add(BLtire);
     }
 
     private Body makeTire(float density, float width, float height) {

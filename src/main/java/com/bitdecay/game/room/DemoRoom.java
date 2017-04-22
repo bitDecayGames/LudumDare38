@@ -39,6 +39,7 @@ public class DemoRoom extends AbstractRoom {
         new DrawSystem(this);
         new WaypointSystem(this);
         new RemovalSystem(this);
+        new HealthSystem(this, phys.world);
 
         createCar(0, 0, false, false);
 
@@ -84,7 +85,21 @@ public class DemoRoom extends AbstractRoom {
         PhysicsComponent carPhysics = new PhysicsComponent(null, null, null);
         car.addComponent(carPhysics);
         carPhysics.body = carBody;
+        carPhysics.body.setUserData(car);
+
+        //car health section
+        HealthComponent carHealth;
+        if(npc){
+            carHealth = new HealthComponent(3);
+        }else{
+            carHealth = new HealthComponent(10);
+        }
+        car.addComponent(carHealth);
+
+        //camera section
         if (!npc) car.addComponent(new CameraFollowComponent());
+
+        //waypoint section
         if (addWayPoint) car.addComponent(new WaypointComponent(Color.GREEN.cpy()));
         gobs.add(car);
 
@@ -123,6 +138,7 @@ public class DemoRoom extends AbstractRoom {
         MyGameObject tire1 = new MyGameObject();
         PhysicsComponent tire1Physics = new PhysicsComponent(null, null, null);
         tire1Physics.body = frontLeftTire;
+        tire1Physics.body.setUserData(tire1);
         tire1.addComponent(tire1Physics);
         if (!npc) tire1.addComponent(new SteerableComponent(MathUtils.PI / 4));
         tire1.addComponent(new RevoluteJointComponent(frontLeftJoint));
@@ -148,6 +164,7 @@ public class DemoRoom extends AbstractRoom {
         MyGameObject tire2 = new MyGameObject();
         PhysicsComponent tire2Physics = new PhysicsComponent(null, null, null);
         tire2Physics.body = frontRightTire;
+        tire2Physics.body.setUserData(tire2);
         tire2.addComponent(tire2Physics);
         if (!npc) tire2.addComponent(new SteerableComponent(MathUtils.PI / 4));
         tire2.addComponent(new RevoluteJointComponent(frontRightJoint));
@@ -172,6 +189,7 @@ public class DemoRoom extends AbstractRoom {
         MyGameObject tire3 = new MyGameObject();
         PhysicsComponent tire3Physics = new PhysicsComponent(null, null, null);
         tire3Physics.body = backRightTire;
+        tire3Physics.body.setUserData(tire3);
         tire3.addComponent(tire3Physics);
         if (!npc) tire3.addComponent(new DriveTireComponent(maxSpeed, acceleration));
 //        tire3.addComponent(new SteerableComponent(-MathUtils.PI/16));
@@ -197,6 +215,7 @@ public class DemoRoom extends AbstractRoom {
         MyGameObject tire4 = new MyGameObject();
         PhysicsComponent tire4Physics = new PhysicsComponent(null, null, null);
         tire4Physics.body = backLeftTire;
+        tire4Physics.body.setUserData(tire4);
         tire4.addComponent(tire4Physics);
         if (!npc) tire4.addComponent(new DriveTireComponent(maxSpeed, acceleration));
 //        tire4.addComponent(new SteerableComponent(-MathUtils.PI/16));

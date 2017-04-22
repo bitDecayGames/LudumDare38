@@ -23,7 +23,11 @@ public class DrawSystem extends AbstractDrawableSystem {
     public void draw(SpriteBatch spriteBatch, OrthographicCamera camera) {
         spriteBatch.setProjectionMatrix(camera.combined);
         spriteBatch.begin();
-        gobs.forEach(gob -> gob.forEach(DrawableComponent.class, drawable -> gob.forEach(PositionComponent.class, pos -> gob.forEach(SizeComponent.class, size -> {
+        gobs.stream().sorted((a, b) -> {
+            int aOrder = a.getComponent(DrawOrderComponent.class).map(o -> o.order).orElseGet(() -> 0);
+            int bOrder = b.getComponent(DrawOrderComponent.class).map(o -> o.order).orElseGet(() -> 0);
+            return aOrder - bOrder;
+        }).forEach(gob -> gob.forEach(DrawableComponent.class, drawable -> gob.forEach(PositionComponent.class, pos -> gob.forEach(SizeComponent.class, size -> {
             float rotation = gob.getComponent(RotationComponent.class).map(RotationComponent::toDegrees).orElseGet(() -> 0f);
             Vector2 origin = gob.getComponent(OriginComponent.class).map(OriginComponent::toVector2).orElseGet(() -> new Vector2(0, 0)).scl(size.w, size.h);
             spriteBatch.draw(drawable.image(), pos.x - origin.x, pos.y - origin.y, origin.x, origin.y, size.w, size.h, 1, 1, rotation);

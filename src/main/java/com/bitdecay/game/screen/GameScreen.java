@@ -4,12 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.bitdecay.game.Launcher;
 import com.bitdecay.game.MyGame;
 import com.bitdecay.game.room.DemoRoom;
 import com.bitdecay.game.trait.ICanSetRoom;
 import com.bitdecay.game.trait.ICanSetScreen;
 import com.bitdecay.game.trait.IHasScreenSize;
+import com.bitdecay.game.ui.Phone;
 import com.bitdecay.game.util.SoundLibrary;
 
 /**
@@ -18,16 +21,38 @@ import com.bitdecay.game.util.SoundLibrary;
 public class GameScreen implements Screen, IHasScreenSize, ICanSetScreen, ICanSetRoom {
 
     private MyGame game;
+    private Stage stage;
 
     private com.bitdecay.game.room.AbstractRoom room;
 
     public GameScreen(MyGame game){
         this.game = game;
         setRoom(new DemoRoom(this));
+        createStage();
     }
     public GameScreen(MyGame game, com.bitdecay.game.room.AbstractRoom room){
         this.game = game;
         setRoom(room);
+        createStage();
+    }
+
+    private void createStage() {
+        this.stage = new Stage(new ScreenViewport());
+        Gdx.input.setInputProcessor(stage);
+
+        Phone phone = new Phone(screenSize());
+        stage.addActor(phone);
+
+        stage.addListener(new InputListener() {
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                phone.setVisible(true);
+                return true;
+            }
+
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                phone.setVisible(false);
+            }
+        });
     }
 
     @Override
@@ -40,11 +65,13 @@ public class GameScreen implements Screen, IHasScreenSize, ICanSetScreen, ICanSe
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         if (room != null) room.render(delta);
+        stage.act(delta);
+        stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-
+        stage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -65,11 +92,12 @@ public class GameScreen implements Screen, IHasScreenSize, ICanSetScreen, ICanSe
     @Override
     public void dispose() {
         if (room != null) room.dispose();
+        stage.dispose();
     }
 
     @Override
     public Vector2 screenSize() {
-        return null; // TODO: need to implement a way to change the screen size
+        return new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     @Override

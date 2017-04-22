@@ -17,7 +17,7 @@ import com.bitdecay.game.MyGame;
 import com.bitdecay.game.util.InputHelper;
 
 /**
- * This is the generic credits screen.  Almost everything in the credits is populated from the /resources/conf/credits.conf file.  The only reason you should be making changes to this file is to adjust the position or speed of the text.
+ * This is the generic credits screen.  Almost everything in the credits is populated from the /resources/conf/credits.conf file.  The only reason you should be making changes to this file is to adjust the position or maxSpeed of the text.
  */
 public class CreditsScreen implements Screen {
 

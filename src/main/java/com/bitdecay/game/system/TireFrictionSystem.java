@@ -12,6 +12,7 @@ import com.bitdecay.game.system.abstracted.AbstractForEachUpdatableSystem;
  */
 public class TireFrictionSystem extends AbstractForEachUpdatableSystem {
 
+    float rollingDampening = 0.00f;
 
     public TireFrictionSystem(AbstractRoom room) {
         super(room);
@@ -39,20 +40,22 @@ public class TireFrictionSystem extends AbstractForEachUpdatableSystem {
 
     private void updateRollingFriction(PhysicsComponent phys, TireFrictionComponent friction) {
         Vector2 rollingVelocity = getRollingVelocity(phys);
-        Vector2 neededImpulse = rollingVelocity.scl(-phys.body.getMass());
-        phys.body.applyLinearImpulse(neededImpulse.scl(0.05f), phys.body.getWorldCenter(), true);
+        float mass = phys.body.getMass() + friction.data.weightOnTire;
+        Vector2 neededImpulse = rollingVelocity.scl(-mass);
+        phys.body.applyLinearImpulse(neededImpulse.scl(rollingDampening), phys.body.getWorldCenter(), true);
     }
 
     private void updateLateralFriction(PhysicsComponent phys, TireFrictionComponent friction) {
         Vector2 lateralVelocity = getLateralVelocity(phys);
-        Vector2 neededImpulse = lateralVelocity.scl(-phys.body.getMass());
-        if (friction.tireLocked && phys.body.getLinearVelocity().len() > friction.lockedTireGripVelocity) {
+        float mass = phys.body.getMass() + friction.data.weightOnTire;
+        Vector2 neededImpulse = lateralVelocity.scl(-mass);
+        if (friction.tireLocked && phys.body.getLinearVelocity().len() > friction.data.lockedTireGripVelocity) {
             // let the tires slide around if the tires are locked up
-            if (neededImpulse.len() > friction.driftingMaxForce) {
-                neededImpulse.nor().scl(friction.driftingMaxForce);
+            if (neededImpulse.len() > friction.data.driftingMaxForce) {
+                neededImpulse.nor().scl(friction.data.driftingMaxForce);
             }
-        } else if (neededImpulse.len() > friction.maxForce) {
-            neededImpulse.nor().scl(friction.maxForce);
+        } else if (neededImpulse.len() > friction.data.rollingMaxForce) {
+            neededImpulse.nor().scl(friction.data.rollingMaxForce);
         }
         phys.body.applyLinearImpulse(neededImpulse, phys.body.getWorldCenter(), true);
         phys.body.applyAngularImpulse(.1f * phys.body.getInertia() * -phys.body.getAngularVelocity(), true);

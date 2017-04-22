@@ -13,6 +13,7 @@ import com.bitdecay.game.trait.ICanSetRoom;
 import com.bitdecay.game.trait.ICanSetScreen;
 import com.bitdecay.game.trait.IHasScreenSize;
 import com.bitdecay.game.ui.Body;
+import com.bitdecay.game.ui.Fuel;
 import com.bitdecay.game.ui.Phone;
 import com.bitdecay.game.util.SoundLibrary;
 
@@ -48,6 +49,9 @@ public class GameScreen implements Screen, IHasScreenSize, ICanSetScreen, ICanSe
 
         Body body = new Body(size);
         stage.addActor(body);
+
+        Fuel fuel = new Fuel(size);
+        stage.addActor(fuel);
 
         stage.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {

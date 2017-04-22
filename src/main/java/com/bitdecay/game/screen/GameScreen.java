@@ -45,12 +45,8 @@ public class GameScreen implements Screen, IHasScreenSize, ICanSetScreen, ICanSe
 
         stage.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                phone.setVisible(true);
+                phone.toggle();
                 return true;
-            }
-
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                phone.setVisible(false);
             }
         });
     }

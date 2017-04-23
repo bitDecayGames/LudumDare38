@@ -44,9 +44,9 @@ public class BreakableObjectSystem extends AbstractForEachUpdatableSystem implem
                         gob.addComponent(new StaticImageComponent(breaker.imagePath));
                         size.set(breaker.breakWidth, breaker.breakHeight);
                         float angle = linearVelocity.angle();
-                        System.out.println("BROKEN AT ANGLE: " + angle);
                         if (breaker.particle != null) {
-                            MyGameObject particleObject = ParticleFactory.getParticleObject(breaker.particle, phys.body.getWorldCenter(), angle);
+                            // take 90 off of this since all things are pointed 'up' at 0-degrees
+                            MyGameObject particleObject = ParticleFactory.getParticleObject(breaker.particle, phys.body.getWorldCenter(), angle-90);
                             if (particleObject != null) {
                                 room.getGameObjects().add(particleObject);
                             }

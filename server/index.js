@@ -28,7 +28,7 @@ const postScore = (req, res) => {
             };
 
             return scores.insert(newScore)
-                .then((result) => {
+                .then(() => {
                     db.close();
                     res.status(200).end();
                 });
@@ -40,9 +40,27 @@ const postScore = (req, res) => {
 }
 
 const getScores = (req, res) => {
-    res.status(200).json({
-        status: 'ok'
-    });
+    const numScoresToReturn = req.query.num || 10;
+
+    connectDb(mongoUrl)
+        .then((db) => {
+            const scores = db.collection('scores');
+
+            return scores.find({}, {
+                    name: 1, score: 1, time: 1, _id: 0 }
+                ).toArray()
+                    .then((results) => {
+                        db.close();
+
+                        res.status(200).json({
+                            scores: results
+                        });
+                    });
+        })
+        .catch((err) => {
+            logger.error(err);
+            res.status(500).end();
+        })
 };
 
 const app = express();

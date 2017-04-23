@@ -2,6 +2,7 @@ package com.bitdecay.game.system;
 
 import com.badlogic.gdx.physics.box2d.*;
 import com.bitdecay.game.component.DamageComponent;
+import com.bitdecay.game.component.DrawableComponent;
 import com.bitdecay.game.component.HealthComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
@@ -55,8 +56,15 @@ public class HealthSystem extends AbstractSystem implements ContactListener {
 
     public void applyDamage(MyGameObject attacker, MyGameObject attacked){
         attacker.forEach(DamageComponent.class, dmg -> attacked.forEach(HealthComponent.class, health ->{
-                health.set(health.currentHealth - dmg.damage);
-                System.out.println("the health" + health.currentHealth);
+            log.info("Health " + health.currentHealth + "/" + health.maxHealth + " - " + dmg.damage + " == " + (health.currentHealth - dmg.damage));
+            health.set(health.currentHealth - dmg.damage);
+
+            attacked.forEachComponentDo(DrawableComponent.class, drawable -> {
+                float min = 0.3f;
+                float grey = (((float) health.currentHealth / (float) health.maxHealth) * (1 - min)) + min;
+                log.info("Grey: " + grey);
+                drawable.color.set(grey, grey, grey, 1);
+            });
         }));
 
     }

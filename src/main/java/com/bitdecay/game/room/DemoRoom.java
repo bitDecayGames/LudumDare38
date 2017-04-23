@@ -1,7 +1,11 @@
 package com.bitdecay.game.room;
 
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.pfa.DefaultGraphPath;
+import com.badlogic.gdx.ai.pfa.Heuristic;
+import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
@@ -16,26 +20,22 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.gameobject.StaticGameObjectFactory;
-import com.bitdecay.game.pathfinding.Node;
-import com.bitdecay.game.pathfinding.NodeComponent;
-import com.bitdecay.game.pathfinding.NodeSystem;
+import com.bitdecay.game.pathfinding.*;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
-import com.bitdecay.game.ui.Fuel;
 import com.bitdecay.game.ui.HUD;
-import com.bitdecay.game.ui.UIElements;
 import com.bitdecay.game.util.CarType;
 import com.bitdecay.game.util.ContactDistributer;
 import com.bitdecay.game.util.Tuple;
 import com.bitdecay.game.util.ZoneType;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Iterator;
 
 /**
  * The demo room is just a super simple example of how to add systems and game objects to a room.
@@ -47,7 +47,6 @@ public class DemoRoom extends AbstractRoom {
     PhysicsSystem phys = null;
 
     private Stage stage;
-    private UIElements uiElements;
     TiledMap map;
     OrthogonalTiledMapRenderer renderer;
 
@@ -77,7 +76,7 @@ public class DemoRoom extends AbstractRoom {
         new DespawnSystem(this, Integer.MIN_VALUE, Integer.MAX_VALUE, -1000, Integer.MAX_VALUE);
         new ShapeDrawSystem(this);
         new DrawSystem(this);
-        new WaypointSystem(this, uiElements);
+        new WaypointSystem(this);
         new HealthSystem(this, contactDistrib);
         new ZoneUpdateSystem(this, contactDistrib);
         new TireFrictionModifierSystem(this, contactDistrib);
@@ -90,14 +89,14 @@ public class DemoRoom extends AbstractRoom {
         new ParticleSystem(this);
 
         // various gauge things
-        new FuelGaugeSystem(this, uiElements);
-        new HungerGaugeSystem(this, uiElements);
-        new PoopGaugeSystem(this, uiElements);
+        new FuelGaugeSystem(this);
+        new HungerGaugeSystem(this);
+        new PoopGaugeSystem(this);
 
-        new MoneySystem(this, uiElements, stage);
+        new MoneySystem(this, stage);
 
         // ObjectiveSystem is based on objects added to the world, it needs to go after those.
-        new ObjectiveSystem(this, uiElements);
+        new ObjectiveSystem(this);
 
         new BreakableObjectSystem(this);
         new RemovalSystem(this);
@@ -109,23 +108,41 @@ public class DemoRoom extends AbstractRoom {
         gobs.add(GameObjectFactory.makePerson(phys,15,5));
         gobs.add(GameObjectFactory.makePerson(phys,-5,5));
 
-        gobs.add(GameObjectFactory.createZone(10, 0, 6, 10, 0, ZoneType.BATHROOM));
-        gobs.add(GameObjectFactory.createZone(20, 16, 6, 10, 0, ZoneType.FUEL));
-        gobs.add(GameObjectFactory.createZone(-10, 0, 6, 10, 0, ZoneType.FOOD));
+        gobs.add(GameObjectFactory.createZone(10, 0, 6, 10, 0, ZoneType.BATHROOM, null));
+        gobs.add(GameObjectFactory.createZone(20, 16, 6, 10, 0, ZoneType.FUEL, null));
+        gobs.add(GameObjectFactory.createZone(-10, 0, 6, 10, 0, ZoneType.FOOD, null));
 
         loadTileMapAndStartingObjects();
 
-        Node a = new Node(new Vector2());
-        Node b = new Node(new Vector2(4, 4));
-        Node c = new Node(new Vector2(-3, 3));
-        c.connectTo(b);
-        Node d = new Node(new Vector2(6, 6));
-        Node e = new Node(new Vector2(-6, 6));
-        e.connectTo(d);
+        // Graph/Nodes
+        Node a = new Node(new Vector2(), 0);
+        Node b = new Node(new Vector2(4, 4), 1);
+        Node c = new Node(new Vector2(-3, 3), 2);
+        Node d = new Node(new Vector2(6, 6), 3);
+        Node e = new Node(new Vector2(-6, 6), 4);
 
+        e.connectTo(d);
+        d.connectTo(c);
+        c.connectTo(b);
+        b.connectTo(a);
+
+        NodeGraph graph = new NodeGraph();
         Node[] nodes = new Node[] {
-            a, b, c, d, e
+                a, b, c, d, e
         };
+        graph.nodes = new Array<>(nodes);
+
+        DefaultGraphPath<Node> graphPath = new DefaultGraphPath<>();
+        ManhattanHeuristic manhattanHeuristic = new ManhattanHeuristic();
+
+        IndexedAStarPathFinder<Node> pathFinder = new IndexedAStarPathFinder<>(graph);
+//        System.out.println("!!!!!!!!!!! " + pathFinder.searchNodePath(e, a, manhattanHeuristic, graphPath));
+
+        Iterator<Node> foundNodes = graphPath.iterator();
+        while (foundNodes.hasNext()) {
+            Node n = foundNodes.next();
+//            System.out.println("??????????? " + n.getIndex());
+        }
 
         Arrays.stream(nodes).forEach(node -> {
             MyGameObject temp = new MyGameObject();
@@ -242,18 +259,12 @@ public class DemoRoom extends AbstractRoom {
         this.stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        uiElements = new UIElements();
-
-        Fuel fuel = new Fuel(screenSize());
-        uiElements.fuel = fuel;
-        stage.addActor(fuel);
-
-        uiElements.hud = new HUD(screenSize());
-        stage.addActor(uiElements.hud);
+        new HUD();
+        stage.addActor(HUD.instance());
 
         stage.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                uiElements.hud.toggle();
+                HUD.instance().phone.toggle();
                 return true;
             }
         });

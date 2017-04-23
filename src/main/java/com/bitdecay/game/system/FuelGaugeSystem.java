@@ -5,20 +5,15 @@ import com.bitdecay.game.component.PlayerTireComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractForEachUpdatableSystem;
-import com.bitdecay.game.ui.UIElements;
+import com.bitdecay.game.ui.HUD;
 
 /**
  * Created by Monday on 4/22/2017.
  */
 public class FuelGaugeSystem extends AbstractForEachUpdatableSystem {
 
-
-    private UIElements uiElements;
-
-    public FuelGaugeSystem(AbstractRoom room, UIElements uiElements) {
+    public FuelGaugeSystem(AbstractRoom room) {
         super(room);
-
-        this.uiElements = uiElements;
     }
 
     @Override
@@ -32,7 +27,7 @@ public class FuelGaugeSystem extends AbstractForEachUpdatableSystem {
     @Override
     protected void forEach(float delta, MyGameObject gob) {
         gob.forEachComponentDo(FuelComponent.class, fuel -> {
-            uiElements.fuel.setPercent(fuel.currentFuel/fuel.maxFuel);
+            HUD.instance().fuel.setPercent(fuel.currentFuel/fuel.maxFuel);
         });
     }
 }

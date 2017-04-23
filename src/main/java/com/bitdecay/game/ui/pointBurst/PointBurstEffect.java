@@ -1,4 +1,4 @@
-package com.bitdecay.game.ui;
+package com.bitdecay.game.ui.pointBurst;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -13,16 +13,6 @@ import com.bitdecay.game.MyGame;
 public class PointBurstEffect extends Group {
     final float DURATION = 2;
 
-    public static PointBurstEffect money(String text) {
-        Image moneyIcon = new Image(MyGame.ATLAS.findRegion("uiStuff/btc-512"));
-        moneyIcon.setScale(0.5f);
-
-        Image diffIcon = new Image(MyGame.ATLAS.findRegion("uiStuff/grubOff"));
-        diffIcon.setScale(0.5f);
-
-        return new PointBurstEffect(moneyIcon, diffIcon, text);
-    }
-
     public PointBurstEffect(Image mainIcon, Image secondaryIcon, String text) {
         addActor(mainIcon);
 
@@ -33,7 +23,7 @@ public class PointBurstEffect extends Group {
 
         Label textLabel = new Label(text, new Label.LabelStyle(MyGame.FONT, Color.WHITE));
         textLabel.setFontScale(2);
-        textLabel.moveBy(mainIcon.getWidth() * 0.55f , mainIcon.getHeight() / 2 - textLabel.getHeight() * 1.5f);
+        textLabel.moveBy(mainIcon.getWidth() * mainIcon.getScaleX(), mainIcon.getHeight() * mainIcon.getScaleY() / 2 - textLabel.getHeight() * 0.55f);
         addActor(textLabel);
 
         float screenHeight = Gdx.graphics.getHeight();

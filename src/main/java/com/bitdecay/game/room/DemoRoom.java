@@ -5,10 +5,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.*;
 import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.bitdecay.game.gameobject.StaticGameObjectFactory;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
@@ -16,7 +18,6 @@ import com.bitdecay.game.ui.Fuel;
 import com.bitdecay.game.ui.HUD;
 import com.bitdecay.game.ui.UIElements;
 import com.bitdecay.game.util.ContactDistributer;
-import com.bitdecay.game.util.ZoneType;
 
 import java.util.Iterator;
 
@@ -62,7 +63,12 @@ public class DemoRoom extends AbstractRoom {
         new RemovalSystem(this);
         new HealthSystem(this, contactDistrib);
         new ZoneUpdateSystem(this, contactDistrib);
+        new TireFrictionModifierSystem(this, contactDistrib);
         new TorqueableSystem(this);
+
+        new ParticlePositionSystem(this);
+
+        new ParticleSystem(this);
 
         // various gauge things
         new FuelGaugeSystem(this, uiElements);
@@ -71,14 +77,16 @@ public class DemoRoom extends AbstractRoom {
 
         new MoneySystem(this, uiElements, stage);
 
+        new ObjectiveSystem(this, uiElements);
+
         new BreakableObjectSystem(this);
         GameObjectFactory.createCar(gobs, phys, 0, 0, false, false);
 
         gobs.add(GameObjectFactory.makePerson(phys,5,5));
 
-        GameObjectFactory.createZone(gobs, phys, 10, 0, 6, 10, 0, ZoneType.BATHROOM);
-        GameObjectFactory.createZone(gobs, phys, 20, 16, 6, 10, 0, ZoneType.FUEL);
-        GameObjectFactory.createZone(gobs, phys, -10, 0, 6, 10, 0, ZoneType.FOOD);
+//        GameObjectFactory.createZone(gobs, phys, 10, 0, 6, 10, 0, ZoneType.BATHROOM);
+//        GameObjectFactory.createZone(gobs, phys, 20, 16, 6, 10, 0, ZoneType.FUEL);
+//        GameObjectFactory.createZone(gobs, phys, -10, 0, 6, 10, 0, ZoneType.FOOD);
 
         loadTileMapAndStartingObjects();
 

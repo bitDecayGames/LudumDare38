@@ -10,6 +10,8 @@ import com.bitdecay.game.component.money.MoneyDiffComponent;
 import com.bitdecay.game.system.PhysicsSystem;
 import com.bitdecay.game.util.ZoneType;
 
+import java.util.function.Consumer;
+
 public class GameObjectFactory {
 
     public static MyGameObject makeTrashBin(PhysicsSystem phys,float x, float y){
@@ -35,8 +37,7 @@ public class GameObjectFactory {
         trashBin.addComponent(new RotationComponent(0));
         trashBin.addComponent(new StaticImageComponent("collidables/trash_lid"));
         trashBin.addComponent(new SizeComponent(1.5f,1.5f));
-        trashBin.addComponent(new BreakableObjectComponent("collidables/trash_flying", 1, 1.5f,1.5f));
-
+        trashBin.addComponent(new BreakableObjectComponent("collidables/trash_flying", 3, 1.5f,1.5f, ParticleFactory.ParticleChoice.TRASH));
 
         return trashBin;
     }
@@ -78,7 +79,7 @@ public class GameObjectFactory {
         Body cartBody = phys.world.createBody(cartBodyDef);
 
         PolygonShape cartShape = new PolygonShape();
-        cartShape.setAsBox(.8f,.5f);
+        cartShape.setAsBox(.5f,.8f);
 
         Fixture cartFix = cartBody.createFixture(cartShape,.5f);
 
@@ -88,7 +89,11 @@ public class GameObjectFactory {
         cart.addComponent(new OriginComponent(.5f,.5f));
         cart.addComponent(new RotationComponent(0));
         cart.addComponent(new StaticImageComponent("collidables/cart"));
-        cart.addComponent(new SizeComponent(1.6f,1));
+        cart.addComponent(new SizeComponent(1,1.6f));
+        TireFrictionComponent.TireFrictionData cartFriction = new TireFrictionComponent.TireFrictionData();
+        cartFriction.rollingMaxForce = .1f;
+        cartFriction.driftingMaxForce = .1f;
+        cart.addComponent(new TireFrictionComponent(cartFriction));
 
         return cart;
     }
@@ -115,7 +120,7 @@ public class GameObjectFactory {
         toilet.addComponent(new RotationComponent(0));
         toilet.addComponent(new StaticImageComponent("collidables/toilet"));
         toilet.addComponent(new SizeComponent(1.9f,1.8f));
-        toilet.addComponent(new BreakableObjectComponent("collidables/toilet_flying", 1, 1.6f,2.9f));
+        toilet.addComponent(new BreakableObjectComponent("collidables/toilet_flying", 1, 1.6f,2.9f, ParticleFactory.ParticleChoice.POOP));
 
         return toilet;
     }
@@ -143,7 +148,7 @@ public class GameObjectFactory {
         trashBag.addComponent(new RotationComponent(0));
         trashBag.addComponent(new StaticImageComponent("collidables/trashbag"));
         trashBag.addComponent(new SizeComponent(1.2f,1.2f));
-        trashBag.addComponent(new BreakableObjectComponent("collidables/trashbag_flying", 1, 1.2f,1.8f));
+        trashBag.addComponent(new BreakableObjectComponent("collidables/trashbag_flying", 1, 1.2f,1.8f, ParticleFactory.ParticleChoice.TRASH));
 
 
         return trashBag;
@@ -172,7 +177,7 @@ public class GameObjectFactory {
         hydrant.addComponent(new StaticImageComponent("collidables/hydrant"));
         hydrant.addComponent(new DamageComponent(2));
         hydrant.addComponent(new SizeComponent(.6f,.6f));
-        hydrant.addComponent(new BreakableObjectComponent("collidables/hydrant_flying", 2, .6f, 0.9f));
+        hydrant.addComponent(new BreakableObjectComponent("collidables/hydrant_flying", 0, .6f, 0.9f, ParticleFactory.ParticleChoice.WATER));
 
         return hydrant;
     }
@@ -198,7 +203,7 @@ public class GameObjectFactory {
         mailbox.addComponent(new RotationComponent(0));
         mailbox.addComponent(new StaticImageComponent("collidables/mailbox"));
         mailbox.addComponent(new SizeComponent(.8f,.8f));
-        mailbox.addComponent(new BreakableObjectComponent("collidables/mailbox_flying", 1, .85f,1.2f));
+        mailbox.addComponent(new BreakableObjectComponent("collidables/mailbox_flying", 1, .85f,1.2f, ParticleFactory.ParticleChoice.MAIL));
 
         return mailbox;
     }
@@ -234,9 +239,55 @@ public class GameObjectFactory {
         obj.addComponent(new TorqueableComponent(30));
         obj.addComponent(new FuelComponent(1, 0));
         obj.addComponent(new SizeComponent(1f,1f));
-        obj.addComponent(new BreakableObjectComponent("person/flyForward", 2, .6f, 0.9f));
+        obj.addComponent(new BreakableObjectComponent("person/flyForward", 2, 1f, 1.5f, ParticleFactory.ParticleChoice.BLOOD));
 
         return obj;
+    }
+
+    public static MyGameObject makeGrassField(PhysicsSystem phys,float x, float y) {
+        MyGameObject field = new MyGameObject();
+
+        BodyDef fieldBodyDef = new BodyDef();
+        fieldBodyDef.position.set(x, y);
+        fieldBodyDef.type = BodyDef.BodyType.StaticBody;
+        Body fieldBody = phys.world.createBody(fieldBodyDef);
+
+        PolygonShape fieldShape = new PolygonShape();
+        fieldShape.setAsBox(20f, 20);
+
+        Fixture fieldFix = fieldBody.createFixture(fieldShape, 0);
+        fieldFix.setSensor(true);
+
+        PhysicsComponent physComp = new PhysicsComponent(fieldBody);
+        physComp.body.setUserData(field);
+        field.addComponent(physComp);
+        field.addComponent(new PositionComponent(x, y));
+        field.addComponent(new OriginComponent(.5f, .5f));
+
+        TireFrictionComponent.TireFrictionData grassFriction = new TireFrictionComponent.TireFrictionData();
+        grassFriction.rollingMaxForce = 2;
+        grassFriction.driftingMaxForce = .2f;
+        grassFriction.lockedTireGripVelocity = -1;
+
+        field.addComponent(new TireFrictionModifierComponent(grassFriction));
+//        field.addComponent(new StaticImageComponent("collidables/dumpster"));
+//        field.addComponent(new SizeComponent(25, 10));
+
+        return field;
+    }
+
+    private static void addZoneComponent(MyGameObject zone, Consumer<MyGameObject> modifyGameObj) {
+        ZoneComponent zComp = new ZoneComponent(10.0f, (gameObj) -> {
+            zone.getComponent(ZoneComponent.class).get().active = false;
+            zone.addComponent(new TimerComponent(5, () -> {
+                zone.getComponent(ZoneComponent.class).get().active = true;
+                zone.removeComponent(TimerComponent.class);
+            }));
+            modifyGameObj.accept(gameObj);
+        });
+        zComp.active = true;
+        zComp.canDeactivate = false;
+        zone.addComponent(zComp);
     }
 
     public static void createZone(MyGameObjects gobs, PhysicsSystem phys, float x, float y, float width, float length, float rotation, ZoneType zoneType){
@@ -272,55 +323,26 @@ public class GameObjectFactory {
         Fixture zoneFix = zoneBody.createFixture(zoneShape, 0);
         zoneFix.setSensor(true);
 
-        ZoneComponent zComp;
         switch (zoneType) {
             case BATHROOM:
-                zComp = new ZoneComponent(() -> {
-                    System.out.println("You take a poo here");
-                    zone.getComponent(ZoneComponent.class).get().active = false;
-                    zone.addComponent(new TimerComponent(5, () -> {
-                        zone.getComponent(ZoneComponent.class).get().active = true;
-                        zone.removeComponent(TimerComponent.class);
-                    }));
-                    gobs.forEach(gob -> gob.forEachComponentDo(PoopooComponent.class, poo ->
-                            poo.currentPoopoo = 0));
+                addZoneComponent(zone, (gameObj) -> {
+                    gameObj.forEachComponentDo(PoopooComponent.class, poo -> poo.currentPoopoo = 0);
                 });
-                zComp.active = true;
-                zComp.canDeactivate = false;
-                zone.addComponent(zComp);
                 break;
             case FOOD:
-                zComp = new ZoneComponent(() -> {
-                    System.out.println("You eat the food here");
-                    zone.getComponent(ZoneComponent.class).get().active = false;
-                    zone.addComponent(new TimerComponent(5, () -> {
-                        zone.getComponent(ZoneComponent.class).get().active = true;
-                        zone.removeComponent(TimerComponent.class);
-                    }));
-                    gobs.forEach(gob -> gob.forEachComponentDo(HungerComponent.class, hungry ->
-                            hungry.currentFullness = hungry.maxFullness));
+                addZoneComponent(zone, (gameObj) -> {
+                    gameObj.forEachComponentDo(HungerComponent.class, hungry -> hungry.currentFullness = hungry.maxFullness);
                 });
-                zComp.active = true;
-                zComp.canDeactivate = false;
-                zone.addComponent(zComp);
                 break;
             case FUEL:
-                zComp = new ZoneComponent(() -> {
-                    System.out.println("You fuel the car here");
-                    zone.getComponent(ZoneComponent.class).get().active = false;
-                    zone.addComponent(new TimerComponent(5, () -> {
-                        zone.getComponent(ZoneComponent.class).get().active = true;
-                        zone.removeComponent(TimerComponent.class);
-                    }));
-                    gobs.forEach(gob -> gob.forEachComponentDo(FuelComponent.class, fuel ->
-                            fuel.currentFuel = fuel.maxFuel));
+                addZoneComponent(zone, (gameObj) -> {
+                    gameObj.forEachComponentDo(FuelComponent.class, fuel -> fuel.currentFuel = fuel.maxFuel);
                 });
-                zComp.active = true;
-                zComp.canDeactivate = false;
-                zone.addComponent(zComp);
                 break;
             case REPAIR:
             case OBJECTIVE:
+            case PICKUP:
+                break;
             default:
         }
 
@@ -361,6 +383,9 @@ public class GameObjectFactory {
         car.addComponent(carPhysics);
         carPhysics.body.setUserData(car);
 
+        car.addComponent(ParticleFactory.getExhaustParticle());
+        car.addComponent(new ParticlePosition(.5f, -2));
+
         //car health section
         HealthComponent carHealth;
         if (npc) {
@@ -378,8 +403,8 @@ public class GameObjectFactory {
         if (!npc) {
             car.addComponent(new CameraFollowComponent());
             car.addComponent(new PlayerControlComponent());
-            car.addComponent(new HungerComponent(100, 10));
-            car.addComponent(new PoopooComponent(100, 5));
+            car.addComponent(new HungerComponent(100, 0.5f));
+            car.addComponent(new PoopooComponent(100, 0.5f));
             car.addComponent(new MoneyComponent(0));
             car.addComponent(new MoneyDiffComponent(100));
         }
@@ -459,7 +484,7 @@ public class GameObjectFactory {
         RevoluteJoint backRightTireJoint = (RevoluteJoint) phys.world.createJoint(backRightTireJointDef);
 
 
-        FuelComponent sharedFuelComponent = new FuelComponent(100, 2);
+        FuelComponent sharedFuelComponent = new FuelComponent(100, 0.25f);
 
         MyGameObject BRtire = makeTireObject(backRightTire, backRightTireJoint, rearTireData, npc, true, true);
         BRtire.addComponent(sharedFuelComponent);
@@ -509,6 +534,7 @@ public class GameObjectFactory {
 
         MyGameObject tire = new MyGameObject();
         PhysicsComponent tirePhysics = new PhysicsComponent(body);
+        tirePhysics.body.setUserData(tire);
         tire.addComponent(tirePhysics);
         tire.addComponent(new TireFrictionComponent(tireData));
         if (rear && !npc) {

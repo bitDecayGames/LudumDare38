@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * This is the main game object class (called MyGameObject because of a name collision with Jump).  It contains a list of components and THAT'S IT!  It should NOT contain any real game logic.  The only extra login in this class has to do with working with the components of the class.  When you add or remove a component to a game object, it won't be added directly to the list of components.  It goes through an intermediary step before being added so that you avoid any ConcurrentModification exceptions.  The game object is dirty when you add or remove one of the components.
@@ -38,11 +39,15 @@ public class MyGameObject implements ICleanup {
     }
 
     public <T> void forEachComponentDo(Class<T> componentClass, Consumer<T> doFunc){
-        components.stream().filter(componentClass::isInstance).map(componentClass::cast).forEach(doFunc);
+        getComponentStream(componentClass).forEach(doFunc);
     }
 
     public <T> void forEach(Class<T> componentClass, Consumer<T> doFunc){
         forEachComponentDo(componentClass, doFunc);
+    }
+
+    public <T> Stream<T> getComponentStream(Class<T> componentClass) {
+        return components.stream().filter(componentClass::isInstance).map(componentClass::cast);
     }
 
     /**
@@ -76,6 +81,11 @@ public class MyGameObject implements ICleanup {
             dirty = true;
         }
         return comp;
+    }
+
+    public void removeComponentInstance(AbstractComponent component) {
+        componentsToRemove.add(component);
+        dirty = true;
     }
 
     @Override

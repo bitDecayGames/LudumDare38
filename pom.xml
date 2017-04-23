@@ -181,6 +181,13 @@
             <version>${animagicVersion}</version>
         </dependency>
         <!-- END CUSTOM TOOLS DEPENDENCIES-->
+        <!-- START REST DEPENDENCIES -->
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>2.21</version>
+        </dependency>
+        <!-- END REST DEPENDENCIES -->
         <!-- START GDX DEPENDENCIES -->
         <dependency>
             <groupId>com.badlogicgames.gdx</groupId>

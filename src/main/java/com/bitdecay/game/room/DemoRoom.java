@@ -2,8 +2,8 @@ package com.bitdecay.game.room;
 
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.*;
+import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -18,6 +18,8 @@ import com.bitdecay.game.ui.UIElements;
 import com.bitdecay.game.util.ContactDistributer;
 import com.bitdecay.game.util.ZoneType;
 
+import java.util.Iterator;
+
 /**
  * The demo room is just a super simple example of how to add systems and game objects to a room.
  */
@@ -29,6 +31,10 @@ public class DemoRoom extends AbstractRoom {
     private UIElements uiElements;
     TiledMap map;
     OrthogonalTiledMapRenderer renderer;
+
+    float scaleFactor = 1/40f;
+    float worldOffsetY = 1f;
+    float worldOffsetX = 1f;
 
     public DemoRoom(GameScreen gameScreen) {
         super(gameScreen);
@@ -68,25 +74,71 @@ public class DemoRoom extends AbstractRoom {
         new BreakableObjectSystem(this);
         GameObjectFactory.createCar(gobs, phys, 0, 0, false, false);
 
-        gobs.add(GameObjectFactory.makeTrashBin(phys,-5,5));
-        gobs.add(GameObjectFactory.makeDumpster(phys,-5,10));
-        gobs.add(GameObjectFactory.makeCart(phys,-5,15));
-        gobs.add(GameObjectFactory.makeToilet(phys,-5,20));
-        gobs.add(GameObjectFactory.makeTrashBag(phys,-5,25));
-        gobs.add(GameObjectFactory.makeFirehydrant(phys,-5,30));
-        gobs.add(GameObjectFactory.makeMailbox(phys,0,15));
-
         gobs.add(GameObjectFactory.makePerson(phys,5,5));
 
         GameObjectFactory.createZone(gobs, phys, 10, 0, 6, 10, 0, ZoneType.BATHROOM);
         GameObjectFactory.createZone(gobs, phys, 20, 16, 6, 10, 0, ZoneType.FUEL);
         GameObjectFactory.createZone(gobs, phys, -10, 0, 6, 10, 0, ZoneType.FOOD);
 
-        map = new TmxMapLoader().load(Gdx.files.internal("img/tiled/town.tmx").path());
-        renderer = new OrthogonalTiledMapRenderer(map, 1/40f);
+        loadTileMapAndStartingObjects();
 
         // this is required to be at the end here so that the systems have the latest gobs
         systemManager.cleanup();
+    }
+
+    private void loadTileMapAndStartingObjects() {
+        map = new TmxMapLoader().load(Gdx.files.internal("img/tiled/town.tmx").path());
+
+        MapLayers mapLayers = map.getLayers();
+
+        TiledMapTileLayer mapLayer = (TiledMapTileLayer) mapLayers.get("Collidables");
+
+        for (int x = 0; x < mapLayer.getWidth(); x++) {
+            for (int y = 0; y < mapLayer.getHeight(); y++) {
+                TiledMapTileLayer.Cell cell = mapLayer.getCell(x, y);
+                if (cell != null) {
+                    String objName = (String) cell.getTile().getProperties().get("obj_name");
+                    if (objName != null) {
+                        System.out.printf("Creating new object from tiled map (%d,%d): %s\n", x, y, objName);
+                        createObjectFromName(objName, x, y);
+                    }
+                }
+            }
+        }
+
+        renderer = new OrthogonalTiledMapRenderer(map, scaleFactor);
+    }
+
+    private void createObjectFromName(String name, float x, float y) {
+
+        x = worldOffsetX + (x * 2);
+        y = worldOffsetY + (y * 2);
+
+        switch(name) {
+            case "mail":
+                gobs.add(GameObjectFactory.makeMailbox(phys, x, y));
+                break;
+            case "hydrant":
+                gobs.add(GameObjectFactory.makeFirehydrant(phys, x, y));
+                break;
+            case "dumpster":
+                gobs.add(GameObjectFactory.makeDumpster(phys, x, y));
+                break;
+            case "bag":
+                gobs.add(GameObjectFactory.makeTrashBag(phys,x,y));
+                break;
+            case "bin":
+                gobs.add(GameObjectFactory.makeTrashBin(phys,x,y));
+                break;
+            case "potty":
+                gobs.add(GameObjectFactory.makeToilet(phys,x,y));
+                break;
+            case "cart":
+                gobs.add(GameObjectFactory.makeCart(phys,x,y));
+                break;
+            default:
+                System.out.println("Item name not recognized. Not spawning in an object");
+        }
     }
 
     @Override

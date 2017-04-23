@@ -39,8 +39,6 @@ public abstract class AbstractRoom implements IUpdate, IDraw, IHasScreenSize, IC
         camera.minZoom = (float) Launcher.conf.getDouble("resolution.camera.minZoom");
         camera.snapSpeed = (float) Launcher.conf.getDouble("resolution.camera.snapSpeed");
         camera.buffer = 100;
-
-        //world.setGravity((float) Launcher.conf.getDouble("world.gravity.x"), (float) Launcher.conf.getDouble("world.gravity.y"));
     }
 
     public MyGameObjects getGameObjects(){
@@ -66,7 +64,7 @@ public abstract class AbstractRoom implements IUpdate, IDraw, IHasScreenSize, IC
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
-        if (MyGame.RUN_MODE == RunMode.DEV) {}//worldRenderer.render(world, cam);
+        if (MyGame.RUN_MODE == RunMode.DEV) {}
         systemManager.draw(spriteBatch, camera);
     }
 

@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.gameobject.MyGameObject;
+import com.bitdecay.game.gameobject.StaticGameObjectFactory;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
 import com.bitdecay.game.ui.Fuel;
@@ -28,6 +29,8 @@ import com.bitdecay.game.util.ZoneType;
  * The demo room is just a super simple example of how to add systems and game objects to a room.
  */
 public class DemoRoom extends AbstractRoom {
+
+    public static int TILE_SIZE = 80;
 
     PhysicsSystem phys = null;
 
@@ -130,9 +133,10 @@ public class DemoRoom extends AbstractRoom {
                 if (cell != null) {
                     String objName = (String) cell.getTile().getProperties().get("obj_name");
                     if (objName != null) {
-                        System.out.printf("Creating new object from tiled map (%d,%d): %s\n", x, y, objName);
-                        int widthTiles = (int) cell.getTile().getProperties().get("width_tiles");
-                        int heightTiles = (int) cell.getTile().getProperties().get("height_tiles");
+                        String stringWidthTiles = (String)cell.getTile().getProperties().get("width_tiles");
+                        String stringHeightTiles = (String)cell.getTile().getProperties().get("height_tiles");
+                        int widthTiles = Integer.parseInt(stringWidthTiles);
+                        int heightTiles = Integer.parseInt(stringHeightTiles);
                         createBuildingCollisionBox(objName, x, y, widthTiles, heightTiles);
                     }
                 }
@@ -143,7 +147,10 @@ public class DemoRoom extends AbstractRoom {
     }
 
     private void createBuildingCollisionBox(String name, float x, float y, int widthTiles, int heightTiles){
-        System.out.println(name + x + y + widthTiles + heightTiles);
+        x = (widthTiles/2f) + (x * 2);
+        y = (heightTiles/2f) + (y * 2);
+        System.out.printf("Creating static body for %s at (%f,%f) of size (%d,%d)\n", name, x, y, widthTiles, heightTiles);
+        StaticGameObjectFactory.create(phys, new Vector2(x,y), new Vector2(widthTiles, heightTiles), 0);
     }
 
 

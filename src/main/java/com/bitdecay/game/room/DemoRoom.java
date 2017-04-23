@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.bitdecay.game.gameobject.StaticGameObjectFactory;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
@@ -19,8 +18,6 @@ import com.bitdecay.game.ui.HUD;
 import com.bitdecay.game.ui.UIElements;
 import com.bitdecay.game.util.CarType;
 import com.bitdecay.game.util.ContactDistributer;
-
-import java.util.Iterator;
 
 /**
  * The demo room is just a super simple example of how to add systems and game objects to a room.

@@ -8,13 +8,13 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
  */
 public class ParticleFXComponent extends AbstractComponent {
     public ParticleEffect effect;
-    public float duration;
+    public boolean continuous;
 
     public boolean started;
     public float timePassed;
 
-    public ParticleFXComponent(float duration, FileHandle effectFile, FileHandle particleDir) {
-        this.duration = duration;
+    public ParticleFXComponent(boolean continuous, FileHandle effectFile, FileHandle particleDir) {
+        this.continuous = continuous;
         effect = new ParticleEffect();
         effect.load(effectFile, particleDir);
         effect.scaleEffect(.01f);

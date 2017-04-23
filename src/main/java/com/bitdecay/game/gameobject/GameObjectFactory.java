@@ -37,7 +37,7 @@ public class GameObjectFactory {
         trashBin.addComponent(new RotationComponent(0));
         trashBin.addComponent(new StaticImageComponent("collidables/trash_lid"));
         trashBin.addComponent(new SizeComponent(1.5f,1.5f));
-        trashBin.addComponent(new BreakableObjectComponent("collidables/trash_flying", 1, 1.5f,1.5f, ParticleFactory.ParticleChoice.TRASH));
+        trashBin.addComponent(new BreakableObjectComponent("collidables/trash_flying", 3, 1.5f,1.5f, ParticleFactory.ParticleChoice.TRASH));
 
         return trashBin;
     }
@@ -383,7 +383,7 @@ public class GameObjectFactory {
         car.addComponent(carPhysics);
         carPhysics.body.setUserData(car);
 
-        car.addComponent(ParticleFactory.getExhaustParticle(0));
+        car.addComponent(ParticleFactory.getExhaustParticle());
         car.addComponent(new ParticlePosition(.5f, -2));
 
         //car health section

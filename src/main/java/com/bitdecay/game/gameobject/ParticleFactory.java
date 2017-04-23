@@ -19,22 +19,22 @@ public class ParticleFactory {
         ParticleFXComponent particleComp = null;
         switch(particle) {
             case MAIL:
-                particleComp = getMailParticle(1f);
+                particleComp = getMailParticle();
                 break;
             case POOP:
-                particleComp = getPoopParticle(1f);
+                particleComp = getPoopParticle();
                 break;
             case BLOOD:
-                particleComp = getBloodParticle(1f);
+                particleComp = getBloodParticle();
                 break;
             case TRASH:
-                particleComp = getTrashParticle(1f);
+                particleComp = getTrashParticle();
                 break;
             case WATER:
-                particleComp = getWaterParticle(1f);
+                particleComp = getWaterParticle();
                 break;
             case EXHAUST:
-                particleComp = getExhaustParticle(.5f);
+                particleComp = getExhaustParticle();
                 break;
             case NONE:
                 return null;
@@ -70,31 +70,31 @@ public class ParticleFactory {
         NONE
     }
 
-    public static ParticleFXComponent getMailParticle(float duration) {
-        return getParticleFX(duration, "src/main/resources/particle/mail.p", "src/main/resources/img/packable/main/particles/");
+    public static ParticleFXComponent getMailParticle() {
+        return getParticleFX(false, "src/main/resources/particle/mail.p", "src/main/resources/img/packable/main/particles/");
     }
 
-    public static ParticleFXComponent getPoopParticle(float duration) {
-        return getParticleFX(duration, "src/main/resources/particle/poopoo.p", "src/main/resources/img/packable/main/particles/");
+    public static ParticleFXComponent getPoopParticle() {
+        return getParticleFX(false, "src/main/resources/particle/poopoo.p", "src/main/resources/img/packable/main/particles/");
     }
 
-    public static ParticleFXComponent getBloodParticle(float duration) {
-        return getParticleFX(duration, "src/main/resources/particle/blood.p", "src/main/resources/img/packable/main/particles/");
+    public static ParticleFXComponent getBloodParticle() {
+        return getParticleFX(false, "src/main/resources/particle/blood.p", "src/main/resources/img/packable/main/particles/");
     }
 
-    public static ParticleFXComponent getTrashParticle(float duration) {
-        return getParticleFX(duration, "src/main/resources/particle/trash.p", "src/main/resources/img/packable/main/particles/");
+    public static ParticleFXComponent getTrashParticle() {
+        return getParticleFX(false, "src/main/resources/particle/trash.p", "src/main/resources/img/packable/main/particles/");
     }
 
-    public static ParticleFXComponent getWaterParticle(float duration) {
-        return getParticleFX(duration, "src/main/resources/particle/water.p", "src/main/resources/img/packable/main/particles/");
+    public static ParticleFXComponent getWaterParticle() {
+        return getParticleFX(false, "src/main/resources/particle/water.p", "src/main/resources/img/packable/main/particles/");
     }
 
-    public static ParticleFXComponent getExhaustParticle(float duration) {
-        return getParticleFX(duration, "src/main/resources/particle/exhaust.p", "src/main/resources/img/packable/main/particles/");
+    public static ParticleFXComponent getExhaustParticle() {
+        return getParticleFX(true, "src/main/resources/particle/exhaust.p", "src/main/resources/img/packable/main/particles/");
     }
 
-    public static ParticleFXComponent getParticleFX(float duration, String particleFile, String particleDir) {
-        return new ParticleFXComponent(duration, Gdx.files.internal(particleFile), Gdx.files.internal(particleDir));
+    public static ParticleFXComponent getParticleFX(boolean continuous, String particleFile, String particleDir) {
+        return new ParticleFXComponent(continuous, Gdx.files.internal(particleFile), Gdx.files.internal(particleDir));
     }
 }

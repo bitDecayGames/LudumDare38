@@ -3,13 +3,12 @@ package com.bitdecay.game.ui;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.bitdecay.game.gameobject.MyGameObjects;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
 
 public class HUD extends Group {
-    Phone phone;
-    Body body;
+    public Phone phone;
+    public Body body;
 
     public HUD(Vector2 screenSize) {
         super();
@@ -25,9 +24,6 @@ public class HUD extends Group {
         this.addActor(body);
 
         setBounds(0, -screenSize.y, screenSize.x, screenSize.y);
-
-        body.setPoopLevelMax(100);
-        body.setFoodLevelMax(100);
     }
 
     public void toggle() {
@@ -41,26 +37,5 @@ public class HUD extends Group {
         action.setDuration(0.25f);
 
         this.addAction(action);
-    }
-
-    float foodLevel = 100;
-    float poopLevel = 0;
-
-    public void update(MyGameObjects gobs) {
-        // TODO This is where we can update the various stats on the HUD
-        // For now stub some stuff in.
-
-        foodLevel--;
-        if (foodLevel < 0) {
-            foodLevel = 100;
-        }
-
-        poopLevel++;
-        if (poopLevel > 100) {
-            poopLevel = 0;
-        }
-
-        body.setFoodLevel(foodLevel);
-        body.setPoopLevel(poopLevel);
     }
 }

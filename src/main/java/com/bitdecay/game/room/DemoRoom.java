@@ -57,7 +57,10 @@ public class DemoRoom extends AbstractRoom {
         new HealthSystem(this, contactDistrib);
         new ZoneUpdateSystem(this, contactDistrib);
 
+        // various gauge things
         new FuelGaugeSystem(this, uiElements);
+        new HungerGaugeSystem(this, uiElements);
+        new PoopGaugeSystem(this, uiElements);
 
         createCar(0, 0, false, false);
 

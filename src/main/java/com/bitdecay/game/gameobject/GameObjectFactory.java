@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.bitdecay.game.component.*;
 import com.bitdecay.game.component.money.MoneyComponent;
+import com.bitdecay.game.component.money.MoneyDiffComponent;
 import com.bitdecay.game.system.PhysicsSystem;
 import com.bitdecay.game.util.ZoneType;
 
@@ -344,6 +345,7 @@ public class GameObjectFactory {
             car.addComponent(new HungerComponent(100, 10));
             car.addComponent(new PoopooComponent(100, 5));
             car.addComponent(new MoneyComponent(0));
+            car.addComponent(new MoneyDiffComponent(100));
         }
 
         //waypoint section

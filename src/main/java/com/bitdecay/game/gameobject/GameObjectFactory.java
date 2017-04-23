@@ -246,7 +246,7 @@ public class GameObjectFactory {
     }
 
     private static void addZoneComponent(MyGameObject zone, Consumer<MyGameObject> modifyGameObj) {
-        ZoneComponent zComp = new ZoneComponent((gameObj) -> {
+        ZoneComponent zComp = new ZoneComponent(10.0f, (gameObj) -> {
             zone.getComponent(ZoneComponent.class).get().active = false;
             zone.addComponent(new TimerComponent(5, () -> {
                 zone.getComponent(ZoneComponent.class).get().active = true;
@@ -295,9 +295,7 @@ public class GameObjectFactory {
         switch (zoneType) {
             case BATHROOM:
                 addZoneComponent(zone, (gameObj) -> {
-//                    if (MoneyComponent.payForService(gameObj, 10.0f)) {
-                        gameObj.forEachComponentDo(PoopooComponent.class, poo -> poo.currentPoopoo = 0);
-//                    }
+                    gameObj.forEachComponentDo(PoopooComponent.class, poo -> poo.currentPoopoo = 0);
                 });
                 break;
             case FOOD:

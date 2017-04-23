@@ -342,6 +342,8 @@ public class GameObjectFactory {
                 break;
             case REPAIR:
             case OBJECTIVE:
+            case PICKUP:
+                break;
             default:
         }
 

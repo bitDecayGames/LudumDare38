@@ -12,6 +12,9 @@ import com.bitdecay.game.room.DemoRoom;
 import com.bitdecay.game.trait.ICanSetRoom;
 import com.bitdecay.game.trait.ICanSetScreen;
 import com.bitdecay.game.trait.IHasScreenSize;
+import com.bitdecay.game.ui.Body;
+import com.bitdecay.game.ui.Fuel;
+import com.bitdecay.game.ui.Phone;
 import com.bitdecay.game.ui.HUD;
 import com.bitdecay.game.util.SoundLibrary;
 
@@ -40,6 +43,9 @@ public class GameScreen implements Screen, IHasScreenSize, ICanSetScreen, ICanSe
     private void createStage() {
         this.stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
+
+        Fuel fuel = new Fuel(screenSize());
+        stage.addActor(fuel);
 
         hud = new HUD(screenSize());
         stage.addActor(hud);

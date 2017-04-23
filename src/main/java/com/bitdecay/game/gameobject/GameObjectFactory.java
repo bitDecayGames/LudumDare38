@@ -7,7 +7,6 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.bitdecay.game.component.*;
 import com.bitdecay.game.component.money.MoneyComponent;
-import com.bitdecay.game.component.money.MoneyDiffComponent;
 import com.bitdecay.game.system.PhysicsSystem;
 import com.bitdecay.game.util.CarType;
 import com.bitdecay.game.util.ZoneType;
@@ -16,12 +15,12 @@ import java.util.function.Consumer;
 
 public class GameObjectFactory {
 
-    public static MyGameObject makeTrashBin(PhysicsSystem phys,float x, float y){
+    public static MyGameObject makeTrashBin(PhysicsSystem phys, float x, float y) {
 
-        MyGameObject trashBin  = new MyGameObject();
+        MyGameObject trashBin = new MyGameObject();
 
         BodyDef trashBinBodyDef = new BodyDef();
-        trashBinBodyDef.position.set(x,y);
+        trashBinBodyDef.position.set(x, y);
         trashBinBodyDef.type = BodyDef.BodyType.DynamicBody;
         trashBinBodyDef.linearDamping = 2;
         trashBinBodyDef.angularDamping = 1;
@@ -30,68 +29,68 @@ public class GameObjectFactory {
         CircleShape trashBinShape = new CircleShape();
         trashBinShape.setRadius(.75f);
 
-        Fixture trashBinFix = trashBinBody.createFixture(trashBinShape,.25f);
+        Fixture trashBinFix = trashBinBody.createFixture(trashBinShape, .25f);
 
         PhysicsComponent physComp = new PhysicsComponent(trashBinBody);
         trashBin.addComponent(physComp);
-        trashBin.addComponent(new PositionComponent(x,y));
-        trashBin.addComponent(new OriginComponent(.5f,.5f));
+        trashBin.addComponent(new PositionComponent(x, y));
+        trashBin.addComponent(new OriginComponent(.5f, .5f));
         trashBin.addComponent(new RotationComponent(0));
         trashBin.addComponent(new StaticImageComponent("collidables/trash_lid"));
-        trashBin.addComponent(new SizeComponent(1.5f,1.5f));
-        trashBin.addComponent(new BreakableObjectComponent("collidables/trash_flying", 3, 1.5f,1.5f, ParticleFactory.ParticleChoice.TRASH));
+        trashBin.addComponent(new SizeComponent(1.5f, 1.5f));
+        trashBin.addComponent(new BreakableObjectComponent("collidables/trash_flying", 3, 1.5f, 1.5f, ParticleFactory.ParticleChoice.TRASH));
 
         return trashBin;
     }
 
-    public static MyGameObject makeDumpster(PhysicsSystem phys,float x, float y){
-        MyGameObject dumpster  = new MyGameObject();
+    public static MyGameObject makeDumpster(PhysicsSystem phys, float x, float y) {
+        MyGameObject dumpster = new MyGameObject();
 
         BodyDef dumpsterBodyDef = new BodyDef();
-        dumpsterBodyDef.position.set(x,y);
+        dumpsterBodyDef.position.set(x, y);
         dumpsterBodyDef.type = BodyDef.BodyType.DynamicBody;
         dumpsterBodyDef.linearDamping = 5;
         dumpsterBodyDef.angularDamping = 2.5f;
         Body dumpsterBody = phys.world.createBody(dumpsterBodyDef);
 
         PolygonShape dumpsterShape = new PolygonShape();
-        dumpsterShape.setAsBox(1.65f,1.2f);
+        dumpsterShape.setAsBox(1.65f, 1.2f);
 
-        Fixture dumpsterFix = dumpsterBody.createFixture(dumpsterShape,3);
+        Fixture dumpsterFix = dumpsterBody.createFixture(dumpsterShape, 3);
 
         PhysicsComponent physComp = new PhysicsComponent(dumpsterBody);
         dumpster.addComponent(physComp);
-        dumpster.addComponent(new PositionComponent(x,y));
-        dumpster.addComponent(new OriginComponent(.5f,.5f));
+        dumpster.addComponent(new PositionComponent(x, y));
+        dumpster.addComponent(new OriginComponent(.5f, .5f));
         dumpster.addComponent(new RotationComponent(0));
         dumpster.addComponent(new StaticImageComponent("collidables/dumpster"));
-        dumpster.addComponent(new SizeComponent(3.3f,2.4f));
+        dumpster.addComponent(new SizeComponent(3.3f, 2.4f));
 
         return dumpster;
     }
 
-    public static MyGameObject makeCart(PhysicsSystem phys,float x, float y){
-        MyGameObject cart  = new MyGameObject();
+    public static MyGameObject makeCart(PhysicsSystem phys, float x, float y) {
+        MyGameObject cart = new MyGameObject();
 
         BodyDef cartBodyDef = new BodyDef();
-        cartBodyDef.position.set(x,y);
+        cartBodyDef.position.set(x, y);
         cartBodyDef.type = BodyDef.BodyType.DynamicBody;
         cartBodyDef.linearDamping = .75f;
         cartBodyDef.angularDamping = .75f;
         Body cartBody = phys.world.createBody(cartBodyDef);
 
         PolygonShape cartShape = new PolygonShape();
-        cartShape.setAsBox(.5f,.8f);
+        cartShape.setAsBox(.5f, .8f);
 
-        Fixture cartFix = cartBody.createFixture(cartShape,.5f);
+        Fixture cartFix = cartBody.createFixture(cartShape, .5f);
 
         PhysicsComponent physComp = new PhysicsComponent(cartBody);
         cart.addComponent(physComp);
-        cart.addComponent(new PositionComponent(x,y));
-        cart.addComponent(new OriginComponent(.5f,.5f));
+        cart.addComponent(new PositionComponent(x, y));
+        cart.addComponent(new OriginComponent(.5f, .5f));
         cart.addComponent(new RotationComponent(0));
         cart.addComponent(new StaticImageComponent("collidables/cart"));
-        cart.addComponent(new SizeComponent(1,1.6f));
+        cart.addComponent(new SizeComponent(1, 1.6f));
         TireFrictionComponent.TireFrictionData cartFriction = new TireFrictionComponent.TireFrictionData();
         cartFriction.rollingMaxForce = .1f;
         cartFriction.driftingMaxForce = .1f;
@@ -100,39 +99,39 @@ public class GameObjectFactory {
         return cart;
     }
 
-    public static MyGameObject makeToilet(PhysicsSystem phys,float x, float y){
-        MyGameObject toilet  = new MyGameObject();
+    public static MyGameObject makeToilet(PhysicsSystem phys, float x, float y) {
+        MyGameObject toilet = new MyGameObject();
 
         BodyDef toiletBodyDef = new BodyDef();
-        toiletBodyDef.position.set(x,y);
+        toiletBodyDef.position.set(x, y);
         toiletBodyDef.type = BodyDef.BodyType.DynamicBody;
         toiletBodyDef.linearDamping = 3;
         toiletBodyDef.angularDamping = 3;
         Body toiletBody = phys.world.createBody(toiletBodyDef);
 
         PolygonShape toiletShape = new PolygonShape();
-        toiletShape.setAsBox(.8f,.9f);
+        toiletShape.setAsBox(.8f, .9f);
 
-        Fixture toiletFix = toiletBody.createFixture(toiletShape,3);
+        Fixture toiletFix = toiletBody.createFixture(toiletShape, 3);
 
         PhysicsComponent physComp = new PhysicsComponent(toiletBody);
         toilet.addComponent(physComp);
-        toilet.addComponent(new PositionComponent(x,y));
-        toilet.addComponent(new OriginComponent(.5f,.5f));
+        toilet.addComponent(new PositionComponent(x, y));
+        toilet.addComponent(new OriginComponent(.5f, .5f));
         toilet.addComponent(new RotationComponent(0));
         toilet.addComponent(new StaticImageComponent("collidables/toilet"));
-        toilet.addComponent(new SizeComponent(1.9f,1.8f));
-        toilet.addComponent(new BreakableObjectComponent("collidables/toilet_flying", 1, 1.6f,2.9f, ParticleFactory.ParticleChoice.POOP));
+        toilet.addComponent(new SizeComponent(1.9f, 1.8f));
+        toilet.addComponent(new BreakableObjectComponent("collidables/toilet_flying", 1, 1.6f, 2.9f, ParticleFactory.ParticleChoice.POOP));
 
         return toilet;
     }
 
-    public static MyGameObject makeTrashBag(PhysicsSystem phys,float x, float y){
+    public static MyGameObject makeTrashBag(PhysicsSystem phys, float x, float y) {
 
-        MyGameObject trashBag  = new MyGameObject();
+        MyGameObject trashBag = new MyGameObject();
 
         BodyDef trashBagBodyDef = new BodyDef();
-        trashBagBodyDef.position.set(x,y);
+        trashBagBodyDef.position.set(x, y);
         trashBagBodyDef.type = BodyDef.BodyType.DynamicBody;
         trashBagBodyDef.linearDamping = 10;
         trashBagBodyDef.angularDamping = 1;
@@ -141,26 +140,26 @@ public class GameObjectFactory {
         CircleShape trashBagShape = new CircleShape();
         trashBagShape.setRadius(.6f);
 
-        Fixture trashBagFix = trashBagBody.createFixture(trashBagShape,.05f);
+        Fixture trashBagFix = trashBagBody.createFixture(trashBagShape, .05f);
 
         PhysicsComponent physComp = new PhysicsComponent(trashBagBody);
         trashBag.addComponent(physComp);
-        trashBag.addComponent(new PositionComponent(x,y));
-        trashBag.addComponent(new OriginComponent(.5f,.5f));
+        trashBag.addComponent(new PositionComponent(x, y));
+        trashBag.addComponent(new OriginComponent(.5f, .5f));
         trashBag.addComponent(new RotationComponent(0));
         trashBag.addComponent(new StaticImageComponent("collidables/trashbag"));
-        trashBag.addComponent(new SizeComponent(1.2f,1.2f));
-        trashBag.addComponent(new BreakableObjectComponent("collidables/trashbag_flying", 1, 1.2f,1.8f, ParticleFactory.ParticleChoice.TRASH));
+        trashBag.addComponent(new SizeComponent(1.2f, 1.2f));
+        trashBag.addComponent(new BreakableObjectComponent("collidables/trashbag_flying", 1, 1.2f, 1.8f, ParticleFactory.ParticleChoice.TRASH));
 
 
         return trashBag;
     }
 
-    public static MyGameObject makeFirehydrant(PhysicsSystem phys,float x, float y){
-        MyGameObject hydrant  = new MyGameObject();
+    public static MyGameObject makeFirehydrant(PhysicsSystem phys, float x, float y) {
+        MyGameObject hydrant = new MyGameObject();
 
         BodyDef hydrantBodyDef = new BodyDef();
-        hydrantBodyDef.position.set(x,y);
+        hydrantBodyDef.position.set(x, y);
         hydrantBodyDef.type = BodyDef.BodyType.DynamicBody;
         hydrantBodyDef.linearDamping = .5f;
         hydrantBodyDef.angularDamping = 3;
@@ -169,66 +168,67 @@ public class GameObjectFactory {
         CircleShape hydrantShape = new CircleShape();
         hydrantShape.setRadius(.3f);
 
-        Fixture hydrantFix = hydrantBody.createFixture(hydrantShape,35f);
+        Fixture hydrantFix = hydrantBody.createFixture(hydrantShape, 35f);
 
         PhysicsComponent physComp = new PhysicsComponent(hydrantBody);
         hydrant.addComponent(physComp);
-        hydrant.addComponent(new PositionComponent(x,y));
-        hydrant.addComponent(new OriginComponent(.5f,.5f));
+        hydrant.addComponent(new PositionComponent(x, y));
+        hydrant.addComponent(new OriginComponent(.5f, .5f));
         hydrant.addComponent(new RotationComponent(0));
         hydrant.addComponent(new StaticImageComponent("collidables/hydrant"));
         hydrant.addComponent(new DamageComponent(2));
-        hydrant.addComponent(new SizeComponent(.6f,.6f));
+        hydrant.addComponent(new SizeComponent(.6f, .6f));
         hydrant.addComponent(new BreakableObjectComponent("collidables/hydrant_flying", 0, .6f, 0.9f, ParticleFactory.ParticleChoice.WATER));
 
         return hydrant;
     }
-    public static MyGameObject makeMailbox(PhysicsSystem phys,float x, float y){
-        MyGameObject mailbox  = new MyGameObject();
+
+    public static MyGameObject makeMailbox(PhysicsSystem phys, float x, float y) {
+        MyGameObject mailbox = new MyGameObject();
 
         BodyDef mailboxBodyDef = new BodyDef();
-        mailboxBodyDef.position.set(x,y);
+        mailboxBodyDef.position.set(x, y);
         mailboxBodyDef.type = BodyDef.BodyType.DynamicBody;
         mailboxBodyDef.linearDamping = 3f;
         mailboxBodyDef.angularDamping = 3;
         Body mailboxBody = phys.world.createBody(mailboxBodyDef);
 
         PolygonShape mailboxShape = new PolygonShape();
-        mailboxShape.setAsBox(.4f,.4f);
+        mailboxShape.setAsBox(.4f, .4f);
 
-        Fixture mailboxFix = mailboxBody.createFixture(mailboxShape,15);
+        Fixture mailboxFix = mailboxBody.createFixture(mailboxShape, 15);
 
         PhysicsComponent physComp = new PhysicsComponent(mailboxBody);
         mailbox.addComponent(physComp);
-        mailbox.addComponent(new PositionComponent(x,y));
-        mailbox.addComponent(new OriginComponent(.5f,.5f));
+        mailbox.addComponent(new PositionComponent(x, y));
+        mailbox.addComponent(new OriginComponent(.5f, .5f));
         mailbox.addComponent(new RotationComponent(0));
         mailbox.addComponent(new StaticImageComponent("collidables/mailbox"));
-        mailbox.addComponent(new SizeComponent(.8f,.8f));
-        mailbox.addComponent(new BreakableObjectComponent("collidables/mailbox_flying", 1, .85f,1.2f, ParticleFactory.ParticleChoice.MAIL));
+        mailbox.addComponent(new SizeComponent(.8f, .8f));
+        mailbox.addComponent(new BreakableObjectComponent("collidables/mailbox_flying", 1, .85f, 1.2f, ParticleFactory.ParticleChoice.MAIL));
 
         return mailbox;
     }
 
-    public static MyGameObject makePerson(PhysicsSystem phys, float x, float y){
-        MyGameObject obj  = new MyGameObject();
+    public static MyGameObject makePerson(PhysicsSystem phys, float x, float y) {
+        MyGameObject obj = new MyGameObject();
 
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(x,y);
+        bodyDef.position.set(x, y);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.linearDamping = .5f;
         bodyDef.angularDamping = 3;
         Body body = phys.world.createBody(bodyDef);
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(.5f,.5f);
+        shape.setAsBox(.5f, .5f);
 
-        body.createFixture(shape,35f);
+        body.createFixture(shape, 35f);
 
         PhysicsComponent physComp = new PhysicsComponent(body);
         obj.addComponent(physComp);
-        obj.addComponent(new PositionComponent(x,y));
-        obj.addComponent(new OriginComponent(.5f,.5f));
+        obj.addComponent(new PositionComponent(x, y));
+        obj.addComponent(new OriginComponent(.5f, .5f));
         obj.addComponent(new RotationComponent(0));
         AnimatedImageComponent slow = new AnimatedImageComponent("person/walk", 0f);
         obj.addComponent(slow);
@@ -240,13 +240,13 @@ public class GameObjectFactory {
         obj.addComponent(new DriveTireComponent(25, 5));
         obj.addComponent(new TorqueableComponent(30));
         obj.addComponent(new FuelComponent(1, 0));
-        obj.addComponent(new SizeComponent(1f,1f));
+        obj.addComponent(new SizeComponent(1f, 1f));
         obj.addComponent(new BreakableObjectComponent("person/flyForward", 2, 1f, 1.5f, ParticleFactory.ParticleChoice.BLOOD));
 
         return obj;
     }
 
-    public static MyGameObject makeGrassField(PhysicsSystem phys,float x, float y) {
+    public static MyGameObject makeGrassField(PhysicsSystem phys, float x, float y) {
         MyGameObject field = new MyGameObject();
 
         BodyDef fieldBodyDef = new BodyDef();
@@ -292,7 +292,7 @@ public class GameObjectFactory {
         zone.addComponent(zComp);
     }
 
-    public static void createZone(MyGameObjects gobs, PhysicsSystem phys, float x, float y, float width, float length, float rotation, ZoneType zoneType){
+    public static void createZone(MyGameObjects gobs, PhysicsSystem phys, float x, float y, float width, float length, float rotation, ZoneType zoneType) {
         MyGameObject zone = new MyGameObject();
 
         BodyDef zoneBodyDef = new BodyDef();
@@ -370,6 +370,17 @@ public class GameObjectFactory {
 
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(halfWidth, halfHeight);
+        shape.set(new float[]{
+                -1, -2,
+                -1, 1.8f,
+                -.7f, 1.9f,
+                -.2f, 2,
+                .2f, 2,
+                .7f, 1.9f,
+                1, 1.8f,
+                1, -2
+
+        });
 
         FixtureDef carFixtureDef = new FixtureDef();
         carFixtureDef.shape = shape;
@@ -458,7 +469,7 @@ public class GameObjectFactory {
         frontLeftTireJointDef.localAnchorA.set(-1f, 1.25f);
         RevoluteJoint frontLeftJoint = (RevoluteJoint) phys.world.createJoint(frontLeftTireJointDef);
 
-        gobs.add(makeTireObject(frontLeftTire, frontLeftJoint, frontTireData,  type, false, false));
+        gobs.add(makeTireObject(frontLeftTire, frontLeftJoint, frontTireData, type, false, false));
 
         // /////////////////////////////////
         // create front right tire
@@ -565,7 +576,7 @@ public class GameObjectFactory {
         tire.addComponent(new AnimatedImageComponent(path, 0.0f));
         tire.addComponent(new VelocityBasedAnimationSpeedComponent(1f));
         tire.addComponent(new DrawOrderComponent(90));
-        tire.addComponent(new SizeComponent(.5f, .8f));
+        tire.addComponent(new SizeComponent(.25f, 2/3.0f));
         tire.addComponent(new RotationComponent(0));
         tire.addComponent(new OriginComponent(.5f, .5f));
         return tire;

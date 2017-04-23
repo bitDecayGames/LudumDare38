@@ -56,11 +56,13 @@ public class HealthSystem extends AbstractSystem implements ContactListener {
 
     public void applyDamage(MyGameObject attacker, MyGameObject attacked){
         attacker.forEach(DamageComponent.class, dmg -> attacked.forEach(HealthComponent.class, health ->{
-            log.info("Health " + health.currentHealth + "/" + health.maxHealth + " - " + dmg.damage);
+            log.info("Health " + health.currentHealth + "/" + health.maxHealth + " - " + dmg.damage + " == " + (health.currentHealth - dmg.damage));
             health.set(health.currentHealth - dmg.damage);
 
             attacked.forEachComponentDo(DrawableComponent.class, drawable -> {
-                float grey = (float) health.currentHealth / ((float) health.maxHealth * 0.8f);
+                float min = 0.3f;
+                float grey = (((float) health.currentHealth / (float) health.maxHealth) * (1 - min)) + min;
+                log.info("Grey: " + grey);
                 drawable.color.set(grey, grey, grey, 1);
             });
         }));

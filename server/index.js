@@ -16,7 +16,8 @@ const connectDb = (url) => {
 }
 
 const postScore = (req, res) => {
-    const { name, score } = req.body;
+    let { name, score } = req.body;
+    score = parseInt(score);
 
     connectDb(mongoUrl)
         .then((db) => {
@@ -40,7 +41,8 @@ const postScore = (req, res) => {
 }
 
 const getScores = (req, res) => {
-    const numScoresToReturn = req.query.num || 10;
+    let num = req.query.num || 10;
+    num = parseInt(num);
 
     connectDb(mongoUrl)
         .then((db) => {
@@ -48,7 +50,9 @@ const getScores = (req, res) => {
 
             return scores.find({}, {
                     name: 1, score: 1, time: 1, _id: 0 }
-                ).toArray()
+                ).sort({ score: -1 })
+                .limit(num)
+                .toArray()
                     .then((results) => {
                         db.close();
 

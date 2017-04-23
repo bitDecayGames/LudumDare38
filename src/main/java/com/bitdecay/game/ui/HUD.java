@@ -36,6 +36,6 @@ public class HUD extends Group {
         }
         action.setDuration(0.25f);
 
-        this.addAction(action);
+        addAction(action);
     }
 }

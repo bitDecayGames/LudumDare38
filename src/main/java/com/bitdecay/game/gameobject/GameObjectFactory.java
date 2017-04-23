@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.bitdecay.game.component.*;
 import com.bitdecay.game.component.money.MoneyComponent;
+import com.bitdecay.game.component.money.MoneyDiffComponent;
 import com.bitdecay.game.system.PhysicsSystem;
 import com.bitdecay.game.util.ZoneType;
 
@@ -202,28 +203,64 @@ public class GameObjectFactory {
         return mailbox;
     }
 
-    public static MyGameObject makeGrassField(PhysicsSystem phys,float x, float y){
-        MyGameObject field  = new MyGameObject();
+    public static MyGameObject makePerson(PhysicsSystem phys, float x, float y){
+        MyGameObject obj  = new MyGameObject();
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.position.set(x,y);
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.linearDamping = .5f;
+        bodyDef.angularDamping = 3;
+        Body body = phys.world.createBody(bodyDef);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(.5f,.5f);
+
+        body.createFixture(shape,35f);
+
+        PhysicsComponent physComp = new PhysicsComponent(body);
+        obj.addComponent(physComp);
+        obj.addComponent(new PositionComponent(x,y));
+        obj.addComponent(new OriginComponent(.5f,.5f));
+        obj.addComponent(new RotationComponent(0));
+        AnimatedImageComponent slow = new AnimatedImageComponent("person/walk", 0f);
+        obj.addComponent(slow);
+        AnimatedImageComponent fast = new AnimatedImageComponent("person/run", 0f);
+        fast.scaleY = 1.5f;
+        obj.addComponent(fast);
+        obj.addComponent(new MultiTieredVelocityAnimationComponent(3, 10, slow, fast));
+        obj.addComponent(new VelocityBasedAnimationSpeedComponent(5f));
+        obj.addComponent(new DriveTireComponent(25, 5));
+        obj.addComponent(new TorqueableComponent(30));
+        obj.addComponent(new FuelComponent(1, 0));
+        obj.addComponent(new SizeComponent(1f,1f));
+        obj.addComponent(new BreakableObjectComponent("person/flyForward", 2, .6f, 0.9f));
+
+        return obj;
+    }
+
+    public static MyGameObject makeGrassField(PhysicsSystem phys,float x, float y) {
+        MyGameObject field = new MyGameObject();
 
         BodyDef fieldBodyDef = new BodyDef();
-        fieldBodyDef.position.set(x,y);
+        fieldBodyDef.position.set(x, y);
         fieldBodyDef.type = BodyDef.BodyType.StaticBody;
         Body fieldBody = phys.world.createBody(fieldBodyDef);
 
         PolygonShape fieldShape = new PolygonShape();
-        fieldShape.setAsBox(12.5f,10);
+        fieldShape.setAsBox(12.5f, 10);
 
-        Fixture fieldFix = fieldBody.createFixture(fieldShape,0);
+        Fixture fieldFix = fieldBody.createFixture(fieldShape, 0);
         fieldFix.setSensor(true);
 
         PhysicsComponent physComp = new PhysicsComponent(fieldBody);
         physComp.body.setUserData(field);
         field.addComponent(physComp);
-        field.addComponent(new PositionComponent(x,y));
-        field.addComponent(new OriginComponent(.5f,.5f));
+        field.addComponent(new PositionComponent(x, y));
+        field.addComponent(new OriginComponent(.5f, .5f));
         field.addComponent(new SteeringModifierComponent());
 //        field.addComponent(new StaticImageComponent("collidables/dumpster"));
-        field.addComponent(new SizeComponent(25,10));
+        field.addComponent(new SizeComponent(25, 10));
 
         return field;
     }
@@ -370,6 +407,7 @@ public class GameObjectFactory {
             car.addComponent(new HungerComponent(100, 10));
             car.addComponent(new PoopooComponent(100, 5));
             car.addComponent(new MoneyComponent(0));
+            car.addComponent(new MoneyDiffComponent(100));
         }
 
         //waypoint section

@@ -2,11 +2,13 @@ package com.bitdecay.game.room;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.bitdecay.game.component.money.MoneyComponent;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
@@ -25,6 +27,8 @@ public class DemoRoom extends AbstractRoom {
 
     private Stage stage;
     private UIElements uiElements;
+    TiledMap map;
+    OrthogonalTiledMapRenderer renderer;
 
     public DemoRoom(GameScreen gameScreen) {
         super(gameScreen);
@@ -53,13 +57,14 @@ public class DemoRoom extends AbstractRoom {
         new HealthSystem(this, contactDistrib);
         new ZoneUpdateSystem(this, contactDistrib);
         new SteeringModifierSystem(this, contactDistrib);
+        new TorqueableSystem(this);
 
         // various gauge things
         new FuelGaugeSystem(this, uiElements);
         new HungerGaugeSystem(this, uiElements);
         new PoopGaugeSystem(this, uiElements);
 
-        new MoneySystem(this, uiElements);
+        new MoneySystem(this, uiElements, stage);
 
         new BreakableObjectSystem(this);
         GameObjectFactory.createCar(gobs, phys, 0, 0, false, false);
@@ -73,9 +78,14 @@ public class DemoRoom extends AbstractRoom {
         gobs.add(GameObjectFactory.makeMailbox(phys,0,15));
         gobs.add(GameObjectFactory.makeGrassField(phys,10,20));
 
+        gobs.add(GameObjectFactory.makePerson(phys,5,5));
+
         GameObjectFactory.createZone(gobs, phys, 10, 0, 6, 10, 0, ZoneType.BATHROOM);
         GameObjectFactory.createZone(gobs, phys, 20, 16, 6, 10, 0, ZoneType.FUEL);
         GameObjectFactory.createZone(gobs, phys, -10, 0, 6, 10, 0, ZoneType.FOOD);
+
+        map = new TmxMapLoader().load("F:\\Programming\\IntelliJWorkspace\\LudumDare38\\src\\main\\resources\\img\\tiled\\town.tmx");
+        renderer = new OrthogonalTiledMapRenderer(map, 1/40f);
 
         // this is required to be at the end here so that the systems have the latest gobs
         systemManager.cleanup();
@@ -83,8 +93,9 @@ public class DemoRoom extends AbstractRoom {
 
     @Override
     public void render(float delta) {
+        renderer.setView(camera);
+        renderer.render();
         super.render(delta);
-
         stage.act(delta);
         stage.draw();
     }

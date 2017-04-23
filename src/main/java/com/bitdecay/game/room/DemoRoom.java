@@ -19,6 +19,7 @@ import com.bitdecay.game.ui.Fuel;
 import com.bitdecay.game.ui.HUD;
 import com.bitdecay.game.ui.UIElements;
 import com.bitdecay.game.util.ContactDistributer;
+import com.bitdecay.game.util.ZoneType;
 
 /**
  * The demo room is just a super simple example of how to add systems and game objects to a room.
@@ -67,8 +68,9 @@ public class DemoRoom extends AbstractRoom {
         for (int x = -2; x < 2; x += 1)
             for (int y = -2; y < 2; y += 1) createCar(x * 30, y * 30, true, x % 2 == 0 && y % 2 == 0);
 
-        createZone(10, 0, 6, 10, 0, true);
-        createZone(20, 16, 6, 10, 0, false);
+        createZone(10, 0, 6, 10, 0, ZoneType.BATHROOM);
+        createZone(20, 16, 6, 10, 0, ZoneType.FUEL);
+        createZone(-10, 0, 6, 10, 0, ZoneType.FOOD);
 
         // this is required to be at the end here so that the systems have the latest gobs
         systemManager.cleanup();
@@ -310,11 +312,29 @@ public class DemoRoom extends AbstractRoom {
         return tire;
     }
 
-    private void createZone(float x, float y, float width, float length, float rotation, boolean removable){
+    private void createZone(float x, float y, float width, float length, float rotation, ZoneType zoneType){
+        MyGameObject zone = new MyGameObject();
+
         BodyDef zoneBodyDef = new BodyDef();
         zoneBodyDef.type = BodyDef.BodyType.StaticBody;
         zoneBodyDef.position.set(x, y);
         Body zoneBody = phys.world.createBody(zoneBodyDef);
+
+        PositionComponent zonePos = new PositionComponent(x, y);
+        zone.addComponent(zonePos);
+
+        OriginComponent zoneOrigin = new OriginComponent(.5f, .5f);
+        zone.addComponent(zoneOrigin);
+
+        StaticImageComponent zoneImage = new StaticImageComponent("target");
+        zone.addComponent(zoneImage);
+
+        SizeComponent zoneSize = new SizeComponent(width, length);
+        zone.addComponent(zoneSize);
+
+        PhysicsComponent zonePhys = new PhysicsComponent(zoneBody);
+        zonePhys.body.setUserData(zone);
+        zone.addComponent(zonePhys);
 
         PolygonShape zoneShape = new PolygonShape();
         zoneShape.setAsBox(width / 2, length / 2);
@@ -322,33 +342,80 @@ public class DemoRoom extends AbstractRoom {
         Fixture zoneFix = zoneBody.createFixture(zoneShape, 0);
         zoneFix.setSensor(true);
 
-        MyGameObject zone = new MyGameObject();
-        PhysicsComponent zonePhys = new PhysicsComponent(zoneBody);
-        zone.addComponent(zonePhys);
-        zonePhys.body.setUserData(zone);
-
-        if(removable) {
-            ZoneComponent zComp = new ZoneComponent(() -> {
-                System.out.println("I talk once then I go way!!!!");
-                phys.world.destroyBody(zone.getComponent(PhysicsComponent.class).get().body);
-                zone.addComponent(new RemoveNowComponent());
-            });
-            zComp.active = true;
-            zComp.canDeactivate = true;
-            zone.addComponent(zComp);
-        } else {
-            ZoneComponent zComp = new ZoneComponent(() -> {
-                System.out.println("I TALK SOOO MUCH AND YOU CANT STOP ME!!");
-                zone.getComponent(ZoneComponent.class).get().active = false;
-                zone.addComponent(new TimerComponent(5, () -> {
-                        zone.getComponent(ZoneComponent.class).get().active = true;
-                        zone.removeComponent(TimerComponent.class);
-                }));
-            });
-            zComp.active = true;
-            zComp.canDeactivate = false;
-            zone.addComponent(zComp);
+        ZoneComponent zComp;
+        switch (zoneType) {
+            case BATHROOM:
+                zComp = new ZoneComponent(() -> {
+                    System.out.println("You take a poo here");
+                    zone.getComponent(ZoneComponent.class).get().active = false;
+                    zone.addComponent(new TimerComponent(5, () -> {
+                            zone.getComponent(ZoneComponent.class).get().active = true;
+                            zone.removeComponent(TimerComponent.class);
+                    }));
+                    gobs.forEach(gob -> gob.forEachComponentDo(PoopooComponent.class, poo ->
+                        poo.currentPoopoo = 0));
+                });
+                zComp.active = true;
+                zComp.canDeactivate = false;
+                zone.addComponent(zComp);
+                break;
+            case FOOD:
+                zComp = new ZoneComponent(() -> {
+                    System.out.println("You eat the food here");
+                    zone.getComponent(ZoneComponent.class).get().active = false;
+                    zone.addComponent(new TimerComponent(5, () -> {
+                            zone.getComponent(ZoneComponent.class).get().active = true;
+                            zone.removeComponent(TimerComponent.class);
+                    }));
+                    gobs.forEach(gob -> gob.forEachComponentDo(HungerComponent.class, hungry ->
+                        hungry.currentFullness = hungry.maxFullness));
+                });
+                zComp.active = true;
+                zComp.canDeactivate = false;
+                zone.addComponent(zComp);
+                break;
+            case FUEL:
+                zComp = new ZoneComponent(() -> {
+                    System.out.println("You fuel the car here");
+                    zone.getComponent(ZoneComponent.class).get().active = false;
+                    zone.addComponent(new TimerComponent(5, () -> {
+                            zone.getComponent(ZoneComponent.class).get().active = true;
+                            zone.removeComponent(TimerComponent.class);
+                    }));
+                    gobs.forEach(gob -> gob.forEachComponentDo(FuelComponent.class, fuel ->
+                        fuel.currentFuel = fuel.maxFuel));
+                });
+                zComp.active = true;
+                zComp.canDeactivate = false;
+                zone.addComponent(zComp);
+                break;
+            case REPAIR:
+            case OBJECTIVE:
+            default:
         }
+
+//        if(removable) {
+//            ZoneComponent zComp = new ZoneComponent(() -> {
+//                System.out.println("I talk once then I go way!!!!");
+//                phys.world.destroyBody(zone.getComponent(PhysicsComponent.class).get().body);
+//                zone.addComponent(new RemoveNowComponent());
+//            });
+//            zComp.active = true;
+//            zComp.canDeactivate = true;
+//            zone.addComponent(zComp);
+//        } else {
+//            ZoneComponent zComp = new ZoneComponent(() -> {
+//                System.out.println("I TALK SOOO MUCH AND YOU CANT STOP ME!!");
+//                zone.getComponent(ZoneComponent.class).get().active = false;
+//                zone.addComponent(new TimerComponent(5, () -> {
+//                        zone.getComponent(ZoneComponent.class).get().active = true;
+//                        zone.removeComponent(TimerComponent.class);
+//                }));
+//            });
+//            zComp.active = true;
+//            zComp.canDeactivate = false;
+//            zone.addComponent(zComp);
+//        }
 
         gobs.add(zone);
     }

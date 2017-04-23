@@ -17,6 +17,7 @@ import com.bitdecay.game.system.*;
 import com.bitdecay.game.ui.Fuel;
 import com.bitdecay.game.ui.HUD;
 import com.bitdecay.game.ui.UIElements;
+import com.bitdecay.game.util.CarType;
 import com.bitdecay.game.util.ContactDistributer;
 
 /**
@@ -74,7 +75,7 @@ public class DemoRoom extends AbstractRoom {
         new ObjectiveSystem(this, uiElements);
 
         new BreakableObjectSystem(this);
-        GameObjectFactory.createCar(gobs, phys, 0, 0, false, false);
+        GameObjectFactory.createCar(gobs, phys, 0, 0, CarType.PLAYER, false);
 
         gobs.add(GameObjectFactory.makeTrashBin(phys,-5,5));
         gobs.add(GameObjectFactory.makeDumpster(phys,-5,10));

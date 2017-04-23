@@ -294,7 +294,6 @@ public class GameObjectFactory {
 
         switch (zoneType) {
             case BATHROOM:
-                System.out.println("You take a poo here");
                 addZoneComponent(zone, (gameObj) -> {
 //                    if (MoneyComponent.payForService(gameObj, 10.0f)) {
                         gameObj.forEachComponentDo(PoopooComponent.class, poo -> poo.currentPoopoo = 0);
@@ -302,20 +301,14 @@ public class GameObjectFactory {
                 });
                 break;
             case FOOD:
-//                addZoneComponent(zone, gobs, new ZoneRunnable() {
-//                    public void run(MyGameObjects gobs) {
-//                        gobs.forEach(gob -> gob.forEachComponentDo(HungerComponent.class, hungry ->
-//                                hungry.currentFullness = hungry.maxFullness));
-//                    }
-//                });
+                addZoneComponent(zone, (gameObj) -> {
+                    gameObj.forEachComponentDo(HungerComponent.class, hungry -> hungry.currentFullness = hungry.maxFullness);
+                });
                 break;
             case FUEL:
-//                addZoneComponent(zone, gobs, new ZoneRunnable() {
-//                    public void run(MyGameObjects gobs) {
-//                        gobs.forEach(gob -> gob.forEachComponentDo(FuelComponent.class, fuel ->
-//                                fuel.currentFuel = fuel.maxFuel));
-//                    }
-//                });
+                addZoneComponent(zone, (gameObj) -> {
+                    gameObj.forEachComponentDo(FuelComponent.class, fuel -> fuel.currentFuel = fuel.maxFuel);
+                });
                 break;
             case REPAIR:
             case OBJECTIVE:

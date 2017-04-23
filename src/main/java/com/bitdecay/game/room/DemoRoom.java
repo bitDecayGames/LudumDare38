@@ -2,6 +2,9 @@ package com.bitdecay.game.room;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -24,6 +27,8 @@ public class DemoRoom extends AbstractRoom {
 
     private Stage stage;
     private UIElements uiElements;
+    TiledMap map;
+    OrthogonalTiledMapRenderer renderer;
 
     public DemoRoom(GameScreen gameScreen) {
         super(gameScreen);
@@ -77,14 +82,18 @@ public class DemoRoom extends AbstractRoom {
         GameObjectFactory.createZone(gobs, phys, 20, 16, 6, 10, 0, ZoneType.FUEL);
         GameObjectFactory.createZone(gobs, phys, -10, 0, 6, 10, 0, ZoneType.FOOD);
 
+        map = new TmxMapLoader().load("F:\\Programming\\IntelliJWorkspace\\LudumDare38\\src\\main\\resources\\img\\tiled\\town.tmx");
+        renderer = new OrthogonalTiledMapRenderer(map, 1/40f);
+
         // this is required to be at the end here so that the systems have the latest gobs
         systemManager.cleanup();
     }
 
     @Override
     public void render(float delta) {
+        renderer.setView(camera);
+        renderer.render();
         super.render(delta);
-
         stage.act(delta);
         stage.draw();
     }

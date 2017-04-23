@@ -64,9 +64,8 @@ public class DemoRoom extends AbstractRoom {
 //        for (int x = -2; x < 2; x += 1)
 //            for (int y = -2; y < 2; y += 1) createCar(x * 30, y * 30, true, x % 2 == 0 && y % 2 == 0);
 
-        createZone(10, 0, 6, 10, 0, () -> {
-
-        });
+        createZone(10, 0, 6, 10, 0, true);
+        createZone(20, 16, 6, 10, 0, false);
 
         // this is required to be at the end here so that the systems have the latest gobs
         systemManager.cleanup();
@@ -302,7 +301,7 @@ public class DemoRoom extends AbstractRoom {
         return tire;
     }
 
-    private void createZone(float x, float y, float width, float length, float rotation, Runnable func) {
+    private void createZone(float x, float y, float width, float length, float rotation, boolean removable){
         BodyDef zoneBodyDef = new BodyDef();
         zoneBodyDef.type = BodyDef.BodyType.StaticBody;
         zoneBodyDef.position.set(x, y);
@@ -319,9 +318,23 @@ public class DemoRoom extends AbstractRoom {
         zone.addComponent(zonePhys);
         zonePhys.body.setUserData(zone);
 
-        ZoneComponent zComp = new ZoneComponent(func);
-        zComp.active = true;
-        zone.addComponent(zComp);
+        if(removable) {
+            ZoneComponent zComp = new ZoneComponent(() -> {
+                System.out.println("I talk once then I go way!!!!");
+                phys.world.destroyBody(zone.getComponent(PhysicsComponent.class).get().body);
+                zone.addComponent(new RemoveNowComponent());
+            });
+            zComp.active = true;
+            zComp.canDeactivate = true;
+            zone.addComponent(zComp);
+        } else {
+            ZoneComponent zComp = new ZoneComponent(() -> {
+                System.out.println("I TALK SOOO MUCH AND YOU CANT STOP ME!!");
+            });
+            zComp.active = true;
+            zComp.canDeactivate = false;
+            zone.addComponent(zComp);
+        }
 
         gobs.add(zone);
     }

@@ -1,41 +1,38 @@
 package com.bitdecay.game.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
 
 public class HUD extends Group {
-    public Phone phone;
-    public Body body;
-
-    public HUD(Vector2 screenSize) {
-        super();
-
-        float screenEdgeOffset = screenSize.x * 0.025f;
-
-        phone = new Phone(screenSize);
-        phone.setPosition(screenEdgeOffset, 0);
-        this.addActor(phone);
-
-        body = new Body(screenSize);
-        body.setPosition(screenSize.x - body.getWidth() + screenEdgeOffset, 0);
-        this.addActor(body);
-
-        setBounds(0, -screenSize.y, screenSize.x, screenSize.y);
+    private static HUD I;
+    public static HUD instance(){
+        return I;
     }
 
-    public void toggle() {
-        MoveToAction action;
+    public Phone phone;
+    public Body body;
+    public Fuel fuel;
 
-        if (getY() + getHeight() > 0) {
-            action = moveTo(getX(), -getHeight());
-        } else {
-            action = moveTo(getX(),0);
-        }
-        action.setDuration(0.25f);
+    public HUD() {
+        super();
+        I = this;
+        Vector2 screenSize = new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        addAction(action);
+        phone = new Phone(screenSize);
+        phone.setPosition(screenSize.x * .675f, 0);
+        phone.moveDown();
+        addActor(phone);
+
+        body = new Body(screenSize);
+        body.setPosition(0, screenSize.y * 1.05f);
+        body.setScale(0.3f);
+        addActor(body);
+
+        fuel = new Fuel();
+        fuel.setPosition(screenSize.x * 0.1f, screenSize.y);
+        addActor(fuel);
+
+        setBounds(0, -screenSize.y, screenSize.x, screenSize.y);
     }
 }

@@ -1,15 +1,11 @@
 package com.bitdecay.game.system;
 
-import com.bitdecay.game.component.ObjectiveComponent;
 import com.bitdecay.game.component.PersonComponent;
-import com.bitdecay.game.component.PhysicsComponent;
 import com.bitdecay.game.component.ZoneComponent;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.gameobject.MyGameObject;
-import com.bitdecay.game.gameobject.MyGameObjects;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractUpdatableSystem;
-import com.bitdecay.game.ui.UIElements;
 import com.bitdecay.game.util.Tuple;
 import com.bitdecay.game.util.ZoneType;
 
@@ -23,9 +19,8 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
     private int currentObjectives = 0;
     private int peopleInTheWorld = 0;
 
-    public ObjectiveSystem(AbstractRoom room, UIElements uiElements) {
+    public ObjectiveSystem(AbstractRoom room) {
         super(room);
-        uiElements.hud.phone.objectives = objectives;
     }
 
     @Override

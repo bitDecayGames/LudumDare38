@@ -1,57 +1,44 @@
 package com.bitdecay.game.ui;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.bitdecay.game.MyGame;
-import com.bitdecay.game.gameobject.MyGameObject;
-import com.bitdecay.game.gameobject.MyGameObjects;
-import com.bitdecay.game.system.PhysicsSystem;
-import com.bitdecay.game.trait.IUpdate;
-import com.bitdecay.game.util.Tuple;
-import com.bitdecay.game.util.ZoneType;
+import org.apache.log4j.Logger;
 
-import java.util.Arrays;
-import java.util.List;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
 
-public class Phone extends Group implements IUpdate{
-    public List<Tuple<MyGameObject, MyGameObject>> objectives;
-    public MyGameObject selectedObjective;
-    public PhysicsSystem phys;
-    public MyGameObjects gobs;
-    boolean objectiveFinished = false;
+public class Phone extends Group {
+    private Logger log = Logger.getLogger(Phone.class);
 
-    Image phone;
-    Money money;
+    public TaskList tasks;
+    public WaypointList waypoints;
+    public Money money;
 
-    final WaypointButtonType[] waypointButtons = new WaypointButtonType[] {
-        new WaypointButtonType("fix", ZoneType.REPAIR),
-        new WaypointButtonType("gas", ZoneType.FUEL),
-        new WaypointButtonType("grub", ZoneType.FOOD),
-        new WaypointButtonType("pooper", ZoneType.BATHROOM),
-    };
+    private boolean isDown = true;
 
     public Phone(Vector2 screenSize) {
         super();
 
-        phone = new Image(getUIRegion("phone"));
-        Image phoneGlare = new Image(getUIRegion("phoneGlare"));
-
+        Image phone = new Image(MyGame.ATLAS.findRegion("uiStuff/phone"));
         addActor(phone);
 
-        makeWaypointButtons();
-//        makeObjectiveButtons();
+        tasks = new TaskList();
+        tasks.setPosition(Gdx.graphics.getWidth() * 0.17f, Gdx.graphics.getHeight() * 0.6f);
+        addActor(tasks);
 
-        money = new Money(screenSize);
+        money = new Money();
+        money.setPosition(Gdx.graphics.getWidth() * 0.17f, Gdx.graphics.getHeight() * 0.95f);
         addActor(money);
 
+        waypoints = new WaypointList();
+        waypoints.setPosition(Gdx.graphics.getWidth() * 0.17f, Gdx.graphics.getHeight() * 0.22f);
+        addActor(waypoints);
+
+        Image phoneGlare = new Image(MyGame.ATLAS.findRegion("uiStuff/phoneGlare"));
         phoneGlare.setTouchable(Touchable.childrenOnly);
         addActor(phoneGlare);
 
@@ -59,106 +46,22 @@ public class Phone extends Group implements IUpdate{
         scaleBy(scale);
     }
 
-    public void setMoney(float value) {
-        money.setMoney(value);
+    public void moveUp(){
+        MoveToAction move = moveTo(getX(), Gdx.graphics.getHeight());
+        move.setDuration(0.25f);
+        addAction(move);
+        isDown = false;
     }
 
-    public boolean getWaypointEnabled(ZoneType type) {
-        WaypointButtonType buttonType = Arrays.stream(waypointButtons)
-            .filter(bt -> bt.type == type)
-            .findFirst().orElse(null);
-
-        if (buttonType != null) {
-            if (buttonType.button != null) {
-                return buttonType.button.isChecked();
-            }
-        }
-
-        return true;
+    public void moveDown(){
+        MoveToAction move = moveTo(getX(), Gdx.graphics.getHeight() * 0.125f);
+        move.setDuration(0.25f);
+        addAction(move);
+        isDown = true;
     }
 
-    private void makeWaypointButtons() {
-        float y = phone.getHeight() * 0.15f;
-        float x = phone.getWidth() * 0.20f;
-        float initX = phone.getWidth() * 0.11f;
-
-        for (int i = 0; i < waypointButtons.length; i++) {
-            WaypointButtonType buttonType = waypointButtons[i];
-            ImageButton button = makeButton(buttonType.imageName);
-            button.setPosition(initX + x * i, y);
-            buttonType.button = button;
-
-            addActor(button);
-        }
-    }
-
-    private void makeObjectiveButtons(){
-        float y = phone.getHeight() * 0.7f;
-        float initY = phone.getWidth() * 0.11f;
-        float x = phone.getWidth() * 0.20f;
-
-//        for (int i = 0; i < objectives.size(); i++){
-//            ImageButton button = makeObjectiveButton(objectives.get(i).x);
-//            button.setPosition(x, initY + y);
-//            addActor(button);
-//        }
-    }
-
-    private ImageButton makeButton(String name) {
-        Drawable onImage = getDrawable(name + "On");
-        ImageButton imageButton = new ImageButton(getDrawable(name + "Off"), onImage, onImage);
-        imageButton.addListener(new InputListener() {
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                event.stop();
-                return true;
-            }
-        });
-        return imageButton;
-    }
-
-    private ImageButton makeObjectiveButton(MyGameObject hooman) {
-        ImageButton imageButton = new ImageButton(new TextureRegionDrawable(MyGame.ATLAS.findRegion("target")));
-        imageButton.addListener(new InputListener() {
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                event.stop();
-                return true;
-            }
-        });
-        return imageButton;
-    }
-
-    private TextureRegion getUIRegion(String name) {
-        return MyGame.ATLAS.findRegion("uiStuff/" + name);
-    }
-
-    private Drawable getDrawable(String name) {
-        return new TextureRegionDrawable(getUIRegion(name));
-    }
-
-    @Override
-    public void update(float delta) {
-        if(objectiveFinished){
-            makeWaypointButtons();
-            objectiveFinished = false;
-        }
-    }
-
-    private class WaypointButtonType {
-        public String imageName;
-        public ZoneType type;
-        public ImageButton button;
-
-        public WaypointButtonType(String imageName, ZoneType type) {
-            this.imageName = imageName;
-            this.type = type;
-        }
-    }
-
-    private class DisplayObjective {
-        public String imageName;
-
-        public DisplayObjective(String imageName){
-            this.imageName = imageName;
-        }
+    public void toggle() {
+        if (isDown) moveUp();
+        else moveDown();
     }
 }

@@ -68,7 +68,8 @@ public class DemoRoom extends AbstractRoom {
         gobs.add(GameObjectFactory.makeCart(phys,-5,15));
         gobs.add(GameObjectFactory.makeToilet(phys,-5,20));
         gobs.add(GameObjectFactory.makeTrashBag(phys,-5,25));
-        gobs.add(GameObjectFactory.makeFirehydrant(phys,0,15));
+        gobs.add(GameObjectFactory.makeFirehydrant(phys,-5,30));
+        gobs.add(GameObjectFactory.makeMailbox(phys,0,15));
 
         GameObjectFactory.createZone(gobs, phys, 10, 0, 6, 10, 0, ZoneType.BATHROOM);
         GameObjectFactory.createZone(gobs, phys, 20, 16, 6, 10, 0, ZoneType.FUEL);

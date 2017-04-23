@@ -16,6 +16,9 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.gameobject.StaticGameObjectFactory;
+import com.bitdecay.game.pathfinding.Node;
+import com.bitdecay.game.pathfinding.NodeComponent;
+import com.bitdecay.game.pathfinding.NodeSystem;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
 import com.bitdecay.game.ui.Fuel;
@@ -24,6 +27,10 @@ import com.bitdecay.game.ui.UIElements;
 import com.bitdecay.game.util.CarType;
 import com.bitdecay.game.util.ContactDistributer;
 import com.bitdecay.game.util.ZoneType;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * The demo room is just a super simple example of how to add systems and game objects to a room.
@@ -88,7 +95,7 @@ public class DemoRoom extends AbstractRoom {
 
         new BreakableObjectSystem(this);
         new RemovalSystem(this);
-
+        new NodeSystem(this);
         GameObjectFactory.createCar(gobs, phys, new Vector2(), CarType.PLAYER, false);
 
         MyGameObject jim = GameObjectFactory.makePerson(phys,5,5);
@@ -100,6 +107,24 @@ public class DemoRoom extends AbstractRoom {
         gobs.add(GameObjectFactory.createZone(-10, 0, 6, 10, 0, ZoneType.FOOD));
 
         loadTileMapAndStartingObjects();
+
+        Node a = new Node(new Vector2());
+        Node b = new Node(new Vector2(4, 4));
+        Node c = new Node(new Vector2(-3, 3));
+        c.connectTo(b);
+        Node d = new Node(new Vector2(6, 6));
+        Node e = new Node(new Vector2(-6, 6));
+        e.connectTo(d);
+
+        Node[] nodes = new Node[] {
+            a, b, c, d, e
+        };
+
+        Arrays.stream(nodes).forEach(node -> {
+            MyGameObject temp = new MyGameObject();
+            temp.addComponent(new NodeComponent(node));
+            gobs.add(temp);
+        });
 
         // this is required to be at the end here so that the systems have the latest gobs
         systemManager.cleanup();

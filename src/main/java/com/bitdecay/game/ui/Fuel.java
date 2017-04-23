@@ -1,6 +1,5 @@
 package com.bitdecay.game.ui;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -18,7 +17,7 @@ public class Fuel extends Group {
     private final TextureRegionDrawable normalGauge;
     private final TextureRegionDrawable lowGasGauge;
 
-    public Fuel(Vector2 size){
+    public Fuel(){
         super();
 
         normalGauge = new TextureRegionDrawable(MyGame.ATLAS.findRegion("uiStuff/gasGauge"));

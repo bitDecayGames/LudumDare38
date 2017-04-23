@@ -19,7 +19,9 @@
   },
   "homepage": "https://github.com/bitDecayGames/LudumDare38#readme",
   "dependencies": {
+    "body-parser": "^1.17.1",
     "express": "^4.15.2",
+    "express-winston": "^2.3.0",
     "jasmine": "^2.5.3",
     "mongodb": "^2.2.26",
     "nodemon": "^1.11.0",

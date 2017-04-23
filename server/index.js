@@ -1,5 +1,7 @@
 const express = require('express');
 const logger = require('winston');
+const expressWinston = require('express-winston');
+const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient
 
 const port = process.env.PORT || 8080;
@@ -9,16 +11,8 @@ const mongoUrl = process.env.MONGO_URL || `mongodb://localhost:27017/${mongoDB}`
 const scoreUrl = '/score';
 
 const connectDb = (url) => {
-    logger.info(`Connecting to mongo: ${url} ...`);
-    return MongoClient.connect(mongoUrl)
-        .then((db) => {
-            logger.info(`Connected to mongo db ${mongoDB}`);
-            return db;
-        })
-        .catch((err) => {
-            logger.error(`Error connecting to mongo`, err);
-            throw err;
-        });
+    return MongoClient.connect(url)
+        .then((db) => db)
 }
 
 const postScore = (req, res) => {
@@ -26,7 +20,18 @@ const postScore = (req, res) => {
 
     connectDb(mongoUrl)
         .then((db) => {
+            const scores = db.collection('scores');
+            const newScore = {
+                name,
+                score,
+                time: Date.now()
+            };
 
+            return scores.insert(newScore)
+                .then((result) => {
+                    db.close();
+                    res.status(200).end();
+                });
         })
         .catch((err) => {
             logger.error(err);
@@ -42,8 +47,27 @@ const getScores = (req, res) => {
 
 const app = express();
 
+app.use(expressWinston.logger({
+    transports: [
+        new logger.transports.Console({
+            json: true,
+            colorize: true
+        })
+    ]
+}));
+app.use(bodyParser.json());
+
 app.get(scoreUrl, getScores);
 app.post(scoreUrl, postScore);
+
+app.use(expressWinston.errorLogger({
+    transports: [
+        new logger.transports.Console({
+            json: true,
+            colorize: true
+        })
+    ]
+}));
 
 app.listen(port, () => {
     logger.info(`Listening on ${port}`);

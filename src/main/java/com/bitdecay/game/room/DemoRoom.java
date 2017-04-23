@@ -87,6 +87,7 @@ public class DemoRoom extends AbstractRoom {
         new RemovalSystem(this);
 
         GameObjectFactory.createCar(gobs, phys, new Vector2(), CarType.PLAYER, false);
+        GameObjectFactory.createCarCass(gobs, phys.world,new Vector2(5,20),0);
 
         MyGameObject jim = GameObjectFactory.makePerson(phys,5,5);
         gobs.add(jim);

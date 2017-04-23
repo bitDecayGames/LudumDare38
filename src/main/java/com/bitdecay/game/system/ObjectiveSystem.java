@@ -14,7 +14,8 @@ import java.util.stream.Collectors;
 public class ObjectiveSystem extends AbstractUpdatableSystem{
     List<Tuple<MyGameObject, MyGameObject>> objectives = new ArrayList<>();
 
-    final private int MAXOBJECTIVES = 3;
+//    final private int MAXOBJECTIVES = 3;
+    final private int MAXOBJECTIVES = 1;
     private int currentObjectives = 0;
 
     public ObjectiveSystem(AbstractRoom room, UIElements uiElements) {

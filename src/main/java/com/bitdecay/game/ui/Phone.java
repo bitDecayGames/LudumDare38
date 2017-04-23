@@ -38,6 +38,7 @@ public class Phone extends Group implements IUpdate{
         new WaypointButtonType("gas", ZoneType.FUEL),
         new WaypointButtonType("grub", ZoneType.FOOD),
         new WaypointButtonType("pooper", ZoneType.BATHROOM),
+        new WaypointButtonType("fix", ZoneType.OBJECTIVE)
     };
 
     public Phone(Vector2 screenSize) {
@@ -49,7 +50,7 @@ public class Phone extends Group implements IUpdate{
         addActor(phone);
 
         makeWaypointButtons();
-        makeObjectiveButtons();
+//        makeObjectiveButtons();
 
         money = new Money(screenSize);
         addActor(money);

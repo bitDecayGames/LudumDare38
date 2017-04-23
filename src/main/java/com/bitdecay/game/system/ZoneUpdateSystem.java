@@ -12,6 +12,7 @@ import com.bitdecay.game.util.ContactDistributer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class ZoneUpdateSystem extends AbstractUpdatableSystem implements ContactListener{
 
@@ -32,15 +33,18 @@ public class ZoneUpdateSystem extends AbstractUpdatableSystem implements Contact
             Body playerBody = playerFixture.getBody();
             MyGameObject player = (MyGameObject) playerBody.getUserData();
 
-            if(checkPlayerStoppedInZone(playerFixture, zoneFixture)){
+            Optional<ZoneComponent> zoneOpt = ((MyGameObject) zoneBody.getUserData()).getComponent(ZoneComponent.class);
+            if(checkPlayerStoppedInZone(playerFixture, zoneFixture, zoneOpt.map(z -> z.strict).orElse(true))){
                 if(playerBody.getLinearVelocity().len() < .1){
-                    ZoneComponent theZone = ((MyGameObject) zoneBody.getUserData()).getComponent(ZoneComponent.class).get();
-                    if(theZone.active) {
-                        theZone.execute(player);
-                    }
-                    if(theZone.canDeactivate){
-                        theZone.active = false;
-                    }
+                    zoneOpt.ifPresent(theZone -> {
+                        if(theZone.active) {
+                            theZone.execute(player);
+                        }
+                        if(theZone.canDeactivate){
+                            theZone.active = false;
+
+                        }
+                    });
                 }
             }
         }
@@ -75,18 +79,32 @@ public class ZoneUpdateSystem extends AbstractUpdatableSystem implements Contact
         }
     }
 
-    public boolean checkPlayerStoppedInZone(Fixture playerFixture, Fixture zoneFixture) {
-        PolygonShape playerPoly = (PolygonShape) playerFixture.getShape();
+    public boolean checkPlayerStoppedInZone(Fixture playerFixture, Fixture zoneFixture, boolean strict) {
+        if(strict) {
+            PolygonShape playerPoly = (PolygonShape) playerFixture.getShape();
 
-        for(int i = 0;i < playerPoly.getVertexCount();i++){
-            Vector2 playerPoint = new Vector2();
-            playerPoly.getVertex(i, playerPoint);
-            Vector2 worldPoint = playerFixture.getBody().getWorldPoint(playerPoint);
-            if(!zoneFixture.testPoint(worldPoint.x, worldPoint.y)){
-                return false;
+            for (int i = 0; i < playerPoly.getVertexCount(); i++) {
+                Vector2 playerPoint = new Vector2();
+                playerPoly.getVertex(i, playerPoint);
+                Vector2 worldPoint = playerFixture.getBody().getWorldPoint(playerPoint);
+                if (!zoneFixture.testPoint(worldPoint.x, worldPoint.y)) {
+                    return false;
+                }
             }
+            return true;
+        } else {
+            PolygonShape playerPoly = (PolygonShape) playerFixture.getShape();
+
+            for (int i = 0; i < playerPoly.getVertexCount(); i++) {
+                Vector2 playerPoint = new Vector2();
+                playerPoly.getVertex(i, playerPoint);
+                Vector2 worldPoint = playerFixture.getBody().getWorldPoint(playerPoint);
+                if (zoneFixture.testPoint(worldPoint.x, worldPoint.y)) {
+                    return true;
+                }
+            }
+            return false;
         }
-        return true;
     }
 
     @Override

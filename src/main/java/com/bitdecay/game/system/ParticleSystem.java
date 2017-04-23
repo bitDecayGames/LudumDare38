@@ -32,23 +32,24 @@ public class ParticleSystem extends AbstractDrawableSystem {
             gob.forEachComponentDo(ParticleFXComponent.class, fx -> gob.forEachComponentDo(ParticlePosition.class, pos -> {
                 fx.effect.setPosition(pos.x, pos.y);
                 if (!fx.started) {
+                    if (!fx.continuous) {
+                        fx.effect.allowCompletion();
+                    }
                     System.out.println("Starting particle");
-                    System.out.println("Planned duration: " + fx.duration);
+                    System.out.println("Continuous: " + fx.continuous);
                     fx.effect.start();
                     fx.started = true;
                 }
                 float delta = Gdx.graphics.getDeltaTime();
-                if (fx.duration > 0 && fx.timePassed >= fx.duration) {
-                    System.out.println("Removing particle");
-                    gob.removeComponent(ParticleFXComponent.class);
-                } else {
-                    fx.effect.update(delta);
-                }
+                fx.effect.update(delta);
                 fx.effect.draw(spriteBatch);
                 fx.timePassed += delta;
                 if (fx.effect.isComplete()) {
-                    System.out.println("Restarting particle");
-                    fx.effect.start();
+                    if (fx.continuous) {
+                        fx.effect.start();
+                    } else {
+                        gob.removeComponent(ParticleFXComponent.class);
+                    }
                 }
             }));
         }

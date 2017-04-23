@@ -120,11 +120,11 @@ active: false
 active: false
 - Tint - 
 colorsCount: 6
-colors0: 0.50980395
-colors1: 0.21176471
-colors2: 0.023529412
-colors3: 0.5019608
-colors4: 0.20784314
+colors0: 0.827451
+colors1: 0.20392157
+colors2: 0.20392157
+colors3: 1.0
+colors4: 0.0
 colors5: 0.0
 timelineCount: 2
 timeline0: 0.0
@@ -137,19 +137,19 @@ highMax: 1.0
 relative: false
 scalingCount: 4
 scaling0: 0.0
-scaling1: 1.0
-scaling2: 0.75
+scaling1: 0.5263158
+scaling2: 0.3508772
 scaling3: 0.0
 timelineCount: 4
 timeline0: 0.0
-timeline1: 0.2
-timeline2: 0.8
+timeline1: 0.19178082
+timeline2: 0.82191783
 timeline3: 1.0
 - Options - 
 attached: false
 continuous: false
 aligned: false
-additive: true
+additive: false
 behind: false
 premultipliedAlpha: false
 - Image Path -

@@ -122,7 +122,7 @@ timeline3: 0.96575344
 attached: false
 continuous: true
 aligned: false
-additive: true
+additive: false
 behind: false
 premultipliedAlpha: false
 - Image Path -

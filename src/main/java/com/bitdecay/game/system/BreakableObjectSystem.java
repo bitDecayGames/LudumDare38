@@ -43,14 +43,16 @@ public class BreakableObjectSystem extends AbstractForEachUpdatableSystem implem
                         });
                         gob.addComponent(new StaticImageComponent(breaker.imagePath));
                         size.set(breaker.breakWidth, breaker.breakHeight);
+                        float angle = linearVelocity.angle();
+                        System.out.println("BROKEN AT ANGLE: " + angle);
                         if (breaker.particle != null) {
-                            MyGameObject particleObject = ParticleFactory.getParticleObject(breaker.particle, phys.body.getWorldCenter(), linearVelocity.angle());
+                            MyGameObject particleObject = ParticleFactory.getParticleObject(breaker.particle, phys.body.getWorldCenter(), angle);
                             if (particleObject != null) {
                                 room.getGameObjects().add(particleObject);
                             }
                         }
                         // TODO figure out how to get these to feel 'good'
-                        phys.body.setTransform(phys.body.getPosition(), linearVelocity.angle());
+                        phys.body.setTransform(phys.body.getPosition(), angle);
                     }
                 });
             });

@@ -5,7 +5,7 @@ active: false
 lowMin: 3000.0
 lowMax: 3000.0
 - Count - 
-min: 100
+min: 200
 max: 200
 - Emission - 
 lowMin: 0.0
@@ -13,26 +13,28 @@ lowMax: 0.0
 highMin: 50.0
 highMax: 50.0
 relative: false
-scalingCount: 2
+scalingCount: 3
 scaling0: 1.0
-scaling1: 0.0
-timelineCount: 2
+scaling1: 1.0
+scaling2: 0.0
+timelineCount: 3
 timeline0: 0.0
-timeline1: 0.3561644
+timeline1: 0.23972602
+timeline2: 0.369863
 - Life - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 500.0
-highMax: 1000.0
+highMin: 2000.0
+highMax: 3000.0
 relative: false
 scalingCount: 3
 scaling0: 1.0
 scaling1: 1.0
-scaling2: 0.3
+scaling2: 0.0
 timelineCount: 3
 timeline0: 0.0
-timeline1: 0.66
-timeline2: 1.0
+timeline1: 0.39726028
+timeline2: 0.39826027
 - Life Offset - 
 active: false
 - X Offset - 
@@ -65,23 +67,43 @@ timeline0: 0.0
 lowMin: 0.0
 lowMax: 0.0
 highMin: 32.0
-highMax: 32.0
+highMax: 64.0
 relative: false
-scalingCount: 1
-scaling0: 1.0
-timelineCount: 1
+scalingCount: 7
+scaling0: 0.11764706
+scaling1: 0.50980395
+scaling2: 0.8627451
+scaling3: 0.9607843
+scaling4: 0.6666667
+scaling5: 0.3529412
+scaling6: 0.0
+timelineCount: 7
 timeline0: 0.0
+timeline1: 0.23287672
+timeline2: 0.3219178
+timeline3: 0.5753425
+timeline4: 0.7328767
+timeline5: 0.84931505
+timeline6: 1.0
 - Velocity - 
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: 30.0
-highMax: 300.0
+highMin: 100.0
+highMax: 500.0
 relative: false
-scalingCount: 1
-scaling0: 1.0
-timelineCount: 1
+scalingCount: 5
+scaling0: 0.0
+scaling1: 0.7254902
+scaling2: 0.8627451
+scaling3: 0.64705884
+scaling4: 0.09803922
+timelineCount: 5
 timeline0: 0.0
+timeline1: 0.14383562
+timeline2: 0.4178082
+timeline3: 0.6712329
+timeline4: 0.8630137
 - Angle - 
 active: true
 lowMin: 0.0
@@ -120,12 +142,12 @@ active: false
 active: false
 - Tint - 
 colorsCount: 6
-colors0: 0.50980395
-colors1: 0.21176471
-colors2: 0.023529412
-colors3: 0.5019608
-colors4: 0.20784314
-colors5: 0.0
+colors0: 0.5647059
+colors1: 0.5647059
+colors2: 0.5647059
+colors3: 1.0
+colors4: 1.0
+colors5: 1.0
 timelineCount: 2
 timeline0: 0.0
 timeline1: 1.0
@@ -135,21 +157,23 @@ lowMax: 0.0
 highMin: 1.0
 highMax: 1.0
 relative: false
-scalingCount: 4
-scaling0: 0.0
-scaling1: 1.0
-scaling2: 0.75
-scaling3: 0.0
-timelineCount: 4
+scalingCount: 5
+scaling0: 0.94736844
+scaling1: 0.9122807
+scaling2: 0.68421054
+scaling3: 0.21052632
+scaling4: 0.0
+timelineCount: 5
 timeline0: 0.0
-timeline1: 0.2
-timeline2: 0.8
-timeline3: 1.0
+timeline1: 0.30821916
+timeline2: 0.5958904
+timeline3: 0.7876712
+timeline4: 1.0
 - Options - 
 attached: false
 continuous: false
 aligned: false
-additive: true
+additive: false
 behind: false
 premultipliedAlpha: false
 - Image Path -

@@ -94,8 +94,8 @@ public class GameObjectFactory {
         BodyDef toiletBodyDef = new BodyDef();
         toiletBodyDef.position.set(x,y);
         toiletBodyDef.type = BodyDef.BodyType.DynamicBody;
-        toiletBodyDef.linearDamping = 1f;
-        toiletBodyDef.angularDamping = 2;
+        toiletBodyDef.linearDamping = 3;
+        toiletBodyDef.angularDamping = 3;
         Body toiletBody = phys.world.createBody(toiletBodyDef);
 
         PolygonShape toiletShape = new PolygonShape();
@@ -139,6 +139,32 @@ public class GameObjectFactory {
         trashBag.addComponent(new SizeComponent(1.2f,1.2f));
 
         return trashBag;
+    }
+
+    public static MyGameObject makeFirehydrant(PhysicsSystem phys,float x, float y){
+        MyGameObject hydrant  = new MyGameObject();
+
+        BodyDef hydrantBodyDef = new BodyDef();
+        hydrantBodyDef.position.set(x,y);
+        hydrantBodyDef.type = BodyDef.BodyType.DynamicBody;
+        hydrantBodyDef.linearDamping = .5f;
+        hydrantBodyDef.angularDamping = 3;
+        Body hydrantBody = phys.world.createBody(hydrantBodyDef);
+
+        CircleShape hydrantShape = new CircleShape();
+        hydrantShape.setRadius(.3f);
+
+        Fixture hydrantFix = hydrantBody.createFixture(hydrantShape,35f);
+
+        PhysicsComponent physComp = new PhysicsComponent(hydrantBody);
+        hydrant.addComponent(physComp);
+        hydrant.addComponent(new PositionComponent(x,y));
+        hydrant.addComponent(new OriginComponent(.5f,.5f));
+        hydrant.addComponent(new RotationComponent(0));
+        hydrant.addComponent(new StaticImageComponent("collidables/hydrant"));
+        hydrant.addComponent(new SizeComponent(.6f,.6f));
+
+        return hydrant;
     }
 
 }

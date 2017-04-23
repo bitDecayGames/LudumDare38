@@ -57,7 +57,10 @@ public class DemoRoom extends AbstractRoom {
         new HealthSystem(this, contactDistrib);
         new ZoneUpdateSystem(this, contactDistrib);
 
+        // various gauge things
         new FuelGaugeSystem(this, uiElements);
+        new HungerGaugeSystem(this, uiElements);
+        new PoopGaugeSystem(this, uiElements);
 
         createCar(0, 0, false, false);
 
@@ -154,6 +157,8 @@ public class DemoRoom extends AbstractRoom {
         if (!npc) {
             car.addComponent(new CameraFollowComponent());
             car.addComponent(new PlayerControlComponent());
+            car.addComponent(new HungerComponent(100, 10));
+            car.addComponent(new PoopooComponent(100, 5));
         }
 
         //waypoint section

@@ -69,25 +69,15 @@ public class Body extends Group {
         poopLevel = value;
     }
 
-    public void setFoodLevelMax(float value) {
-        foodLevelMax = value;
-    }
-
-    public void setPoopLevelMax(float value) {
-        poopLevelMax = value;
-    }
-
     public void act(float delta) {
         // Poop
-        float poopScale = poopLevel / poopLevelMax;
-        float poopDisplayHeight = poopMax() * poopScale;
+        float poopDisplayHeight = poopMax() * poopLevel;
 
         poopRect.setY(-poopDisplayHeight + poopStartY);
         poopRect.setHeight(poopDisplayHeight);
 
         // Food
-        float foodScale = foodLevel / foodLevelMax;
-        float foodDisplayHeight = foodMax() * foodScale;
+        float foodDisplayHeight = foodMax() * foodLevel;
 
         foodRect.setHeight(foodDisplayHeight);
     }

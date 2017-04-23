@@ -1,8 +1,9 @@
-package com.bitdecay.game.room;
+package com.bitdecay.game.system;
 
 import com.bitdecay.game.component.FuelComponent;
 import com.bitdecay.game.component.PlayerTireComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
+import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractForEachUpdatableSystem;
 import com.bitdecay.game.ui.UIElements;
 

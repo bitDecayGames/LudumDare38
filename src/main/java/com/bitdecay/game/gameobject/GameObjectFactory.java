@@ -32,6 +32,8 @@ public class GameObjectFactory {
         trashBin.addComponent(new RotationComponent(0));
         trashBin.addComponent(new StaticImageComponent("collidables/trash_lid"));
         trashBin.addComponent(new SizeComponent(1.5f,1.5f));
+        trashBin.addComponent(new BreakableObjectComponent("collidables/trash_flying", 1, 1.5f,1.5f));
+
 
         return trashBin;
     }
@@ -110,6 +112,7 @@ public class GameObjectFactory {
         toilet.addComponent(new RotationComponent(0));
         toilet.addComponent(new StaticImageComponent("collidables/toilet"));
         toilet.addComponent(new SizeComponent(1.9f,1.8f));
+        toilet.addComponent(new BreakableObjectComponent("collidables/toilet_flying", 1, 1.6f,2.9f));
 
         return toilet;
     }
@@ -137,6 +140,8 @@ public class GameObjectFactory {
         trashBag.addComponent(new RotationComponent(0));
         trashBag.addComponent(new StaticImageComponent("collidables/trashbag"));
         trashBag.addComponent(new SizeComponent(1.2f,1.2f));
+        trashBag.addComponent(new BreakableObjectComponent("collidables/trashbag_flying", 1, 1.2f,1.8f));
+
 
         return trashBag;
     }
@@ -163,8 +168,8 @@ public class GameObjectFactory {
         hydrant.addComponent(new RotationComponent(0));
         hydrant.addComponent(new StaticImageComponent("collidables/hydrant"));
         hydrant.addComponent(new DamageComponent(2));
-        hydrant.addComponent(new BreakableObjectComponent("collidables/hydrant_flying", 2, .6f, 0.9f));
         hydrant.addComponent(new SizeComponent(.6f,.6f));
+        hydrant.addComponent(new BreakableObjectComponent("collidables/hydrant_flying", 2, .6f, 0.9f));
 
         return hydrant;
     }

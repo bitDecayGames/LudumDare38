@@ -462,6 +462,7 @@ public class GameObjectFactory {
             case COP:
                 health = 20;
                 imageName = "cop/cop";
+//                car.addComponent(new CameraFollowComponent());
                 break;
             case NPC:
                 health = 2;

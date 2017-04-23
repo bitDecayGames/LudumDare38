@@ -66,6 +66,7 @@ public class DemoRoom extends AbstractRoom {
         new TireFrictionModifierSystem(this, contactDistrib);
         new TorqueableSystem(this);
         new FollowSystem(this);
+        new DeathSystem(this);
 
         new ParticlePositionSystem(this);
 
@@ -82,6 +83,7 @@ public class DemoRoom extends AbstractRoom {
 
         new BreakableObjectSystem(this);
         new RemovalSystem(this);
+
         GameObjectFactory.createCar(gobs, phys, new Vector2(), CarType.PLAYER, false);
 
         MyGameObject jim = GameObjectFactory.makePerson(phys,5,5);

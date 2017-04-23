@@ -44,7 +44,7 @@ public class BreakableObjectSystem extends AbstractForEachUpdatableSystem implem
                         gob.addComponent(new StaticImageComponent(breaker.imagePath));
                         size.set(breaker.breakWidth, breaker.breakHeight);
                         if (breaker.particle != null) {
-                            MyGameObject particleObject = ParticleFactory.getParticleObject(breaker.particle, phys.body.getWorldCenter());
+                            MyGameObject particleObject = ParticleFactory.getParticleObject(breaker.particle, phys.body.getWorldCenter(), linearVelocity.angle());
                             if (particleObject != null) {
                                 room.getGameObjects().add(particleObject);
                             }

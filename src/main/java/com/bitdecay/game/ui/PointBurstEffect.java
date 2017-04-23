@@ -13,14 +13,27 @@ import com.bitdecay.game.MyGame;
 public class PointBurstEffect extends Group {
     final float DURATION = 2;
 
-    public PointBurstEffect(String iconName, String text) {
-        Image icon = new Image(MyGame.ATLAS.findRegion(iconName));
-        icon.setScale(0.5f);
-        addActor(icon);
+    public static PointBurstEffect money(String text) {
+        Image moneyIcon = new Image(MyGame.ATLAS.findRegion("uiStuff/btc-512"));
+        moneyIcon.setScale(0.075f);
+
+        Image diffIcon = new Image(MyGame.ATLAS.findRegion("uiStuff/grubOff"));
+        diffIcon.setScale(0.5f);
+
+        return new PointBurstEffect(moneyIcon, diffIcon, text);
+    }
+
+    public PointBurstEffect(Image mainIcon, Image secondaryIcon, String text) {
+        addActor(mainIcon);
+
+        if (secondaryIcon != null) {
+            secondaryIcon.setPosition(secondaryIcon.getWidth() * -0.55f, mainIcon.getY());
+            addActor(secondaryIcon);
+        }
 
         Label textLabel = new Label(text, new Label.LabelStyle(MyGame.FONT, Color.WHITE));
         textLabel.setFontScale(2);
-        textLabel.moveBy(icon.getWidth() * 0.55f , icon.getHeight() / 2 - textLabel.getHeight() * 1.5f);
+        textLabel.moveBy(mainIcon.getWidth() * mainIcon.getScaleX(), mainIcon.getHeight() * mainIcon.getScaleY() / 2 - textLabel.getHeight() * 0.55f);
         addActor(textLabel);
 
         float screenHeight = Gdx.graphics.getHeight();

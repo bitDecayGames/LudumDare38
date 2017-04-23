@@ -8,4 +8,9 @@ public class MoneyDiffComponent extends AbstractComponent {
     public MoneyDiffComponent(float diff) {
         this.diff = diff;
     }
+
+    @Override
+    public String toString() {
+        return Float.toString(diff);
+    }
 }

@@ -239,6 +239,24 @@ public class GameObjectFactory {
         return obj;
     }
 
+    interface ZoneRunnable {
+        void run(MyGameObjects gobs);
+    }
+
+    private static void addZoneComponent(MyGameObject zone, MyGameObjects gobs, ZoneRunnable modifyGobs) {
+        ZoneComponent zComp = new ZoneComponent(() -> {
+            zone.getComponent(ZoneComponent.class).get().active = false;
+            zone.addComponent(new TimerComponent(5, () -> {
+                zone.getComponent(ZoneComponent.class).get().active = true;
+                zone.removeComponent(TimerComponent.class);
+            }));
+            modifyGobs.run(gobs);
+        });
+        zComp.active = true;
+        zComp.canDeactivate = false;
+        zone.addComponent(zComp);
+    }
+
     public static void createZone(MyGameObjects gobs, PhysicsSystem phys, float x, float y, float width, float length, float rotation, ZoneType zoneType){
         MyGameObject zone = new MyGameObject();
 
@@ -275,49 +293,29 @@ public class GameObjectFactory {
         ZoneComponent zComp;
         switch (zoneType) {
             case BATHROOM:
-                zComp = new ZoneComponent(() -> {
-                    System.out.println("You take a poo here");
-                    zone.getComponent(ZoneComponent.class).get().active = false;
-                    zone.addComponent(new TimerComponent(5, () -> {
-                        zone.getComponent(ZoneComponent.class).get().active = true;
-                        zone.removeComponent(TimerComponent.class);
-                    }));
-                    gobs.forEach(gob -> gob.forEachComponentDo(PoopooComponent.class, poo ->
-                            poo.currentPoopoo = 0));
+                System.out.println("You take a poo here");
+                addZoneComponent(zone, gobs, new ZoneRunnable() {
+                    public void run(MyGameObjects gobs) {
+                        gobs.forEach(gob -> gob.forEachComponentDo(PoopooComponent.class, poo ->
+                                poo.currentPoopoo = 0));
+                    }
                 });
-                zComp.active = true;
-                zComp.canDeactivate = false;
-                zone.addComponent(zComp);
                 break;
             case FOOD:
-                zComp = new ZoneComponent(() -> {
-                    System.out.println("You eat the food here");
-                    zone.getComponent(ZoneComponent.class).get().active = false;
-                    zone.addComponent(new TimerComponent(5, () -> {
-                        zone.getComponent(ZoneComponent.class).get().active = true;
-                        zone.removeComponent(TimerComponent.class);
-                    }));
-                    gobs.forEach(gob -> gob.forEachComponentDo(HungerComponent.class, hungry ->
-                            hungry.currentFullness = hungry.maxFullness));
+                addZoneComponent(zone, gobs, new ZoneRunnable() {
+                    public void run(MyGameObjects gobs) {
+                        gobs.forEach(gob -> gob.forEachComponentDo(HungerComponent.class, hungry ->
+                                hungry.currentFullness = hungry.maxFullness));
+                    }
                 });
-                zComp.active = true;
-                zComp.canDeactivate = false;
-                zone.addComponent(zComp);
                 break;
             case FUEL:
-                zComp = new ZoneComponent(() -> {
-                    System.out.println("You fuel the car here");
-                    zone.getComponent(ZoneComponent.class).get().active = false;
-                    zone.addComponent(new TimerComponent(5, () -> {
-                        zone.getComponent(ZoneComponent.class).get().active = true;
-                        zone.removeComponent(TimerComponent.class);
-                    }));
-                    gobs.forEach(gob -> gob.forEachComponentDo(FuelComponent.class, fuel ->
-                            fuel.currentFuel = fuel.maxFuel));
+                addZoneComponent(zone, gobs, new ZoneRunnable() {
+                    public void run(MyGameObjects gobs) {
+                        gobs.forEach(gob -> gob.forEachComponentDo(FuelComponent.class, fuel ->
+                                fuel.currentFuel = fuel.maxFuel));
+                    }
                 });
-                zComp.active = true;
-                zComp.canDeactivate = false;
-                zone.addComponent(zComp);
                 break;
             case REPAIR:
             case OBJECTIVE:

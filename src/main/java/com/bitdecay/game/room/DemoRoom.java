@@ -69,20 +69,20 @@ public class DemoRoom extends AbstractRoom {
         new BreakableObjectSystem(this);
         GameObjectFactory.createCar(gobs, phys, 0, 0, false, false);
 
-        gobs.add(GameObjectFactory.makeTrashBin(phys,-5,5));
-        gobs.add(GameObjectFactory.makeDumpster(phys,-5,10));
-        gobs.add(GameObjectFactory.makeCart(phys,-5,15));
-        gobs.add(GameObjectFactory.makeToilet(phys,-5,20));
-        gobs.add(GameObjectFactory.makeTrashBag(phys,-5,25));
-        gobs.add(GameObjectFactory.makeFirehydrant(phys,-5,30));
-        gobs.add(GameObjectFactory.makeMailbox(phys,0,15));
-        gobs.add(GameObjectFactory.makeGrassField(phys,10,20));
+//        gobs.add(GameObjectFactory.makeTrashBin(phys,-5,5));
+//        gobs.add(GameObjectFactory.makeDumpster(phys,-5,10));
+//        gobs.add(GameObjectFactory.makeCart(phys,-5,15));
+//        gobs.add(GameObjectFactory.makeToilet(phys,-5,20));
+//        gobs.add(GameObjectFactory.makeTrashBag(phys,-5,25));
+//        gobs.add(GameObjectFactory.makeFirehydrant(phys,-5,30));
+//        gobs.add(GameObjectFactory.makeMailbox(phys,0,15));
+        gobs.add(GameObjectFactory.makeGrassField(phys,10,10));
 
-        gobs.add(GameObjectFactory.makePerson(phys,5,5));
+//        gobs.add(GameObjectFactory.makePerson(phys,5,5));
 
-        GameObjectFactory.createZone(gobs, phys, 10, 0, 6, 10, 0, ZoneType.BATHROOM);
-        GameObjectFactory.createZone(gobs, phys, 20, 16, 6, 10, 0, ZoneType.FUEL);
-        GameObjectFactory.createZone(gobs, phys, -10, 0, 6, 10, 0, ZoneType.FOOD);
+//        GameObjectFactory.createZone(gobs, phys, 10, 0, 6, 10, 0, ZoneType.BATHROOM);
+//        GameObjectFactory.createZone(gobs, phys, 20, 16, 6, 10, 0, ZoneType.FUEL);
+//        GameObjectFactory.createZone(gobs, phys, -10, 0, 6, 10, 0, ZoneType.FOOD);
 
         map = new TmxMapLoader().load(Gdx.files.internal("img/tiled/town.tmx").path());
         renderer = new OrthogonalTiledMapRenderer(map, 1/40f);

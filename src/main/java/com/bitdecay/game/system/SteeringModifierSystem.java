@@ -27,25 +27,23 @@ public class SteeringModifierSystem extends AbstractUpdatableSystem implements C
         MyGameObject objectB = (MyGameObject) contact.getFixtureB().getBody().getUserData();
 
         boolean objectAIsZone = objectA != null &&
-                objectA.hasComponents(SteeringModifierComponent.class, PhysicsComponent.class);
+                objectA.hasComponents(SteeringModifierComponent.class);
         boolean objectBIsZone = objectB != null &&
-                objectB.hasComponents(SteeringModifierComponent.class, PhysicsComponent.class);
+                objectB.hasComponents(SteeringModifierComponent.class);
 
         boolean objectAIsTire = objectA != null &&
-                objectA.hasComponents(TireFrictionComponent.class, SteerableComponent.class, DriveTireComponent.class,PhysicsComponent.class);
+                objectA.hasComponents(TireFrictionComponent.class);
         boolean objectBIsTire = objectB != null &&
-                objectB.hasComponents(TireFrictionComponent.class, SteerableComponent.class, DriveTireComponent.class, PhysicsComponent.class);
+                objectB.hasComponents(TireFrictionComponent.class);
 
         if (objectAIsZone && objectBIsTire) {
-//            objectB.forEach(TireFrictionComponent.class, TFC -> TFC.);
-//            objectB.forEach(DriveTireComponent.class, DTC -> SC.);
-            System.out.println("entering: objectB is a tire");
+            ModifiedSteeringComponent modifiedSteeringComp = new ModifiedSteeringComponent(objectA.getComponent(SteeringModifierComponent.class).get().modifiedFriction);
+            objectB.addComponent(modifiedSteeringComp);
         } else if (objectAIsTire && objectBIsZone) {
-//            objectA.forEach(TireFrictionComponent.class, TFC -> TFC.);
-//            objectA.forEach(DriveTireComponent.class, DTC -> SC.);
-            System.out.println("entering: objectA is a tire");
+            ModifiedSteeringComponent modifiedSteeringComp = new ModifiedSteeringComponent(objectB.getComponent(SteeringModifierComponent.class).get().modifiedFriction);
+            objectA.addComponent(modifiedSteeringComp);
         }
-        System.out.println("exiting: objectA is a tire");
+//        System.out.println("exiting: objectA is a tire");
     }
 
     @Override
@@ -54,25 +52,20 @@ public class SteeringModifierSystem extends AbstractUpdatableSystem implements C
         MyGameObject objectB = (MyGameObject) contact.getFixtureB().getBody().getUserData();
 
         boolean objectAIsZone = objectA != null &&
-                objectA.hasComponents(SteeringModifierComponent.class, PhysicsComponent.class);
+                objectA.hasComponents(SteeringModifierComponent.class);
         boolean objectBIsZone = objectB != null &&
-                objectB.hasComponents(SteeringModifierComponent.class, PhysicsComponent.class);
+                objectB.hasComponents(SteeringModifierComponent.class);
 
         boolean objectAIsTire = objectA != null &&
-                objectA.hasComponents(TireFrictionComponent.class,DriveTireComponent.class, SteerableComponent.class,PhysicsComponent.class);
+                objectA.hasComponents(TireFrictionComponent.class);
         boolean objectBIsTire = objectB != null &&
-                objectB.hasComponents(TireFrictionComponent.class,DriveTireComponent.class, SteerableComponent.class, PhysicsComponent.class);
+                objectB.hasComponents(TireFrictionComponent.class);
 
         if (objectAIsZone && objectBIsTire) {
-//            objectB.forEach(TireFrictionComponent.class, TFC -> TFC.);
-//            objectB.forEach(SteerableComponent.class, SC -> SC.);
-            System.out.println("exiting: objectB is a tire");
+            objectB.removeComponent(ModifiedSteeringComponent.class);
         } else if (objectAIsTire && objectBIsZone) {
-//            objectA.forEach(TireFrictionComponent.class, TFC -> TFC.);
-//            objectA.forEach(SteerableComponent.class, SC -> SC.);
-            System.out.println("exiting: objectA is a tire");
+            objectA.removeComponent(ModifiedSteeringComponent.class);
         }
-        System.out.println("exiting: objectA is a tire");
     }
 
     @Override

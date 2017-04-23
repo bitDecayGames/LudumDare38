@@ -1,6 +1,7 @@
 package com.bitdecay.game.system;
 
 import com.badlogic.gdx.math.Vector2;
+import com.bitdecay.game.component.ModifiedSteeringComponent;
 import com.bitdecay.game.component.PhysicsComponent;
 import com.bitdecay.game.component.TireFrictionComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
@@ -29,33 +30,41 @@ public class TireFrictionSystem extends AbstractForEachUpdatableSystem {
     @Override
     protected void forEach(float delta, MyGameObject gob) {
         gob.forEachComponentDo(TireFrictionComponent.class, friction -> gob.forEachComponentDo(PhysicsComponent.class, phys -> {
-            updateFriction(phys, friction);
+            TireFrictionComponent.TireFrictionData data;
+            if(gob.hasComponent(ModifiedSteeringComponent.class)) {
+                data = gob.getComponent(ModifiedSteeringComponent.class).get().modifiedFriction.copy();
+                data.weightOnTire = friction.data.weightOnTire;
+            } else {
+                data = friction.data;
+            }
+
+            updateFriction(phys, friction.tireLocked, data);
         }));
     }
 
-    private void updateFriction(PhysicsComponent phys, TireFrictionComponent friction) {
-        updateRollingFriction(phys, friction);
-        updateLateralFriction(phys, friction);
+    private void updateFriction(PhysicsComponent phys, boolean tiresLocked, TireFrictionComponent.TireFrictionData data) {
+        updateRollingFriction(phys, tiresLocked, data);
+        updateLateralFriction(phys, tiresLocked, data);
     }
 
-    private void updateRollingFriction(PhysicsComponent phys, TireFrictionComponent friction) {
+    private void updateRollingFriction(PhysicsComponent phys, boolean tiresLocked, TireFrictionComponent.TireFrictionData data) {
         Vector2 rollingVelocity = getRollingVelocity(phys);
-        float mass = phys.body.getMass() + friction.data.weightOnTire;
+        float mass = phys.body.getMass() + data.weightOnTire;
         Vector2 neededImpulse = rollingVelocity.scl(-mass);
         phys.body.applyLinearImpulse(neededImpulse.scl(rollingDampening), phys.body.getWorldCenter(), true);
     }
 
-    private void updateLateralFriction(PhysicsComponent phys, TireFrictionComponent friction) {
+    private void updateLateralFriction(PhysicsComponent phys, boolean tiresLocked, TireFrictionComponent.TireFrictionData data) {
         Vector2 lateralVelocity = getLateralVelocity(phys);
-        float mass = phys.body.getMass() + friction.data.weightOnTire;
+        float mass = phys.body.getMass() + data.weightOnTire;
         Vector2 neededImpulse = lateralVelocity.scl(-mass);
-        if (friction.tireLocked && phys.body.getLinearVelocity().len() > friction.data.lockedTireGripVelocity) {
+        if (tiresLocked && phys.body.getLinearVelocity().len() > data.lockedTireGripVelocity) {
             // let the tires slide around if the tires are locked up
-            if (neededImpulse.len() > friction.data.driftingMaxForce) {
-                neededImpulse.nor().scl(friction.data.driftingMaxForce);
+            if (neededImpulse.len() > data.driftingMaxForce) {
+                neededImpulse.nor().scl(data.driftingMaxForce);
             }
-        } else if (neededImpulse.len() > friction.data.rollingMaxForce) {
-            neededImpulse.nor().scl(friction.data.rollingMaxForce);
+        } else if (neededImpulse.len() > data.rollingMaxForce) {
+            neededImpulse.nor().scl(data.rollingMaxForce);
         }
         phys.body.applyLinearImpulse(neededImpulse, phys.body.getWorldCenter(), true);
         phys.body.applyAngularImpulse(.1f * phys.body.getInertia() * -phys.body.getAngularVelocity(), true);

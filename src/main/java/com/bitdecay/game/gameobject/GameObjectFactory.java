@@ -248,7 +248,7 @@ public class GameObjectFactory {
         Body fieldBody = phys.world.createBody(fieldBodyDef);
 
         PolygonShape fieldShape = new PolygonShape();
-        fieldShape.setAsBox(12.5f, 10);
+        fieldShape.setAsBox(30f, 40);
 
         Fixture fieldFix = fieldBody.createFixture(fieldShape, 0);
         fieldFix.setSensor(true);
@@ -258,9 +258,15 @@ public class GameObjectFactory {
         field.addComponent(physComp);
         field.addComponent(new PositionComponent(x, y));
         field.addComponent(new OriginComponent(.5f, .5f));
-        field.addComponent(new SteeringModifierComponent());
+
+        TireFrictionComponent.TireFrictionData grassFriction = new TireFrictionComponent.TireFrictionData();
+        grassFriction.rollingMaxForce = 2;
+        grassFriction.driftingMaxForce = .2f;
+        grassFriction.lockedTireGripVelocity = -1;
+
+        field.addComponent(new SteeringModifierComponent(grassFriction));
 //        field.addComponent(new StaticImageComponent("collidables/dumpster"));
-        field.addComponent(new SizeComponent(25, 10));
+//        field.addComponent(new SizeComponent(25, 10));
 
         return field;
     }
@@ -535,6 +541,7 @@ public class GameObjectFactory {
 
         MyGameObject tire = new MyGameObject();
         PhysicsComponent tirePhysics = new PhysicsComponent(body);
+        tirePhysics.body.setUserData(tire);
         tire.addComponent(tirePhysics);
         tire.addComponent(new TireFrictionComponent(tireData));
         if (rear && !npc) {

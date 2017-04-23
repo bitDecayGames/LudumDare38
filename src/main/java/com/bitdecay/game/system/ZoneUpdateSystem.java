@@ -25,11 +25,18 @@ public class ZoneUpdateSystem extends AbstractUpdatableSystem implements Contact
     @Override
     public void update(float delta) {
         for (Map.Entry<Fixture, Fixture> zoneToPlayer : ongoingZoneToPlayerCollisions.entrySet()) {
-            if(checkPlayerStoppedInZone(zoneToPlayer.getValue(), zoneToPlayer.getKey())){
-                if(zoneToPlayer.getValue().getBody().getLinearVelocity().len() < .1){
-                    ZoneComponent theZone = ((MyGameObject) zoneToPlayer.getKey().getBody().getUserData()).getComponent(ZoneComponent.class).get();
+            Fixture zoneFixture = zoneToPlayer.getKey();
+            Body zoneBody = zoneFixture.getBody();
+
+            Fixture playerFixture = zoneToPlayer.getValue();
+            Body playerBody = playerFixture.getBody();
+            MyGameObject player = (MyGameObject) playerBody.getUserData();
+
+            if(checkPlayerStoppedInZone(playerFixture, zoneFixture)){
+                if(playerBody.getLinearVelocity().len() < .1){
+                    ZoneComponent theZone = ((MyGameObject) zoneBody.getUserData()).getComponent(ZoneComponent.class).get();
                     if(theZone.active) {
-                        theZone.execute();
+                        theZone.execute(player);
                     }
                     if(theZone.canDeactivate){
                         theZone.active = false;

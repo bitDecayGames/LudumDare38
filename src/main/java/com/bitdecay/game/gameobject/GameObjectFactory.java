@@ -10,6 +10,8 @@ import com.bitdecay.game.component.money.MoneyDiffComponent;
 import com.bitdecay.game.system.PhysicsSystem;
 import com.bitdecay.game.util.ZoneType;
 
+import java.util.function.Consumer;
+
 public class GameObjectFactory {
 
     public static MyGameObject makeTrashBin(PhysicsSystem phys,float x, float y){
@@ -243,14 +245,14 @@ public class GameObjectFactory {
         void run(MyGameObjects gobs);
     }
 
-    private static void addZoneComponent(MyGameObject zone, MyGameObjects gobs, ZoneRunnable modifyGobs) {
-        ZoneComponent zComp = new ZoneComponent(() -> {
+    private static void addZoneComponent(MyGameObject zone, Consumer<MyGameObject> modifyGameObj) {
+        ZoneComponent zComp = new ZoneComponent((gameObj) -> {
             zone.getComponent(ZoneComponent.class).get().active = false;
             zone.addComponent(new TimerComponent(5, () -> {
                 zone.getComponent(ZoneComponent.class).get().active = true;
                 zone.removeComponent(TimerComponent.class);
             }));
-            modifyGobs.run(gobs);
+            modifyGameObj.accept(gameObj);
         });
         zComp.active = true;
         zComp.canDeactivate = false;
@@ -290,32 +292,30 @@ public class GameObjectFactory {
         Fixture zoneFix = zoneBody.createFixture(zoneShape, 0);
         zoneFix.setSensor(true);
 
-        ZoneComponent zComp;
         switch (zoneType) {
             case BATHROOM:
                 System.out.println("You take a poo here");
-                addZoneComponent(zone, gobs, new ZoneRunnable() {
-                    public void run(MyGameObjects gobs) {
-                        gobs.forEach(gob -> gob.forEachComponentDo(PoopooComponent.class, poo ->
-                                poo.currentPoopoo = 0));
-                    }
+                addZoneComponent(zone, (gameObj) -> {
+//                    if (MoneyComponent.payForService(gameObj, 10.0f)) {
+                        gameObj.forEachComponentDo(PoopooComponent.class, poo -> poo.currentPoopoo = 0);
+//                    }
                 });
                 break;
             case FOOD:
-                addZoneComponent(zone, gobs, new ZoneRunnable() {
-                    public void run(MyGameObjects gobs) {
-                        gobs.forEach(gob -> gob.forEachComponentDo(HungerComponent.class, hungry ->
-                                hungry.currentFullness = hungry.maxFullness));
-                    }
-                });
+//                addZoneComponent(zone, gobs, new ZoneRunnable() {
+//                    public void run(MyGameObjects gobs) {
+//                        gobs.forEach(gob -> gob.forEachComponentDo(HungerComponent.class, hungry ->
+//                                hungry.currentFullness = hungry.maxFullness));
+//                    }
+//                });
                 break;
             case FUEL:
-                addZoneComponent(zone, gobs, new ZoneRunnable() {
-                    public void run(MyGameObjects gobs) {
-                        gobs.forEach(gob -> gob.forEachComponentDo(FuelComponent.class, fuel ->
-                                fuel.currentFuel = fuel.maxFuel));
-                    }
-                });
+//                addZoneComponent(zone, gobs, new ZoneRunnable() {
+//                    public void run(MyGameObjects gobs) {
+//                        gobs.forEach(gob -> gob.forEachComponentDo(FuelComponent.class, fuel ->
+//                                fuel.currentFuel = fuel.maxFuel));
+//                    }
+//                });
                 break;
             case REPAIR:
             case OBJECTIVE:

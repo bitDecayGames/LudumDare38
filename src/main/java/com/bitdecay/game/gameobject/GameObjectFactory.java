@@ -202,6 +202,32 @@ public class GameObjectFactory {
         return mailbox;
     }
 
+    public static MyGameObject makeGrassField(PhysicsSystem phys,float x, float y){
+        MyGameObject field  = new MyGameObject();
+
+        BodyDef fieldBodyDef = new BodyDef();
+        fieldBodyDef.position.set(x,y);
+        fieldBodyDef.type = BodyDef.BodyType.StaticBody;
+        Body fieldBody = phys.world.createBody(fieldBodyDef);
+
+        PolygonShape fieldShape = new PolygonShape();
+        fieldShape.setAsBox(12.5f,10);
+
+        Fixture fieldFix = fieldBody.createFixture(fieldShape,0);
+        fieldFix.setSensor(true);
+
+        PhysicsComponent physComp = new PhysicsComponent(fieldBody);
+        physComp.body.setUserData(field);
+        field.addComponent(physComp);
+        field.addComponent(new PositionComponent(x,y));
+        field.addComponent(new OriginComponent(.5f,.5f));
+        field.addComponent(new SteeringModifierComponent());
+//        field.addComponent(new StaticImageComponent("collidables/dumpster"));
+        field.addComponent(new SizeComponent(25,10));
+
+        return field;
+    }
+
     public static void createZone(MyGameObjects gobs, PhysicsSystem phys, float x, float y, float width, float length, float rotation, ZoneType zoneType){
         MyGameObject zone = new MyGameObject();
 

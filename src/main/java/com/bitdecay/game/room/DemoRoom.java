@@ -52,6 +52,7 @@ public class DemoRoom extends AbstractRoom {
         new RemovalSystem(this);
         new HealthSystem(this, contactDistrib);
         new ZoneUpdateSystem(this, contactDistrib);
+        new SteeringModifierSystem(this, contactDistrib);
 
         // various gauge things
         new FuelGaugeSystem(this, uiElements);
@@ -70,6 +71,7 @@ public class DemoRoom extends AbstractRoom {
         gobs.add(GameObjectFactory.makeTrashBag(phys,-5,25));
         gobs.add(GameObjectFactory.makeFirehydrant(phys,-5,30));
         gobs.add(GameObjectFactory.makeMailbox(phys,0,15));
+        gobs.add(GameObjectFactory.makeGrassField(phys,10,20));
 
         GameObjectFactory.createZone(gobs, phys, 10, 0, 6, 10, 0, ZoneType.BATHROOM);
         GameObjectFactory.createZone(gobs, phys, 20, 16, 6, 10, 0, ZoneType.FUEL);

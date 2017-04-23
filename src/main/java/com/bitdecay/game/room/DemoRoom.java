@@ -281,6 +281,11 @@ public class DemoRoom extends AbstractRoom {
         } else {
             ZoneComponent zComp = new ZoneComponent(() -> {
                 System.out.println("I TALK SOOO MUCH AND YOU CANT STOP ME!!");
+                zone.getComponent(ZoneComponent.class).get().active = false;
+                zone.addComponent(new TimerComponent(5, () -> {
+                        zone.getComponent(ZoneComponent.class).get().active = true;
+                        zone.removeComponent(TimerComponent.class);
+                }));
             });
             zComp.active = true;
             zComp.canDeactivate = false;

@@ -94,21 +94,19 @@ timeline3: 0.96575344
 timeline4: 1.0
 - Angle - 
 active: true
-lowMin: 0.0
-lowMax: 0.0
+lowMin: 20.0
+lowMax: 160.0
 highMin: 20.0
-highMax: 160.0
-relative: true
-scalingCount: 4
-scaling0: 1.0
-scaling1: 1.0
+highMax: 20.0
+relative: false
+scalingCount: 3
+scaling0: 0.0
+scaling1: 0.0
 scaling2: 0.0
-scaling3: 0.0
-timelineCount: 4
+timelineCount: 3
 timeline0: 0.0
-timeline1: 0.998
-timeline2: 0.999
-timeline3: 1.0
+timeline1: 0.999
+timeline2: 1.0
 - Rotation - 
 active: true
 lowMin: 1.0
@@ -262,21 +260,19 @@ timeline3: 0.96575344
 timeline4: 1.0
 - Angle - 
 active: true
-lowMin: 0.0
-lowMax: 0.0
+lowMin: 20.0
+lowMax: 160.0
 highMin: 20.0
-highMax: 160.0
-relative: true
-scalingCount: 4
-scaling0: 1.0
-scaling1: 1.0
+highMax: 20.0
+relative: false
+scalingCount: 3
+scaling0: 0.0
+scaling1: 0.0
 scaling2: 0.0
-scaling3: 0.0
-timelineCount: 4
+timelineCount: 3
 timeline0: 0.0
-timeline1: 0.998
-timeline2: 0.999
-timeline3: 1.0
+timeline1: 0.999
+timeline2: 1.0
 - Rotation - 
 active: true
 lowMin: 1.0

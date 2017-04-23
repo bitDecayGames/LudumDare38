@@ -39,7 +39,9 @@ public class ParticleFactory {
             case NONE:
                 return null;
         }
-        updateParticleAngle(particleComp, angle);
+        if (angle != 0) {
+            updateParticleAngle(particleComp, angle);
+        }
         particleEffect.addComponent(particleComp);
         particleEffect.addComponent(new PositionComponent(pos.x, pos.y));
         particleEffect.addComponent(new ParticlePosition(0, 0));

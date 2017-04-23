@@ -18,8 +18,7 @@ public class MoneySystem extends AbstractForEachUpdatableSystem {
     @Override
     protected boolean validateGob(MyGameObject gob) {
         return gob.hasComponents(
-                MoneyComponent.class,
-                MoneyDiffComponent.class
+                MoneyComponent.class
         );
     }
 

@@ -97,6 +97,7 @@ public class DemoRoom extends AbstractRoom {
 
         uiElements.hud = new HUD(screenSize());
         stage.addActor(uiElements.hud);
+        uiElements.hud.toggle();
 
         stage.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {

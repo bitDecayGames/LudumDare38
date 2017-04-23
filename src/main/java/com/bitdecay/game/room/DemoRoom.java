@@ -21,16 +21,12 @@ import com.bitdecay.game.pathfinding.NodeComponent;
 import com.bitdecay.game.pathfinding.NodeSystem;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
-import com.bitdecay.game.ui.Fuel;
 import com.bitdecay.game.ui.HUD;
-import com.bitdecay.game.ui.UIElements;
 import com.bitdecay.game.util.CarType;
 import com.bitdecay.game.util.ContactDistributer;
 import com.bitdecay.game.util.ZoneType;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * The demo room is just a super simple example of how to add systems and game objects to a room.
@@ -42,7 +38,6 @@ public class DemoRoom extends AbstractRoom {
     PhysicsSystem phys = null;
 
     private Stage stage;
-    private UIElements uiElements;
     TiledMap map;
     OrthogonalTiledMapRenderer renderer;
 
@@ -72,7 +67,7 @@ public class DemoRoom extends AbstractRoom {
         new DespawnSystem(this, Integer.MIN_VALUE, Integer.MAX_VALUE, -1000, Integer.MAX_VALUE);
         new ShapeDrawSystem(this);
         new DrawSystem(this);
-        new WaypointSystem(this, uiElements);
+        new WaypointSystem(this);
         new HealthSystem(this, contactDistrib);
         new ZoneUpdateSystem(this, contactDistrib);
         new TireFrictionModifierSystem(this, contactDistrib);
@@ -85,14 +80,14 @@ public class DemoRoom extends AbstractRoom {
         new ParticleSystem(this);
 
         // various gauge things
-        new FuelGaugeSystem(this, uiElements);
-        new HungerGaugeSystem(this, uiElements);
-        new PoopGaugeSystem(this, uiElements);
+        new FuelGaugeSystem(this);
+        new HungerGaugeSystem(this);
+        new PoopGaugeSystem(this);
 
-        new MoneySystem(this, uiElements, stage);
+        new MoneySystem(this, stage);
 
         // ObjectiveSystem is based on objects added to the world, it needs to go after those.
-        new ObjectiveSystem(this, uiElements);
+        new ObjectiveSystem(this);
 
         new BreakableObjectSystem(this);
         new RemovalSystem(this);
@@ -226,18 +221,12 @@ public class DemoRoom extends AbstractRoom {
         this.stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        uiElements = new UIElements();
-
-        Fuel fuel = new Fuel(screenSize());
-        uiElements.fuel = fuel;
-        stage.addActor(fuel);
-
-        uiElements.hud = new HUD(screenSize());
-        stage.addActor(uiElements.hud);
+        new HUD();
+        stage.addActor(HUD.instance());
 
         stage.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                uiElements.hud.toggle();
+                HUD.instance().phone.toggle();
                 return true;
             }
         });

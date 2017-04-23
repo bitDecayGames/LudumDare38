@@ -6,16 +6,14 @@ import com.bitdecay.game.component.money.MoneyDiffComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractForEachUpdatableSystem;
-import com.bitdecay.game.ui.UIElements;
+import com.bitdecay.game.ui.HUD;
 import com.bitdecay.game.ui.pointBurst.PointBurstFactory;
 
 public class MoneySystem extends AbstractForEachUpdatableSystem {
-    private UIElements uiElements;
     private Stage stage;
 
-    public MoneySystem(AbstractRoom room, UIElements uiElements, Stage stage) {
+    public MoneySystem(AbstractRoom room, Stage stage) {
         super(room);
-        this.uiElements = uiElements;
         this.stage = stage;
     }
 
@@ -38,6 +36,6 @@ public class MoneySystem extends AbstractForEachUpdatableSystem {
 
         gob.removeComponent(MoneyDiffComponent.class);
 
-        uiElements.hud.phone.setMoney(moneyComp.getMoney());
+        HUD.instance().phone.money.setMoney(moneyComp.getMoney());
     }
 }

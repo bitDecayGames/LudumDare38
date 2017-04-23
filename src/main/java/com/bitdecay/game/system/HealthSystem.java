@@ -53,6 +53,10 @@ public class HealthSystem extends AbstractSystem implements ContactListener {
     }
 
     public void applyDamage(MyGameObject attacker, MyGameObject attacked){
-        attacker.forEach(DamageComponent.class, dmg -> attacked.forEach(HealthComponent.class, health -> health.set(health.currentHealth - dmg.damage)));
+        attacker.forEach(DamageComponent.class, dmg -> attacked.forEach(HealthComponent.class, health ->{
+                health.set(health.currentHealth - dmg.damage);
+                System.out.println("the health" + health.currentHealth);
+        }));
+
     }
 }

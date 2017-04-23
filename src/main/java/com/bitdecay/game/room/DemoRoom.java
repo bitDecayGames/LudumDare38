@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.bitdecay.game.gameobject.GameObjectFactory;
-import com.bitdecay.game.gameobject.ParticleFactory;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
 import com.bitdecay.game.ui.Fuel;
@@ -48,10 +47,11 @@ public class DemoRoom extends AbstractRoom {
         new DespawnSystem(this, Integer.MIN_VALUE, Integer.MAX_VALUE, -1000, Integer.MAX_VALUE);
         new ShapeDrawSystem(this);
         new DrawSystem(this);
-        new WaypointSystem(this);
+        new WaypointSystem(this, uiElements);
         new RemovalSystem(this);
         new HealthSystem(this, contactDistrib);
         new ZoneUpdateSystem(this, contactDistrib);
+        new TorqueableSystem(this);
 
         new ParticleSystem(this);
 
@@ -59,6 +59,8 @@ public class DemoRoom extends AbstractRoom {
         new FuelGaugeSystem(this, uiElements);
         new HungerGaugeSystem(this, uiElements);
         new PoopGaugeSystem(this, uiElements);
+
+        new MoneySystem(this, uiElements, stage);
 
         new BreakableObjectSystem(this);
         GameObjectFactory.createCar(gobs, phys, 0, 0, false, false);
@@ -68,13 +70,14 @@ public class DemoRoom extends AbstractRoom {
         gobs.add(GameObjectFactory.makeCart(phys,-5,15));
         gobs.add(GameObjectFactory.makeToilet(phys,-5,20));
         gobs.add(GameObjectFactory.makeTrashBag(phys,-5,25));
-        gobs.add(GameObjectFactory.makeFirehydrant(phys,0,15));
+        gobs.add(GameObjectFactory.makeFirehydrant(phys,-5,30));
+        gobs.add(GameObjectFactory.makeMailbox(phys,0,15));
+
+        gobs.add(GameObjectFactory.makePerson(phys,5,5));
 
         GameObjectFactory.createZone(gobs, phys, 10, 0, 6, 10, 0, ZoneType.BATHROOM);
         GameObjectFactory.createZone(gobs, phys, 20, 16, 6, 10, 0, ZoneType.FUEL);
         GameObjectFactory.createZone(gobs, phys, -10, 0, 6, 10, 0, ZoneType.FOOD);
-
-        gobs.add(ParticleFactory.getMailParticle(0, 4, 1.60f));
 
         // this is required to be at the end here so that the systems have the latest gobs
         systemManager.cleanup();
@@ -100,7 +103,6 @@ public class DemoRoom extends AbstractRoom {
 
         uiElements.hud = new HUD(screenSize());
         stage.addActor(uiElements.hud);
-//        uiElements.hud.toggle();
 
         stage.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {

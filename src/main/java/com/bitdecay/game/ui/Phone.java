@@ -11,15 +11,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.bitdecay.game.MyGame;
+import com.bitdecay.game.util.ZoneType;
+
+import java.util.Arrays;
 
 public class Phone extends Group {
     Image phone;
+    Money money;
 
-    final String[] waypointButtons = new String[] {
-        "fix",
-        "gas",
-        "grub",
-        "pooper"
+    final WaypointButtonType[] waypointButtons = new WaypointButtonType[] {
+        new WaypointButtonType("fix", ZoneType.REPAIR),
+        new WaypointButtonType("gas", ZoneType.FUEL),
+        new WaypointButtonType("grub", ZoneType.FOOD),
+        new WaypointButtonType("pooper", ZoneType.BATHROOM),
     };
 
     public Phone(Vector2 screenSize) {
@@ -32,11 +36,33 @@ public class Phone extends Group {
 
         makeWaypointButtons();
 
+        money = new Money(screenSize);
+        addActor(money);
+
         phoneGlare.setTouchable(Touchable.childrenOnly);
         addActor(phoneGlare);
 
         float scale = screenSize.y / phone.getHeight() - 1;
         scaleBy(scale);
+    }
+
+    public void setMoney(float value) {
+        money.setMoney(value);
+    }
+
+    public boolean getWaypointEnabled(ZoneType type) {
+        WaypointButtonType buttonType = Arrays.stream(waypointButtons)
+            .filter(bt -> bt.type == type)
+            .findFirst()
+            .get();
+
+        if (buttonType != null) {
+            if (buttonType.button != null) {
+                return buttonType.button.isChecked();
+            }
+        }
+
+        return true;
     }
 
     private void makeWaypointButtons() {
@@ -45,9 +71,10 @@ public class Phone extends Group {
         float initX = phone.getWidth() * 0.11f;
 
         for (int i = 0; i < waypointButtons.length; i++) {
-            String buttonName = waypointButtons[i];
-            ImageButton button = makeButton(buttonName);
+            WaypointButtonType buttonType = waypointButtons[i];
+            ImageButton button = makeButton(buttonType.imageName);
             button.setPosition(initX + x * i, y);
+            buttonType.button = button;
 
             addActor(button);
         }
@@ -71,5 +98,16 @@ public class Phone extends Group {
 
     private Drawable getDrawable(String name) {
         return new TextureRegionDrawable(getUIRegion(name));
+    }
+
+    private class WaypointButtonType {
+        public String imageName;
+        public ZoneType type;
+        public ImageButton button;
+
+        public WaypointButtonType(String imageName, ZoneType type) {
+            this.imageName = imageName;
+            this.type = type;
+        }
     }
 }

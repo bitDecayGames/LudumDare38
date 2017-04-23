@@ -9,6 +9,7 @@ import com.bitdecay.game.component.WaypointComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractDrawableSystem;
+import com.bitdecay.game.ui.UIElements;
 import com.bitdecay.game.util.RectangleExt;
 import com.bitdecay.game.util.VectorMath;
 
@@ -25,8 +26,12 @@ public class WaypointSystem extends AbstractDrawableSystem {
     private float originX_XL = size_XL * 0.5f;
     private float originY_XL = 0f;
 
-    public WaypointSystem(AbstractRoom room) {
+    private UIElements uiElements;
+
+    public WaypointSystem(AbstractRoom room, UIElements uiElements) {
         super(room);
+
+        this.uiElements = uiElements;
     }
 
     @Override
@@ -36,18 +41,20 @@ public class WaypointSystem extends AbstractDrawableSystem {
     public void draw(SpriteBatch spriteBatch, OrthographicCamera camera) {
         spriteBatch.begin();
         gobs.forEach(gob -> gob.forEachComponentDo(PositionComponent.class, pos -> gob.forEachComponentDo(WaypointComponent.class, wp -> {
-            Vector2 camPos = VectorMath.toVector2(camera.position);
-            Vector2 camToPos = pos.toVector2().sub(camPos);
-            float modWidth = camera.viewportWidth * 0.9f;
-            float modHeight = camera.viewportHeight * 0.9f;
-            float halfWidth = modWidth / 2;
-            float halfHeight = modHeight / 2;
-            RectangleExt viewPort = new RectangleExt(-halfWidth + camPos.x, -halfHeight + camPos.y, modWidth, modHeight);
-            if (viewPort.contains(pos.toVector2())) {
-                drawArrow(pos.toVector2(), new Vector2(0, -1), wp.animated, wp.rotates, size_XL, originX_XL, originY_XL);
-            } else {
-                Vector2 intersection = viewPort.intersectionFromCenter(camToPos.cpy());
-                if (intersection != null) drawArrow(intersection.cpy(), camToPos, wp.staticImage, wp.rotates, size, originX, originY);
+            if (uiElements.hud.phone.getWaypointEnabled(wp.zoneType)) {
+                Vector2 camPos = VectorMath.toVector2(camera.position);
+                Vector2 camToPos = pos.toVector2().sub(camPos);
+                float modWidth = camera.viewportWidth * 0.9f;
+                float modHeight = camera.viewportHeight * 0.9f;
+                float halfWidth = modWidth / 2;
+                float halfHeight = modHeight / 2;
+                RectangleExt viewPort = new RectangleExt(-halfWidth + camPos.x, -halfHeight + camPos.y, modWidth, modHeight);
+                if (viewPort.contains(pos.toVector2())) {
+                    drawArrow(pos.toVector2(), new Vector2(0, -1), wp.animated, wp.rotates, size_XL, originX_XL, originY_XL);
+                } else {
+                    Vector2 intersection = viewPort.intersectionFromCenter(camToPos.cpy());
+                    if (intersection != null) drawArrow(intersection.cpy(), camToPos, wp.staticImage, wp.rotates, size, originX, originY);
+                }
             }
         })));
         spriteBatch.end();

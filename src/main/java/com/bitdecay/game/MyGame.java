@@ -1,8 +1,10 @@
 package com.bitdecay.game;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.GdxNativesLoader;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.screen.SplashScreen;
@@ -19,6 +21,7 @@ public class MyGame extends Game implements ICanSetScreen{
     public static AssetManager ASSET_MANAGER = new AssetManager();
     public static AnimagicTextureAtlas ATLAS;
     public static RunMode RUN_MODE;
+    public static BitmapFont FONT;
 
     static {
         GdxNativesLoader.load();
@@ -32,6 +35,7 @@ public class MyGame extends Game implements ICanSetScreen{
     public void queueAssetsForLoad() {
         ASSET_MANAGER.setLoader(AnimagicTextureAtlas.class, new AnimagicTextureAtlasLoader(new InternalFileHandleResolver()));
         ASSET_MANAGER.load("img/packed/main.atlas", AnimagicTextureAtlas.class);
+        FONT = new BitmapFont(Gdx.files.internal("font/bit.fnt"));
     }
 
     @Override

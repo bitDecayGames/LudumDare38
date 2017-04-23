@@ -43,7 +43,7 @@ public class Fuel extends Group {
         if (percent <= .15f) {
             fuel.setDrawable(lowGasGauge);
         } else {
-            fuel.setDrawable(lowGasGauge);
+            fuel.setDrawable(normalGauge);
         }
     }
 }

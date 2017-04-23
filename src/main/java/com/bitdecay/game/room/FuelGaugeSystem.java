@@ -1,6 +1,7 @@
 package com.bitdecay.game.room;
 
 import com.bitdecay.game.component.FuelComponent;
+import com.bitdecay.game.component.PlayerTireComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.system.abstracted.AbstractForEachUpdatableSystem;
 import com.bitdecay.game.ui.UIElements;
@@ -22,7 +23,8 @@ public class FuelGaugeSystem extends AbstractForEachUpdatableSystem {
     @Override
     protected boolean validateGob(MyGameObject gob) {
         return gob.hasComponents(
-                FuelComponent.class
+                FuelComponent.class,
+                PlayerTireComponent.class
         );
     }
 

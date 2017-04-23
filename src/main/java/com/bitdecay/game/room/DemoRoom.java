@@ -61,8 +61,8 @@ public class DemoRoom extends AbstractRoom {
 
         createCar(0, 0, false, false);
 
-//        for (int x = -2; x < 2; x += 1)
-//            for (int y = -2; y < 2; y += 1) createCar(x * 30, y * 30, true, x % 2 == 0 && y % 2 == 0);
+        for (int x = -2; x < 2; x += 1)
+            for (int y = -2; y < 2; y += 1) createCar(x * 30, y * 30, true, x % 2 == 0 && y % 2 == 0);
 
         createZone(10, 0, 6, 10, 0, true);
         createZone(20, 16, 6, 10, 0, false);
@@ -283,9 +283,13 @@ public class DemoRoom extends AbstractRoom {
         PhysicsComponent tirePhysics = new PhysicsComponent(body);
         tire.addComponent(tirePhysics);
         tire.addComponent(new TireFrictionComponent(tireData));
-        if (rear && !npc) tire.addComponent(new DriveTireComponent(maxSpeed, acceleration));
-        else {
-            if (!npc) tire.addComponent(new SteerableComponent(MathUtils.PI / 4));
+        if (rear && !npc) {
+            tire.addComponent(new DriveTireComponent(maxSpeed, acceleration));
+            tire.addComponent(new PlayerTireComponent());
+        } else {
+            if (!npc) {
+                tire.addComponent(new SteerableComponent(MathUtils.PI / 4));
+            }
             tire.addComponent(new RevoluteJointComponent(joint));
         }
         tire.addComponent(new PositionComponent(0, 0));

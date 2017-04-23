@@ -2,8 +2,11 @@ package com.bitdecay.game.room;
 
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.maps.*;
-import com.badlogic.gdx.maps.tiled.*;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapLayers;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -11,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.bitdecay.game.gameobject.GameObjectFactory;
+import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
 import com.bitdecay.game.ui.Fuel;
@@ -18,6 +22,7 @@ import com.bitdecay.game.ui.HUD;
 import com.bitdecay.game.ui.UIElements;
 import com.bitdecay.game.util.CarType;
 import com.bitdecay.game.util.ContactDistributer;
+import com.bitdecay.game.util.ZoneType;
 
 /**
  * The demo room is just a super simple example of how to add systems and game objects to a room.
@@ -58,11 +63,11 @@ public class DemoRoom extends AbstractRoom {
         new ShapeDrawSystem(this);
         new DrawSystem(this);
         new WaypointSystem(this, uiElements);
-        new RemovalSystem(this);
         new HealthSystem(this, contactDistrib);
         new ZoneUpdateSystem(this, contactDistrib);
         new TireFrictionModifierSystem(this, contactDistrib);
         new TorqueableSystem(this);
+        new FollowSystem(this);
 
         new ParticlePositionSystem(this);
 
@@ -78,13 +83,16 @@ public class DemoRoom extends AbstractRoom {
         new ObjectiveSystem(this, uiElements);
 
         new BreakableObjectSystem(this);
+        new RemovalSystem(this);
         GameObjectFactory.createCar(gobs, phys, new Vector2(), CarType.PLAYER, false);
 
-        gobs.add(GameObjectFactory.makePerson(phys,5,5));
+        MyGameObject jim = GameObjectFactory.makePerson(phys,5,5);
+        gobs.add(jim);
+        gobs.add(GameObjectFactory.createZone(jim, 1000, 1000, 5, 5, 0, ZoneType.OBJECTIVE, (o)->{}));
 
-//        GameObjectFactory.createZone(gobs, phys, 10, 0, 6, 10, 0, ZoneType.BATHROOM);
-//        GameObjectFactory.createZone(gobs, phys, 20, 16, 6, 10, 0, ZoneType.FUEL);
-//        GameObjectFactory.createZone(gobs, phys, -10, 0, 6, 10, 0, ZoneType.FOOD);
+        gobs.add(GameObjectFactory.createZone(10, 0, 6, 10, 0, ZoneType.BATHROOM));
+        gobs.add(GameObjectFactory.createZone(20, 16, 6, 10, 0, ZoneType.FUEL));
+        gobs.add(GameObjectFactory.createZone(-10, 0, 6, 10, 0, ZoneType.FOOD));
 
         loadTileMapAndStartingObjects();
 
@@ -97,11 +105,11 @@ public class DemoRoom extends AbstractRoom {
 
         MapLayers mapLayers = map.getLayers();
 
-        TiledMapTileLayer mapLayer = (TiledMapTileLayer) mapLayers.get("Collidables");
+        TiledMapTileLayer collidablesLayer = (TiledMapTileLayer) mapLayers.get("Collidables");
 
-        for (int x = 0; x < mapLayer.getWidth(); x++) {
-            for (int y = 0; y < mapLayer.getHeight(); y++) {
-                TiledMapTileLayer.Cell cell = mapLayer.getCell(x, y);
+        for (int x = 0; x < collidablesLayer.getWidth(); x++) {
+            for (int y = 0; y < collidablesLayer.getHeight(); y++) {
+                TiledMapTileLayer.Cell cell = collidablesLayer.getCell(x, y);
                 if (cell != null) {
                     String objName = (String) cell.getTile().getProperties().get("obj_name");
                     if (objName != null) {
@@ -112,8 +120,30 @@ public class DemoRoom extends AbstractRoom {
             }
         }
 
+        TiledMapTileLayer buildingsLayer = (TiledMapTileLayer) mapLayers.get("Buildings");
+
+        for (int x = 0; x < buildingsLayer.getWidth(); x++) {
+            for (int y = 0; y < buildingsLayer.getHeight(); y++) {
+                TiledMapTileLayer.Cell cell = buildingsLayer.getCell(x, y);
+                if (cell != null) {
+                    String objName = (String) cell.getTile().getProperties().get("obj_name");
+                    if (objName != null) {
+                        System.out.printf("Creating new object from tiled map (%d,%d): %s\n", x, y, objName);
+                        int widthTiles = (int) cell.getTile().getProperties().get("width_tiles");
+                        int heightTiles = (int) cell.getTile().getProperties().get("height_tiles");
+                        createBuildingCollisionBox(objName, x, y, widthTiles, heightTiles);
+                    }
+                }
+            }
+        }
+
         renderer = new OrthogonalTiledMapRenderer(map, scaleFactor);
     }
+
+    private void createBuildingCollisionBox(String name, float x, float y, int widthTiles, int heightTiles){
+        System.out.println(name + x + y + widthTiles + heightTiles);
+    }
+
 
     private void createObjectFromName(String name, float x, float y) {
 
@@ -148,11 +178,11 @@ public class DemoRoom extends AbstractRoom {
     }
 
     @Override
-    public void render(float delta) {
+    public void draw(SpriteBatch spriteBatch) {
         renderer.setView(camera);
         renderer.render();
-        super.render(delta);
-        stage.act(delta);
+        super.draw(spriteBatch);
+        stage.act(1/60f);
         stage.draw();
     }
 

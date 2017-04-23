@@ -11,8 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.bitdecay.game.MyGame;
-import com.bitdecay.game.component.PositionComponent;
-import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.gameobject.MyGameObjects;
 import com.bitdecay.game.system.PhysicsSystem;
@@ -49,7 +47,7 @@ public class Phone extends Group implements IUpdate{
         addActor(phone);
 
         makeWaypointButtons();
-        makeObjectiveButtons();
+//        makeObjectiveButtons();
 
         money = new Money(screenSize);
         addActor(money);
@@ -68,8 +66,7 @@ public class Phone extends Group implements IUpdate{
     public boolean getWaypointEnabled(ZoneType type) {
         WaypointButtonType buttonType = Arrays.stream(waypointButtons)
             .filter(bt -> bt.type == type)
-            .findFirst()
-            .get();
+            .findFirst().orElse(null);
 
         if (buttonType != null) {
             if (buttonType.button != null) {

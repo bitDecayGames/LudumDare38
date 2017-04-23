@@ -13,6 +13,7 @@ public class StaticGameObjectFactory {
         bodyDef.position.set(pos.x + size.x/2, pos.y + size.y/2);
         bodyDef.type = BodyDef.BodyType.StaticBody;
         Body body = phys.world.createBody(bodyDef);
+        body.setUserData(gameObject);
 
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(size.x, size.y);

@@ -31,6 +31,7 @@ public class HealthSystem extends AbstractSystem implements ContactListener {
             applyDamage(objectA, objectB);
             applyDamage(objectB, objectA);
 
+
             //for testing only
 //            objectA.forEachComponentDo(HealthComponent.class, health -> System.out.println(health.currentHealth));
 //            objectB.forEachComponentDo(HealthComponent.class, health -> System.out.println(health.currentHealth));

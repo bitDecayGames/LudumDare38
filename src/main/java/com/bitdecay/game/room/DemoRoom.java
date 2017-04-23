@@ -91,6 +91,7 @@ public class DemoRoom extends AbstractRoom {
 
         new MoneySystem(this, uiElements, stage);
 
+        // ObjectiveSystem is based on objects added to the world, it needs to go after those.
         new ObjectiveSystem(this, uiElements);
 
         new BreakableObjectSystem(this);
@@ -98,9 +99,9 @@ public class DemoRoom extends AbstractRoom {
         new NodeSystem(this);
         GameObjectFactory.createCar(gobs, phys, new Vector2(), CarType.PLAYER, false);
 
-        MyGameObject jim = GameObjectFactory.makePerson(phys,5,5);
-        gobs.add(jim);
-        gobs.add(GameObjectFactory.createZone(jim, 1000, 1000, 5, 5, 0, ZoneType.OBJECTIVE, (o)->{}));
+        gobs.add(GameObjectFactory.makePerson(phys,5,5));
+        gobs.add(GameObjectFactory.makePerson(phys,15,5));
+        gobs.add(GameObjectFactory.makePerson(phys,-5,5));
 
         gobs.add(GameObjectFactory.createZone(10, 0, 6, 10, 0, ZoneType.BATHROOM));
         gobs.add(GameObjectFactory.createZone(20, 16, 6, 10, 0, ZoneType.FUEL));

@@ -45,7 +45,7 @@ public class NodeSystem extends AbstractDrawableSystem {
 
             // Connections
             renderer.setColor(Color.FIREBRICK);
-            node.connections.stream().forEach(connection -> {
+            node.connections.forEach(connection -> {
                 renderer.begin(ShapeRenderer.ShapeType.Line);
                 renderer.line(connection.getFromNode().position, connection.getToNode().position);
                 renderer.end();

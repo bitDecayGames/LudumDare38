@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.bitdecay.game.component.*;
+import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
@@ -69,6 +70,12 @@ public class DemoRoom extends AbstractRoom {
 
         createZone(10, 0, 6, 10, 0, true);
         createZone(20, 16, 6, 10, 0, false);
+        gobs.add(GameObjectFactory.makeTrashBin(phys,5,5));
+        gobs.add(GameObjectFactory.makeDumpster(phys,-5,5));
+        gobs.add(GameObjectFactory.makeCart(phys,-5,10));
+        gobs.add(GameObjectFactory.makeToilet(phys,0,10));
+        gobs.add(GameObjectFactory.makeTrashBag(phys,2,10));
+
 
         // this is required to be at the end here so that the systems have the latest gobs
         systemManager.cleanup();

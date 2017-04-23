@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
+import com.bitdecay.game.Launcher;
 import com.bitdecay.game.component.*;
 import com.bitdecay.game.component.money.MoneyComponent;
 import com.bitdecay.game.system.PhysicsSystem;
@@ -241,12 +242,13 @@ public class GameObjectFactory {
         obj.addComponent(new TorqueableComponent(30));
         obj.addComponent(new FuelComponent(1, 0));
         obj.addComponent(new SizeComponent(1f, 1f));
-        obj.addComponent(new BreakableObjectComponent("person/flyForward", 2, 1f, 1.5f, ParticleFactory.ParticleChoice.BLOOD));
+        obj.addComponent(new BreakableObjectComponent("person/flyForward", 30, 1f, 1.5f, ParticleFactory.ParticleChoice.BLOOD));
+        obj.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.person")));
 
         return obj;
     }
 
-    public static MyGameObject makeGrassField(PhysicsSystem phys, float x, float y) {
+    public static MyGameObject makeGrassKnoll(PhysicsSystem phys, float x, float y) {
         MyGameObject field = new MyGameObject();
 
         BodyDef fieldBodyDef = new BodyDef();
@@ -322,9 +324,6 @@ public class GameObjectFactory {
         OriginComponent zoneOrigin = new OriginComponent(.5f, .5f);
         zone.addComponent(zoneOrigin);
 
-        StaticImageComponent zoneImage = new StaticImageComponent("target");
-        zone.addComponent(zoneImage);
-
         SizeComponent zoneSize = new SizeComponent(width, length);
         zone.addComponent(zoneSize);
 
@@ -342,7 +341,10 @@ public class GameObjectFactory {
 
         zone.addComponent(new RotationComponent(0));
 
+        zone.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.zzone")));
+
         Shape zoneShape = null;
+        AnimatedImageComponent zoneAnim;
         switch (zoneType) {
             case BATHROOM:
             case FUEL:
@@ -351,11 +353,19 @@ public class GameObjectFactory {
                 PolygonShape s = new PolygonShape();
                 s.setAsBox(width / 2f, length / 2f);
                 zoneShape = s;
+
+                zoneAnim = new AnimatedImageComponent("uiStuff/missions/rectangleTarget", 0.1f);
+                zone.addComponent(zoneAnim);
+
                 break;
             case OBJECTIVE:
                 CircleShape c = new CircleShape();
                 c.setRadius(width / 2f);
                 zoneShape = c;
+
+                zoneAnim = new AnimatedImageComponent("uiStuff/missions/circleTarget", 0.1f);
+                zone.addComponent(zoneAnim);
+
                 break;
             default:
                 break;
@@ -384,8 +394,6 @@ public class GameObjectFactory {
                 break;
             case OBJECTIVE:
                 addDynamicObjectiveZone(0, zone, modifyGameObj);
-                break;
-            case PICKUP:
                 break;
             default:
                 break;
@@ -478,7 +486,7 @@ public class GameObjectFactory {
 
         //waypoint section
         if (addWayPoint) car.addComponent(new WaypointComponent(ZoneType.OBJECTIVE));
-        car.addComponent(new DrawOrderComponent(100));
+        car.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.car")));
         car.addComponent(new SizeComponent(2, 4));
         car.addComponent(new RotationComponent(0));
         car.addComponent(new OriginComponent(.5f, .5f));
@@ -618,7 +626,7 @@ public class GameObjectFactory {
         else path = "player/tireLeft";
         tire.addComponent(new AnimatedImageComponent(path, 0.0f));
         tire.addComponent(new VelocityBasedAnimationSpeedComponent(1f));
-        tire.addComponent(new DrawOrderComponent(90));
+        tire.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.tire")));
         tire.addComponent(new SizeComponent(.25f, 2/3.0f));
         tire.addComponent(new RotationComponent(0));
         tire.addComponent(new OriginComponent(.5f, .5f));

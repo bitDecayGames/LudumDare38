@@ -5,6 +5,5 @@ public enum ZoneType {
     FOOD,
     REPAIR,
     FUEL,
-    OBJECTIVE,
-    PICKUP
+    OBJECTIVE
 }

@@ -82,7 +82,7 @@ public class DemoRoom extends AbstractRoom {
         GameObjectFactory.createZone(gobs, phys, 20, 16, 6, 10, 0, ZoneType.FUEL);
         GameObjectFactory.createZone(gobs, phys, -10, 0, 6, 10, 0, ZoneType.FOOD);
 
-        map = new TmxMapLoader().load("F:\\Programming\\IntelliJWorkspace\\LudumDare38\\src\\main\\resources\\img\\tiled\\town.tmx");
+        map = new TmxMapLoader().load(Gdx.files.internal("img/tiled/town.tmx").path());
         renderer = new OrthogonalTiledMapRenderer(map, 1/40f);
 
         // this is required to be at the end here so that the systems have the latest gobs

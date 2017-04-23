@@ -14,7 +14,7 @@ public class PointBurstEffect extends Group {
     final float DURATION = 2;
 
     public static PointBurstEffect money(String text) {
-        Image moneyIcon = new Image(MyGame.ATLAS.findRegion("uiStuff/fixOn"));
+        Image moneyIcon = new Image(MyGame.ATLAS.findRegion("uiStuff/btc-512"));
         moneyIcon.setScale(0.5f);
 
         Image diffIcon = new Image(MyGame.ATLAS.findRegion("uiStuff/grubOff"));

@@ -13,9 +13,9 @@ import com.bitdecay.game.util.ContactDistributer;
 /**
  * Created by Luke on 4/22/2017.
  */
-public class SteeringModifierSystem extends AbstractUpdatableSystem implements ContactListener {
+public class TireFrictionModifierSystem extends AbstractUpdatableSystem implements ContactListener {
 
-    public SteeringModifierSystem(AbstractRoom room, ContactDistributer contactDistrib) {
+    public TireFrictionModifierSystem(AbstractRoom room, ContactDistributer contactDistrib) {
         super(room);
         contactDistrib.listeners.add(this);
     }
@@ -27,9 +27,9 @@ public class SteeringModifierSystem extends AbstractUpdatableSystem implements C
         MyGameObject objectB = (MyGameObject) contact.getFixtureB().getBody().getUserData();
 
         boolean objectAIsZone = objectA != null &&
-                objectA.hasComponents(SteeringModifierComponent.class);
+                objectA.hasComponents(TireFrictionModifierComponent.class);
         boolean objectBIsZone = objectB != null &&
-                objectB.hasComponents(SteeringModifierComponent.class);
+                objectB.hasComponents(TireFrictionModifierComponent.class);
 
         boolean objectAIsTire = objectA != null &&
                 objectA.hasComponents(TireFrictionComponent.class);
@@ -37,10 +37,10 @@ public class SteeringModifierSystem extends AbstractUpdatableSystem implements C
                 objectB.hasComponents(TireFrictionComponent.class);
 
         if (objectAIsZone && objectBIsTire) {
-            ModifiedSteeringComponent modifiedSteeringComp = new ModifiedSteeringComponent(objectA.getComponent(SteeringModifierComponent.class).get().modifiedFriction);
+            ModifiedSteeringComponent modifiedSteeringComp = new ModifiedSteeringComponent(objectA.getComponent(TireFrictionModifierComponent.class).get().modifiedFriction);
             objectB.addComponent(modifiedSteeringComp);
         } else if (objectAIsTire && objectBIsZone) {
-            ModifiedSteeringComponent modifiedSteeringComp = new ModifiedSteeringComponent(objectB.getComponent(SteeringModifierComponent.class).get().modifiedFriction);
+            ModifiedSteeringComponent modifiedSteeringComp = new ModifiedSteeringComponent(objectB.getComponent(TireFrictionModifierComponent.class).get().modifiedFriction);
             objectA.addComponent(modifiedSteeringComp);
         }
 //        System.out.println("exiting: objectA is a tire");
@@ -52,9 +52,9 @@ public class SteeringModifierSystem extends AbstractUpdatableSystem implements C
         MyGameObject objectB = (MyGameObject) contact.getFixtureB().getBody().getUserData();
 
         boolean objectAIsZone = objectA != null &&
-                objectA.hasComponents(SteeringModifierComponent.class);
+                objectA.hasComponents(TireFrictionModifierComponent.class);
         boolean objectBIsZone = objectB != null &&
-                objectB.hasComponents(SteeringModifierComponent.class);
+                objectB.hasComponents(TireFrictionModifierComponent.class);
 
         boolean objectAIsTire = objectA != null &&
                 objectA.hasComponents(TireFrictionComponent.class);
@@ -85,6 +85,6 @@ public class SteeringModifierSystem extends AbstractUpdatableSystem implements C
 
     @Override
     protected boolean validateGob(MyGameObject gob) {
-        return gob.hasComponent(SteeringModifierComponent.class);
+        return gob.hasComponent(TireFrictionModifierComponent.class);
     }
 }

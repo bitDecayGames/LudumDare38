@@ -266,7 +266,7 @@ public class GameObjectFactory {
         grassFriction.driftingMaxForce = .2f;
         grassFriction.lockedTireGripVelocity = -1;
 
-        field.addComponent(new SteeringModifierComponent(grassFriction));
+        field.addComponent(new TireFrictionModifierComponent(grassFriction));
 //        field.addComponent(new StaticImageComponent("collidables/dumpster"));
 //        field.addComponent(new SizeComponent(25, 10));
 

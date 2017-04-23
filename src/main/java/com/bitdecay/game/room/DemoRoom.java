@@ -16,7 +16,6 @@ import com.bitdecay.game.ui.Fuel;
 import com.bitdecay.game.ui.HUD;
 import com.bitdecay.game.ui.UIElements;
 import com.bitdecay.game.util.ContactDistributer;
-import com.bitdecay.game.util.ZoneType;
 
 /**
  * The demo room is just a super simple example of how to add systems and game objects to a room.
@@ -56,7 +55,7 @@ public class DemoRoom extends AbstractRoom {
         new RemovalSystem(this);
         new HealthSystem(this, contactDistrib);
         new ZoneUpdateSystem(this, contactDistrib);
-        new SteeringModifierSystem(this, contactDistrib);
+        new TireFrictionModifierSystem(this, contactDistrib);
         new TorqueableSystem(this);
 
         new ParticleSystem(this);

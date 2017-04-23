@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.bitdecay.game.component.money.MoneyComponent;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
@@ -57,6 +58,8 @@ public class DemoRoom extends AbstractRoom {
         new HungerGaugeSystem(this, uiElements);
         new PoopGaugeSystem(this, uiElements);
 
+        new MoneySystem(this, uiElements);
+
         new BreakableObjectSystem(this);
         GameObjectFactory.createCar(gobs, phys, 0, 0, false, false);
 
@@ -95,7 +98,6 @@ public class DemoRoom extends AbstractRoom {
 
         uiElements.hud = new HUD(screenSize());
         stage.addActor(uiElements.hud);
-        uiElements.hud.toggle();
 
         stage.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {

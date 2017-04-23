@@ -42,6 +42,10 @@ public class Phone extends Group {
         scaleBy(scale);
     }
 
+    public void setMoney(float value) {
+
+    }
+
     public boolean getWaypointEnabled(ZoneType type) {
         WaypointButtonType buttonType = Arrays.stream(waypointButtons)
             .filter(bt -> bt.type == type)

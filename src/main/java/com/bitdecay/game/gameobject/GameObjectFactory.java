@@ -202,6 +202,42 @@ public class GameObjectFactory {
         return mailbox;
     }
 
+    public static MyGameObject makePerson(PhysicsSystem phys, float x, float y){
+        MyGameObject obj  = new MyGameObject();
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.position.set(x,y);
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.linearDamping = .5f;
+        bodyDef.angularDamping = 3;
+        Body body = phys.world.createBody(bodyDef);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(.5f,.5f);
+
+        body.createFixture(shape,35f);
+
+        PhysicsComponent physComp = new PhysicsComponent(body);
+        obj.addComponent(physComp);
+        obj.addComponent(new PositionComponent(x,y));
+        obj.addComponent(new OriginComponent(.5f,.5f));
+        obj.addComponent(new RotationComponent(0));
+        AnimatedImageComponent slow = new AnimatedImageComponent("person/walk", 0f);
+        obj.addComponent(slow);
+        AnimatedImageComponent fast = new AnimatedImageComponent("person/run", 0f);
+        fast.scaleY = 1.5f;
+        obj.addComponent(fast);
+        obj.addComponent(new MultiTieredVelocityAnimationComponent(3, 10, slow, fast));
+        obj.addComponent(new VelocityBasedAnimationSpeedComponent(5f));
+        obj.addComponent(new DriveTireComponent(25, 5));
+        obj.addComponent(new TorqueableComponent(30));
+        obj.addComponent(new FuelComponent(1, 0));
+        obj.addComponent(new SizeComponent(1f,1f));
+        obj.addComponent(new BreakableObjectComponent("person/flyForward", 2, .6f, 0.9f));
+
+        return obj;
+    }
+
     public static void createZone(MyGameObjects gobs, PhysicsSystem phys, float x, float y, float width, float length, float rotation, ZoneType zoneType){
         MyGameObject zone = new MyGameObject();
 

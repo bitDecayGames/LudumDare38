@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  */
 public class TileComponent extends DrawableComponent {
     private TextureRegion image;
+
     public TileComponent(TextureRegion image) {
         this.image = image;
     }

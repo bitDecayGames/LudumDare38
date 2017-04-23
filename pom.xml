@@ -21,6 +21,7 @@
 
         <!-- these probably shouldn't change much -->
         <gdxVersion>1.6.5</gdxVersion>
+        <gdxAIVersion>1.6.0</gdxAIVersion>
         <log4jVersion>1.2.17</log4jVersion>
         <jacksonVersion>2.6.1</jacksonVersion>
         <commonsVersion>2.4</commonsVersion>
@@ -246,6 +247,11 @@
             <artifactId>gdx-box2d-platform</artifactId>
             <version>${gdxVersion}</version>
             <classifier>natives-desktop</classifier>
+        </dependency>
+        <dependency>
+            <groupId>com.badlogicgames.gdx</groupId>
+            <artifactId>gdx-ai</artifactId>
+            <version>${gdxAIVersion}</version>
         </dependency>
         <!-- END GDX DEPENDENCIES -->
     </dependencies>

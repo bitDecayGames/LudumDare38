@@ -7,6 +7,8 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.bitdecay.game.component.*;
 import com.bitdecay.game.component.money.MoneyComponent;
+import com.bitdecay.game.physics.FrictionDataFactory;
+import com.bitdecay.game.physics.TireFrictionData;
 import com.bitdecay.game.system.PhysicsSystem;
 import com.bitdecay.game.util.CarType;
 import com.bitdecay.game.util.ZoneType;
@@ -91,10 +93,7 @@ public class GameObjectFactory {
         cart.addComponent(new RotationComponent(0));
         cart.addComponent(new StaticImageComponent("collidables/cart"));
         cart.addComponent(new SizeComponent(1, 1.6f));
-        TireFrictionComponent.TireFrictionData cartFriction = new TireFrictionComponent.TireFrictionData();
-        cartFriction.rollingMaxForce = .1f;
-        cartFriction.driftingMaxForce = .1f;
-        cart.addComponent(new TireFrictionComponent(cartFriction));
+        cart.addComponent(new TireFrictionComponent(FrictionDataFactory.getCartFriction()));
 
         return cart;
     }
@@ -266,12 +265,7 @@ public class GameObjectFactory {
         field.addComponent(new PositionComponent(x, y));
         field.addComponent(new OriginComponent(.5f, .5f));
 
-        TireFrictionComponent.TireFrictionData grassFriction = new TireFrictionComponent.TireFrictionData();
-        grassFriction.rollingMaxForce = 2;
-        grassFriction.driftingMaxForce = .2f;
-        grassFriction.lockedTireGripVelocity = -1;
-
-        field.addComponent(new TireFrictionModifierComponent(grassFriction));
+        field.addComponent(new TireFrictionModifierComponent(FrictionDataFactory.getGrassFriction()));
 //        field.addComponent(new StaticImageComponent("collidables/dumpster"));
 //        field.addComponent(new SizeComponent(25, 10));
 
@@ -442,15 +436,10 @@ public class GameObjectFactory {
         gobs.add(car);
 
         // TIRE DATA
-        TireFrictionComponent.TireFrictionData frontTireData = new TireFrictionComponent.TireFrictionData();
-        frontTireData.rollingMaxForce = 8;
-        frontTireData.driftingMaxForce = .5f;
-        frontTireData.lockedTireGripVelocity = 0;
+        TireFrictionData frontTireData = FrictionDataFactory.getStreetFriction();
         frontTireData.weightOnTire = carBody.getMass() / 4;
 
-        TireFrictionComponent.TireFrictionData rearTireData = frontTireData.copy();
-        rearTireData.driftingMaxForce = 0f;
-        rearTireData.lockedTireGripVelocity = 1f;
+        TireFrictionData rearTireData = frontTireData.copy();
         rearTireData.weightOnTire = carBody.getMass() / 10;
 
         // /////////////////////////////////
@@ -551,7 +540,7 @@ public class GameObjectFactory {
         return tireBody;
     }
 
-    private static MyGameObject makeTireObject(Body body, RevoluteJoint joint, TireFrictionComponent.TireFrictionData tireData, CarType type, boolean rear, boolean right) {
+    private static MyGameObject makeTireObject(Body body, RevoluteJoint joint, TireFrictionData tireData, CarType type, boolean rear, boolean right) {
         float maxSpeed = 30;
         float acceleration = 5;
 

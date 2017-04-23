@@ -15,7 +15,7 @@ public class PointBurstEffect extends Group {
 
     public static PointBurstEffect money(String text) {
         Image moneyIcon = new Image(MyGame.ATLAS.findRegion("uiStuff/btc-512"));
-        moneyIcon.setScale(0.5f);
+        moneyIcon.setScale(0.075f);
 
         Image diffIcon = new Image(MyGame.ATLAS.findRegion("uiStuff/grubOff"));
         diffIcon.setScale(0.5f);
@@ -33,7 +33,7 @@ public class PointBurstEffect extends Group {
 
         Label textLabel = new Label(text, new Label.LabelStyle(MyGame.FONT, Color.WHITE));
         textLabel.setFontScale(2);
-        textLabel.moveBy(mainIcon.getWidth() * 0.55f , mainIcon.getHeight() / 2 - textLabel.getHeight() * 1.5f);
+        textLabel.moveBy(mainIcon.getWidth() * mainIcon.getScaleX(), mainIcon.getHeight() * mainIcon.getScaleY() / 2 - textLabel.getHeight() * 0.55f);
         addActor(textLabel);
 
         float screenHeight = Gdx.graphics.getHeight();

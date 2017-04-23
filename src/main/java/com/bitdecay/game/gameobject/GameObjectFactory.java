@@ -175,6 +175,32 @@ public class GameObjectFactory {
 
         return hydrant;
     }
+    public static MyGameObject makeMailbox(PhysicsSystem phys,float x, float y){
+        MyGameObject mailbox  = new MyGameObject();
+
+        BodyDef mailboxBodyDef = new BodyDef();
+        mailboxBodyDef.position.set(x,y);
+        mailboxBodyDef.type = BodyDef.BodyType.DynamicBody;
+        mailboxBodyDef.linearDamping = 3f;
+        mailboxBodyDef.angularDamping = 3;
+        Body mailboxBody = phys.world.createBody(mailboxBodyDef);
+
+        PolygonShape mailboxShape = new PolygonShape();
+        mailboxShape.setAsBox(.4f,.4f);
+
+        Fixture mailboxFix = mailboxBody.createFixture(mailboxShape,15);
+
+        PhysicsComponent physComp = new PhysicsComponent(mailboxBody);
+        mailbox.addComponent(physComp);
+        mailbox.addComponent(new PositionComponent(x,y));
+        mailbox.addComponent(new OriginComponent(.5f,.5f));
+        mailbox.addComponent(new RotationComponent(0));
+        mailbox.addComponent(new StaticImageComponent("collidables/mailbox"));
+        mailbox.addComponent(new SizeComponent(.8f,.8f));
+        mailbox.addComponent(new BreakableObjectComponent("collidables/mailbox_flying", 1, .85f,1.2f));
+
+        return mailbox;
+    }
 
     public static void createZone(MyGameObjects gobs, PhysicsSystem phys, float x, float y, float width, float length, float rotation, ZoneType zoneType){
         MyGameObject zone = new MyGameObject();

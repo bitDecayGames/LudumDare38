@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 public class ZoneComponent extends AbstractComponent {
     public boolean canDeactivate = true;
     public boolean active = false;
+    public boolean strict = true;
     private Consumer<MyGameObject> func;
     float cost;
 

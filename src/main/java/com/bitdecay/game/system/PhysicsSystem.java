@@ -14,12 +14,19 @@ import com.bitdecay.game.system.abstracted.AbstractUpdatableSystem;
 /**
  * This system is in charge of updating the position and size component with data from the physics component
  */
+
 public class PhysicsSystem extends AbstractUpdatableSystem {
+    private static PhysicsSystem I;
+    public static PhysicsSystem instance(){
+        return I;
+    }
+
     public World world;
     public Box2DDebugRenderer debug = null;
 
     public PhysicsSystem(AbstractRoom room) {
         super(room);
+        I = this;
         world = new World(Vector2.Zero, false);
         debug = new Box2DDebugRenderer();
     }

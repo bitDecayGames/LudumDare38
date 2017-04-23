@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.bitdecay.game.room.AbstractRoom;
+import com.bitdecay.game.system.PhysicsSystem;
 import com.bitdecay.game.trait.IInitializable;
 import com.bitdecay.game.trait.IRemovable;
 
@@ -21,5 +22,6 @@ public class PhysicsComponent extends AbstractComponent implements IRemovable {
 
     @Override
     public void remove(AbstractRoom room) {
+        PhysicsSystem.instance().world.destroyBody(body);
     }
 }

@@ -278,7 +278,7 @@ public class GameObjectFactory {
         return field;
     }
 
-    private static void addZoneComponent(MyGameObject zone, Consumer<MyGameObject> modifyGameObj) {
+    private static void addStaticUtilityZone(MyGameObject zone, Consumer<MyGameObject> modifyGameObj) {
         ZoneComponent zComp = new ZoneComponent(10.0f, (gameObj) -> {
             zone.getComponent(ZoneComponent.class).get().active = false;
             zone.addComponent(new TimerComponent(5, () -> {
@@ -289,16 +289,32 @@ public class GameObjectFactory {
         });
         zComp.active = true;
         zComp.canDeactivate = false;
+        zComp.strict = true;
         zone.addComponent(zComp);
     }
 
-    public static void createZone(MyGameObjects gobs, PhysicsSystem phys, float x, float y, float width, float length, float rotation, ZoneType zoneType) {
+    private static void addDynamicObjectiveZone(float cost, MyGameObject zone, Consumer<MyGameObject> modifyGameObj){
+        ZoneComponent zComp = new ZoneComponent(cost, (gameObj) -> {
+            zone.getComponent(ZoneComponent.class).get().active = false;
+            zone.addComponent(new RemoveNowComponent());
+            modifyGameObj.accept(gameObj);
+        });
+        zComp.active = true;
+        zComp.canDeactivate = true;
+        zComp.strict = false;
+        zone.addComponent(zComp);
+    }
+
+    public static MyGameObject createZone(float x, float y, float width, float length, float rotation, ZoneType zoneType){
+        return createZone(null, x, y, width, length, rotation, zoneType, null);
+    }
+    public static MyGameObject createZone(MyGameObject followTarget, float x, float y, float width, float length, float rotation, ZoneType zoneType, Consumer<MyGameObject> modifyGameObj){
         MyGameObject zone = new MyGameObject();
 
         BodyDef zoneBodyDef = new BodyDef();
         zoneBodyDef.type = BodyDef.BodyType.StaticBody;
         zoneBodyDef.position.set(x, y);
-        Body zoneBody = phys.world.createBody(zoneBodyDef);
+        Body zoneBody = PhysicsSystem.instance().world.createBody(zoneBodyDef);
 
         PositionComponent zonePos = new PositionComponent(x, y);
         zone.addComponent(zonePos);
@@ -315,40 +331,67 @@ public class GameObjectFactory {
         WaypointComponent waypoint = new WaypointComponent(zoneType);
         zone.addComponent(waypoint);
 
+        if(followTarget != null) {
+            FollowComponent followComp = new FollowComponent(followTarget);
+            zone.addComponent(followComp);
+        }
+
         PhysicsComponent zonePhys = new PhysicsComponent(zoneBody);
         zonePhys.body.setUserData(zone);
         zone.addComponent(zonePhys);
 
-        PolygonShape zoneShape = new PolygonShape();
-        zoneShape.setAsBox(width / 2, length / 2);
+        zone.addComponent(new RotationComponent(0));
+
+        Shape zoneShape = null;
+        switch (zoneType) {
+            case BATHROOM:
+            case FUEL:
+            case REPAIR:
+            case FOOD:
+                PolygonShape s = new PolygonShape();
+                s.setAsBox(width / 2f, length / 2f);
+                zoneShape = s;
+                break;
+            case OBJECTIVE:
+                CircleShape c = new CircleShape();
+                c.setRadius(width / 2f);
+                zoneShape = c;
+                break;
+            default:
+                break;
+        }
 
         Fixture zoneFix = zoneBody.createFixture(zoneShape, 0);
         zoneFix.setSensor(true);
 
         switch (zoneType) {
             case BATHROOM:
-                addZoneComponent(zone, (gameObj) -> {
+                addStaticUtilityZone(zone, (gameObj) -> {
                     gameObj.forEachComponentDo(PoopooComponent.class, poo -> poo.currentPoopoo = 0);
                 });
                 break;
             case FOOD:
-                addZoneComponent(zone, (gameObj) -> {
+                addStaticUtilityZone(zone, (gameObj) -> {
                     gameObj.forEachComponentDo(HungerComponent.class, hungry -> hungry.currentFullness = hungry.maxFullness);
                 });
                 break;
             case FUEL:
-                addZoneComponent(zone, (gameObj) -> {
+                addStaticUtilityZone(zone, (gameObj) -> {
                     gameObj.forEachComponentDo(FuelComponent.class, fuel -> fuel.currentFuel = fuel.maxFuel);
                 });
                 break;
             case REPAIR:
+                break;
             case OBJECTIVE:
+                addDynamicObjectiveZone(0, zone, modifyGameObj);
+                break;
             case PICKUP:
                 break;
             default:
+                break;
         }
 
-        gobs.add(zone);
+        return zone;
     }
 
     public static void createCar(MyGameObjects gobs, PhysicsSystem phys, Vector2 pos, CarType type, boolean addWayPoint) {

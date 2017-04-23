@@ -667,8 +667,8 @@ public class GameObjectFactory {
         car.addComponent(carPhysics);
         carPhysics.body.setUserData(car);
 
-        car.addComponent(ParticleFactory.getExhaustParticle());
-        car.addComponent(new ParticlePosition(0f, 0));
+        car.addComponent(ParticleFactory.getFireParticle());
+        car.addComponent(new ParticlePosition(0, 1f));
 
         car.addComponent(new StaticImageComponent("player/taxi/taxi_dead"));
 

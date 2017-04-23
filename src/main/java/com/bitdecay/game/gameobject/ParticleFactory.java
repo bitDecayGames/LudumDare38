@@ -17,7 +17,7 @@ public class ParticleFactory {
     public static MyGameObject getParticleObject(ParticleChoice particle, Vector2 pos, float angle) {
         MyGameObject particleEffect = new MyGameObject();
         ParticleFXComponent particleComp = null;
-        switch(particle) {
+        switch (particle) {
             case MAIL:
                 particleComp = getMailParticle();
                 break;
@@ -37,6 +37,7 @@ public class ParticleFactory {
                 particleComp = getExhaustParticle();
                 break;
             case NONE:
+            default:
                 return null;
         }
         if (angle != 0) {
@@ -94,6 +95,10 @@ public class ParticleFactory {
 
     public static ParticleFXComponent getExhaustParticle() {
         return getParticleFX(true, "src/main/resources/particle/exhaust.p", "src/main/resources/img/packable/main/particles/");
+    }
+
+    public static ParticleFXComponent getFireParticle() {
+        return getParticleFX(true, "src/main/resources/particle/fire.p", "src/main/resources/img/packable/main/particles/");
     }
 
     public static ParticleFXComponent getParticleFX(boolean continuous, String particleFile, String particleDir) {

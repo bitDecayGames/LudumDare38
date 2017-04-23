@@ -1,12 +1,14 @@
 package com.bitdecay.game.component;
 
+import com.bitdecay.game.physics.TireFrictionData;
+
 /**
  * Created by Luke on 4/23/2017.
  */
 public class ModifiedSteeringComponent extends AbstractComponent  {
-    public TireFrictionComponent.TireFrictionData modifiedFriction;
+    public TireFrictionData modifiedFriction;
 
-    public ModifiedSteeringComponent(TireFrictionComponent.TireFrictionData Friction){
+    public ModifiedSteeringComponent(TireFrictionData Friction){
         modifiedFriction = Friction;
     }
 }

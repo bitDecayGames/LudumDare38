@@ -64,6 +64,8 @@ public class DemoRoom extends AbstractRoom {
         new HungerGaugeSystem(this, uiElements);
         new PoopGaugeSystem(this, uiElements);
 
+        new BreakableObjectSystem(this);
+
         createCar(0, 0, false, false);
 
 //        for (int x = -2; x < 2; x += 1)

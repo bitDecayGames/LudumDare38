@@ -162,6 +162,8 @@ public class GameObjectFactory {
         hydrant.addComponent(new OriginComponent(.5f,.5f));
         hydrant.addComponent(new RotationComponent(0));
         hydrant.addComponent(new StaticImageComponent("collidables/hydrant"));
+        hydrant.addComponent(new DamageComponent(2));
+        hydrant.addComponent(new BreakableObjectComponent("collidables/hydrant_flying", 2, .6f, 0.9f));
         hydrant.addComponent(new SizeComponent(.6f,.6f));
 
         return hydrant;

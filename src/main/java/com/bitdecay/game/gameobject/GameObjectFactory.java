@@ -55,6 +55,7 @@ public class GameObjectFactory {
         dumpsterBodyDef.linearDamping = 5;
         dumpsterBodyDef.angularDamping = 2.5f;
         Body dumpsterBody = phys.world.createBody(dumpsterBodyDef);
+        dumpsterBody.setUserData(dumpster);
 
         PolygonShape dumpsterShape = new PolygonShape();
         dumpsterShape.setAsBox(1.65f, 1.2f);
@@ -68,6 +69,7 @@ public class GameObjectFactory {
         dumpster.addComponent(new RotationComponent(0));
         dumpster.addComponent(new StaticImageComponent("collidables/dumpster"));
         dumpster.addComponent(new SizeComponent(3.3f, 2.4f));
+        dumpster.addComponent(new DamageComponent(4));
 
         return dumpster;
     }
@@ -548,7 +550,7 @@ public class GameObjectFactory {
         RevoluteJoint backRightTireJoint = (RevoluteJoint) phys.world.createJoint(backRightTireJointDef);
 
 
-        FuelComponent sharedFuelComponent = new FuelComponent(100, 0.25f);
+        FuelComponent sharedFuelComponent = new FuelComponent(100, .25f);
 
         MyGameObject BRtire = makeTireObject(backRightTire, backRightTireJoint, rearTireData, type, true, true);
         BRtire.addComponent(sharedFuelComponent);

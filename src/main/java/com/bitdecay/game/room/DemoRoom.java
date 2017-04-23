@@ -1,10 +1,12 @@
 package com.bitdecay.game.room;
 
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.maps.*;
-import com.badlogic.gdx.maps.tiled.*;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapLayers;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -176,11 +178,11 @@ public class DemoRoom extends AbstractRoom {
     }
 
     @Override
-    public void render(float delta) {
+    public void draw(SpriteBatch spriteBatch) {
         renderer.setView(camera);
         renderer.render();
-        super.render(delta);
-        stage.act(delta);
+        super.draw(spriteBatch);
+        stage.act(1/60f);
         stage.draw();
     }
 

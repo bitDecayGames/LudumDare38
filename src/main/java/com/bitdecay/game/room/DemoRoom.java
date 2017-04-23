@@ -2,7 +2,6 @@ package com.bitdecay.game.room;
 
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
@@ -172,7 +171,7 @@ public class DemoRoom extends AbstractRoom {
         }
 
         //waypoint section
-        if (addWayPoint) car.addComponent(new WaypointComponent(Color.GREEN.cpy()));
+        if (addWayPoint) car.addComponent(new WaypointComponent(ZoneType.OBJECTIVE));
         car.addComponent(new StaticImageComponent("player/taxi/taxi"));
         car.addComponent(new DrawOrderComponent(100));
         car.addComponent(new SizeComponent(2, 4));
@@ -339,6 +338,9 @@ public class DemoRoom extends AbstractRoom {
 
         SizeComponent zoneSize = new SizeComponent(width, length);
         zone.addComponent(zoneSize);
+
+        WaypointComponent waypoint = new WaypointComponent(zoneType);
+        zone.addComponent(waypoint);
 
         PhysicsComponent zonePhys = new PhysicsComponent(zoneBody);
         zonePhys.body.setUserData(zone);

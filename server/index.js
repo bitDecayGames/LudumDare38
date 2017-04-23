@@ -15,9 +15,9 @@ const authMiddleware = (req, res, next) => {
     const authorization = req.get('Authorization');
     if (authorization !== apiKey) {
         res.status(401).end();
+    } else {
+        next();
     }
-
-    next();
 }
 
 const connectDb = (url) => {

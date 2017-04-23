@@ -1,58 +1,105 @@
 package com.bitdecay.game.ui;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.bitdecay.game.MyGame;
+import com.bitdecay.game.util.ZoneType;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
+import java.util.Arrays;
 
-public class Phone extends Actor {
+public class Phone extends Group {
+    Image phone;
 
-    private ShapeRenderer renderer;
+    final WaypointButtonType[] waypointButtons = new WaypointButtonType[] {
+        new WaypointButtonType("fix", ZoneType.REPAIR),
+        new WaypointButtonType("gas", ZoneType.FUEL),
+        new WaypointButtonType("grub", ZoneType.FOOD),
+        new WaypointButtonType("pooper", ZoneType.BATHROOM),
+    };
 
-    public Phone (Vector2 screenSize) {
-        renderer = new ShapeRenderer();
+    public Phone(Vector2 screenSize) {
+        super();
 
-        float height = screenSize.y;
-        float width = height / 2;
+        phone = new Image(getUIRegion("phone"));
+        Image phoneGlare = new Image(getUIRegion("phoneGlare"));
 
-        float x = screenSize.x / 2 - width / 2;
+        addActor(phone);
 
-        setBounds(x, -height, width, height);
+        makeWaypointButtons();
+
+        phoneGlare.setTouchable(Touchable.childrenOnly);
+        addActor(phoneGlare);
+
+        float scale = screenSize.y / phone.getHeight() - 1;
+        scaleBy(scale);
     }
 
-    public void toggle() {
-        MoveToAction action;
+    public boolean getWaypointEnabled(ZoneType type) {
+        WaypointButtonType buttonType = Arrays.stream(waypointButtons)
+            .filter(bt -> bt.type == type)
+            .findFirst()
+            .get();
 
-        if (getY() + getHeight() > 0) {
-            action = moveTo(getX(), -getHeight());
-        } else {
-            action = moveTo(getX(),0);
+        if (buttonType != null) {
+            if (buttonType.button != null) {
+                return buttonType.button.isChecked();
+            }
         }
-        action.setDuration(0.25f);
 
-        this.addAction(action);
+        return true;
     }
 
-    public void draw (Batch batch, float parentAlpha) {
-        batch.end();
+    private void makeWaypointButtons() {
+        float y = phone.getHeight() * 0.15f;
+        float x = phone.getWidth() * 0.20f;
+        float initX = phone.getWidth() * 0.11f;
 
-        drawBase(batch);
+        for (int i = 0; i < waypointButtons.length; i++) {
+            WaypointButtonType buttonType = waypointButtons[i];
+            ImageButton button = makeButton(buttonType.imageName);
+            button.setPosition(initX + x * i, y);
+            buttonType.button = button;
 
-        batch.begin();
+            addActor(button);
+        }
     }
 
-    private void drawBase(Batch batch) {
-        renderer.setProjectionMatrix(batch.getProjectionMatrix());
-        renderer.setTransformMatrix(batch.getTransformMatrix());
-        renderer.translate(getX(), getY(), 0);
+    private ImageButton makeButton(String name) {
+        Drawable onImage = getDrawable(name + "On");
+        ImageButton imageButton = new ImageButton(getDrawable(name + "Off"), onImage, onImage);
+        imageButton.addListener(new InputListener() {
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                event.stop();
+                return true;
+            }
+        });
+        return imageButton;
+    }
 
-        renderer.begin(ShapeRenderer.ShapeType.Filled);
-        renderer.setColor(Color.BLUE);
-        renderer.rect(0, 0, getWidth(), getHeight());
-        renderer.end();
+    private TextureRegion getUIRegion(String name) {
+        return MyGame.ATLAS.findRegion("uiStuff/" + name);
+    }
+
+    private Drawable getDrawable(String name) {
+        return new TextureRegionDrawable(getUIRegion(name));
+    }
+
+    private class WaypointButtonType {
+        public String imageName;
+        public ZoneType type;
+        public ImageButton button;
+
+        public WaypointButtonType(String imageName, ZoneType type) {
+            this.imageName = imageName;
+            this.type = type;
+        }
     }
 }

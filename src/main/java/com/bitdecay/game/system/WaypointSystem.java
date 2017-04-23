@@ -1,14 +1,15 @@
 package com.bitdecay.game.system;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.bitdecay.game.component.DrawableComponent;
 import com.bitdecay.game.component.PositionComponent;
 import com.bitdecay.game.component.WaypointComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractDrawableSystem;
+import com.bitdecay.game.ui.UIElements;
 import com.bitdecay.game.util.RectangleExt;
 import com.bitdecay.game.util.VectorMath;
 
@@ -17,13 +18,20 @@ import com.bitdecay.game.util.VectorMath;
  */
 public class WaypointSystem extends AbstractDrawableSystem {
 
-    private float arrowHeight = 0.5f;
-    private float arrowWidth = 0.25f;
+    private float size = 1f;
+    private float originX = size * 0.5f;
+    private float originY = 0f;
 
-    private float visRadius = 5f;
+    private float size_XL = 2f;
+    private float originX_XL = size_XL * 0.5f;
+    private float originY_XL = 0f;
 
-    public WaypointSystem(AbstractRoom room) {
+    private UIElements uiElements;
+
+    public WaypointSystem(AbstractRoom room, UIElements uiElements) {
         super(room);
+
+        this.uiElements = uiElements;
     }
 
     @Override
@@ -31,33 +39,29 @@ public class WaypointSystem extends AbstractDrawableSystem {
 
     @Override
     public void draw(SpriteBatch spriteBatch, OrthographicCamera camera) {
-        room.shapeRenderer.setProjectionMatrix(camera.combined);
-        room.shapeRenderer.begin();
+        spriteBatch.begin();
         gobs.forEach(gob -> gob.forEachComponentDo(PositionComponent.class, pos -> gob.forEachComponentDo(WaypointComponent.class, wp -> {
-            Vector2 camPos = VectorMath.toVector2(camera.position);
-            Vector2 camToPos = pos.toVector2().sub(camPos);
-            float halfWidth = camera.viewportWidth / 2;
-            float halfHeight = camera.viewportHeight / 2;
-            RectangleExt viewPort = new RectangleExt(-halfWidth + camPos.x, -halfHeight + camPos.y, camera.viewportWidth, camera.viewportHeight);
-            if (viewPort.contains(pos.toVector2())) drawArrow(pos.toVector2().add(0, 1), new Vector2(0, -1), wp.color);
-            else {
-                Vector2 intersection = viewPort.intersectionFromCenter(camToPos.cpy().nor().scl(camToPos.len()));
-                if (intersection != null) drawArrow(intersection.cpy(), camToPos, wp.color);
+            if (uiElements.hud.phone.getWaypointEnabled(wp.zoneType)) {
+                Vector2 camPos = VectorMath.toVector2(camera.position);
+                Vector2 camToPos = pos.toVector2().sub(camPos);
+                float modWidth = camera.viewportWidth * 0.9f;
+                float modHeight = camera.viewportHeight * 0.9f;
+                float halfWidth = modWidth / 2;
+                float halfHeight = modHeight / 2;
+                RectangleExt viewPort = new RectangleExt(-halfWidth + camPos.x, -halfHeight + camPos.y, modWidth, modHeight);
+                if (viewPort.contains(pos.toVector2())) {
+                    drawArrow(pos.toVector2(), new Vector2(0, -1), wp.animated, wp.rotates, size_XL, originX_XL, originY_XL);
+                } else {
+                    Vector2 intersection = viewPort.intersectionFromCenter(camToPos.cpy());
+                    if (intersection != null) drawArrow(intersection.cpy(), camToPos, wp.staticImage, wp.rotates, size, originX, originY);
+                }
             }
-
         })));
-        room.shapeRenderer.end();
+        spriteBatch.end();
     }
 
-    private void drawArrow(Vector2 pos, Vector2 pointingTo, Color color){
-        Vector2 norm = pointingTo.cpy().scl(-1).nor();
-        Vector2 perp = norm.cpy().rotate(90);
-        Vector2 left = norm.cpy().scl(arrowHeight).add(perp.cpy().scl(-arrowWidth * 0.5f)).add(pos);
-        Vector2 right = norm.cpy().scl(arrowHeight).add(perp.cpy().scl(arrowWidth * 0.5f)).add(pos);
-
-        room.shapeRenderer.setColor(color);
-        room.shapeRenderer.line(pos, left);
-        room.shapeRenderer.line(pos, right);
-        room.shapeRenderer.line(right, left);
+    private void drawArrow(Vector2 pos, Vector2 pointingTo, DrawableComponent arrow, boolean rotates, float size, float originX, float originY){
+        float rotation = rotates ? VectorMath.angleInDegrees(new Vector2(0, -1), pointingTo.cpy().nor()) : 0;
+        room.spriteBatch.draw(arrow.image(), pos.x - originX, pos.y - originY, originX, originY, size, size, 1, 1, rotation);
     }
 }

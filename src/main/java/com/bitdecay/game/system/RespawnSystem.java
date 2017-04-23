@@ -42,5 +42,4 @@ public class RespawnSystem extends AbstractForEachUpdatableSystem {
             })
         );
     }
-
 }

@@ -21,7 +21,7 @@ public class PhysicsSystem extends AbstractUpdatableSystem {
     public PhysicsSystem(AbstractRoom room) {
         super(room);
         world = new World(Vector2.Zero, false);
-        //debug = new Box2DDebugRenderer();
+        debug = new Box2DDebugRenderer();
     }
 
     @Override
@@ -33,11 +33,6 @@ public class PhysicsSystem extends AbstractUpdatableSystem {
     public void update(float delta) {
         world.step(delta, 1, 1);
         gobs.forEach(gob -> gob.forEach(PhysicsComponent.class, phy -> {
-            if (!phy.isInitialized()) {
-                Body body = world.createBody(phy.bodyDef);
-                body.createFixture(phy.fixtureDef);
-                phy.body = body;
-            }
             gob.forEachComponentDo(PositionComponent.class, pos -> pos.set(phy.body.getPosition()));
             gob.forEachComponentDo(RotationComponent.class, rot -> rot.set(phy.body.getAngle()));
         }));

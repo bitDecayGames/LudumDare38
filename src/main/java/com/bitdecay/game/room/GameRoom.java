@@ -5,15 +5,16 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.bitdecay.game.component.PhysicsComponent;
 import com.bitdecay.game.screen.GameScreen;
 
 /**
  * Created by Monday on 4/21/2017.
  */
 public class GameRoom extends AbstractRoom {
+
     public GameRoom(GameScreen gameScreen) {
         super(gameScreen);
+
 
         // for some reason we have to initialize a world before we make shapes, or it will crash
         World world = new World(Vector2.Zero, true);
@@ -29,7 +30,7 @@ public class GameRoom extends AbstractRoom {
         carFixtureDef.shape = shape;
         carFixtureDef.friction = 0.5f;
 
-        PhysicsComponent phys = new PhysicsComponent(carBodyDef, shape, carFixtureDef);
+//        PhysicsComponent phys = new PhysicsComponent(carBodyDef, shape, carFixtureDef);
     }
 
     @Override

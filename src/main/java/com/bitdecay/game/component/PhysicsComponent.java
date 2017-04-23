@@ -11,26 +11,12 @@ import com.bitdecay.game.trait.IRemovable;
 /**
  * The component in charge of tracking the BitBody of the object
  */
-public class PhysicsComponent extends AbstractComponent implements IInitializable, IRemovable {
+public class PhysicsComponent extends AbstractComponent implements IRemovable {
     public Body body;
-    public BodyDef bodyDef;
-    public Shape shape;
-    public FixtureDef fixtureDef;
 
-    public PhysicsComponent(BodyDef bodyDef, Shape shape, FixtureDef fixtureDef) {
+    public PhysicsComponent(Body body) {
         super();
-        this.bodyDef = bodyDef;
-        this.shape = shape;
-        this.fixtureDef = fixtureDef;
-    }
-
-    @Override
-    public boolean isInitialized() {
-        return body != null;
-    }
-
-    @Override
-    public void initialize(AbstractRoom room) {
+        this.body = body;
     }
 
     @Override

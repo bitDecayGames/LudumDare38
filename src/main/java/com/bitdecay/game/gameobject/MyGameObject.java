@@ -78,6 +78,11 @@ public class MyGameObject implements ICleanup {
         return comp;
     }
 
+    public void removeComponentInstance(AbstractComponent component) {
+        componentsToRemove.add(component);
+        dirty = true;
+    }
+
     @Override
     public boolean isDirty() {
         return dirty;

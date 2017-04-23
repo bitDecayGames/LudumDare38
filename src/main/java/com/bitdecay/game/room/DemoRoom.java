@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.bitdecay.game.gameobject.GameObjectFactory;
+import com.bitdecay.game.gameobject.ParticleFactory;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
 import com.bitdecay.game.ui.Fuel;
@@ -52,6 +53,8 @@ public class DemoRoom extends AbstractRoom {
         new HealthSystem(this, contactDistrib);
         new ZoneUpdateSystem(this, contactDistrib);
 
+        new ParticleSystem(this);
+
         // various gauge things
         new FuelGaugeSystem(this, uiElements);
         new HungerGaugeSystem(this, uiElements);
@@ -70,6 +73,8 @@ public class DemoRoom extends AbstractRoom {
         GameObjectFactory.createZone(gobs, phys, 10, 0, 6, 10, 0, ZoneType.BATHROOM);
         GameObjectFactory.createZone(gobs, phys, 20, 16, 6, 10, 0, ZoneType.FUEL);
         GameObjectFactory.createZone(gobs, phys, -10, 0, 6, 10, 0, ZoneType.FOOD);
+
+        gobs.add(ParticleFactory.getMailParticle(0, 4, 1.60f));
 
         // this is required to be at the end here so that the systems have the latest gobs
         systemManager.cleanup();
@@ -95,7 +100,7 @@ public class DemoRoom extends AbstractRoom {
 
         uiElements.hud = new HUD(screenSize());
         stage.addActor(uiElements.hud);
-        uiElements.hud.toggle();
+//        uiElements.hud.toggle();
 
         stage.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {

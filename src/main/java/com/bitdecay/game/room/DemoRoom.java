@@ -176,7 +176,7 @@ public class DemoRoom extends AbstractRoom {
         x = (widthTiles/2f) + (x * 2);
         y = (heightTiles/2f) + (y * 2);
         System.out.printf("Creating static body for %s at (%f,%f) of size (%d,%d)\n", name, x, y, widthTiles, heightTiles);
-        StaticGameObjectFactory.create(phys, new Vector2(x,y), new Vector2(widthTiles, heightTiles), 0);
+        gobs.add(StaticGameObjectFactory.create(phys, new Vector2(x,y), new Vector2(widthTiles, heightTiles), 1));
     }
 
 

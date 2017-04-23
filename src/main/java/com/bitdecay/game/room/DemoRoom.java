@@ -46,7 +46,6 @@ public class DemoRoom extends AbstractRoom {
     PhysicsSystem phys = null;
 
     private Stage stage;
-    private UIElements uiElements;
     TiledMap map;
     OrthogonalTiledMapRenderer renderer;
 
@@ -76,7 +75,7 @@ public class DemoRoom extends AbstractRoom {
         new DespawnSystem(this, Integer.MIN_VALUE, Integer.MAX_VALUE, -1000, Integer.MAX_VALUE);
         new ShapeDrawSystem(this);
         new DrawSystem(this);
-        new WaypointSystem(this, uiElements);
+        new WaypointSystem(this);
         new HealthSystem(this, contactDistrib);
         new ZoneUpdateSystem(this, contactDistrib);
         new TireFrictionModifierSystem(this, contactDistrib);
@@ -89,22 +88,24 @@ public class DemoRoom extends AbstractRoom {
         new ParticleSystem(this);
 
         // various gauge things
-        new FuelGaugeSystem(this, uiElements);
-        new HungerGaugeSystem(this, uiElements);
-        new PoopGaugeSystem(this, uiElements);
+        new FuelGaugeSystem(this);
+        new HungerGaugeSystem(this);
+        new PoopGaugeSystem(this);
 
-        new MoneySystem(this, uiElements, stage);
+        new MoneySystem(this, stage);
 
-        new ObjectiveSystem(this, uiElements);
+        // ObjectiveSystem is based on objects added to the world, it needs to go after those.
+        new ObjectiveSystem(this);
 
         new BreakableObjectSystem(this);
         new RemovalSystem(this);
         new NodeSystem(this);
         GameObjectFactory.createCar(gobs, phys, new Vector2(), CarType.PLAYER, false);
+        GameObjectFactory.createCarCass(gobs, phys.world,new Vector2(5,20),0);
 
-        MyGameObject jim = GameObjectFactory.makePerson(phys,5,5);
-        gobs.add(jim);
-        gobs.add(GameObjectFactory.createZone(jim, 1000, 1000, 5, 5, 0, ZoneType.OBJECTIVE, (o)->{}));
+        gobs.add(GameObjectFactory.makePerson(phys,5,5));
+        gobs.add(GameObjectFactory.makePerson(phys,15,5));
+        gobs.add(GameObjectFactory.makePerson(phys,-5,5));
 
         gobs.add(GameObjectFactory.createZone(10, 0, 6, 10, 0, ZoneType.BATHROOM));
         gobs.add(GameObjectFactory.createZone(20, 16, 6, 10, 0, ZoneType.FUEL));
@@ -197,7 +198,7 @@ public class DemoRoom extends AbstractRoom {
         x = (widthTiles/2f) + (x * 2);
         y = (heightTiles/2f) + (y * 2);
         System.out.printf("Creating static body for %s at (%f,%f) of size (%d,%d)\n", name, x, y, widthTiles, heightTiles);
-        StaticGameObjectFactory.create(phys, new Vector2(x,y), new Vector2(widthTiles, heightTiles), 0);
+        gobs.add(StaticGameObjectFactory.create(phys, new Vector2(x,y), new Vector2(widthTiles, heightTiles), 1));
     }
 
 
@@ -246,18 +247,12 @@ public class DemoRoom extends AbstractRoom {
         this.stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        uiElements = new UIElements();
-
-        Fuel fuel = new Fuel(screenSize());
-        uiElements.fuel = fuel;
-        stage.addActor(fuel);
-
-        uiElements.hud = new HUD(screenSize());
-        stage.addActor(uiElements.hud);
+        new HUD();
+        stage.addActor(HUD.instance());
 
         stage.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                uiElements.hud.toggle();
+                HUD.instance().phone.toggle();
                 return true;
             }
         });

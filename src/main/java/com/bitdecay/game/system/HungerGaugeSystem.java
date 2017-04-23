@@ -6,19 +6,15 @@ import com.bitdecay.game.component.PlayerControlComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractForEachUpdatableSystem;
-import com.bitdecay.game.ui.UIElements;
+import com.bitdecay.game.ui.HUD;
 
 /**
  * Created by Monday on 4/22/2017.
  */
 public class HungerGaugeSystem extends AbstractForEachUpdatableSystem {
 
-
-    private UIElements uiElements;
-
-    public HungerGaugeSystem(AbstractRoom room, UIElements uiElements) {
+    public HungerGaugeSystem(AbstractRoom room) {
         super(room);
-        this.uiElements = uiElements;
     }
 
     @Override
@@ -34,7 +30,7 @@ public class HungerGaugeSystem extends AbstractForEachUpdatableSystem {
         gob.forEachComponentDo(HungerComponent.class, hunger -> {
             hunger.currentFullness -= delta * hunger.digestionRate;
             hunger.currentFullness = MathUtils.clamp(hunger.currentFullness, 0, hunger.maxFullness);
-            uiElements.hud.body.setFoodLevel(hunger.currentFullness/hunger.maxFullness);
+            HUD.instance().body.setFoodLevel(hunger.currentFullness/hunger.maxFullness);
         });
     }
 }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.bitdecay.game.component.*;
+import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractForEachUpdatableSystem;
@@ -22,6 +23,15 @@ public class DeathSystem extends AbstractForEachUpdatableSystem {
         gob.forEach(HealthComponent.class, health -> {
             if(health.currentHealth <= 0){
                gob.addComponent(new RemoveNowComponent());
+                for (JointEdge joint:gob.getComponent(PhysicsComponent.class).get().body.getJointList()) {
+                    ((MyGameObject) joint.other.getUserData()).addComponent(new RemoveNowComponent());
+                };
+
+                PhysicsComponent phys = gob.getComponent(PhysicsComponent.class).get();
+                GameObjectFactory.createCarCass(room.getGameObjects(),
+                        phys.body.getWorld(),
+                        phys.body.getPosition(),
+                        phys.body.getAngle());
             }
         });
         gob.forEach(PoopooComponent.class, poop -> {

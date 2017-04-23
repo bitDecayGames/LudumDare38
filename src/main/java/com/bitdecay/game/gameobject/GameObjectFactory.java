@@ -245,6 +245,7 @@ public class GameObjectFactory {
         obj.addComponent(new SizeComponent(1f, 1f));
         obj.addComponent(new BreakableObjectComponent("person/flyForward", 30, 1f, 1.5f, ParticleFactory.ParticleChoice.BLOOD));
         obj.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.person")));
+        obj.addComponent(new PersonComponent());
 
         return obj;
     }
@@ -623,5 +624,63 @@ public class GameObjectFactory {
         tire.addComponent(new RotationComponent(0));
         tire.addComponent(new OriginComponent(.5f, .5f));
         return tire;
+    }
+
+    public static void createCarCass(MyGameObjects gobs, World world, Vector2 pos, float rotationAngle) {
+
+        float carWidth = 2;
+        float carHeight = 4;
+        float halfWidth = carWidth / 2;
+        float halfHeight = carHeight / 2;
+
+        // create our car
+        BodyDef carBodyDef = new BodyDef();
+        carBodyDef.type = BodyDef.BodyType.StaticBody;
+        carBodyDef.position.set(pos.x, pos.y);
+
+        Body carBody = world.createBody(carBodyDef);
+        carBody.setTransform(pos,rotationAngle);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(halfWidth, halfHeight);
+        shape.set(new float[]{
+                -1, -2,
+                -1, 1.8f,
+                -.7f, 1.9f,
+                -.2f, 2,
+                .2f, 2,
+                .7f, 1.9f,
+                1, 1.8f,
+                1, -2
+
+        });
+
+        FixtureDef carFixtureDef = new FixtureDef();
+        carFixtureDef.shape = shape;
+
+        carBody.createFixture(carFixtureDef);
+
+        // create car entity
+        MyGameObject car = new MyGameObject();
+        car.addComponent(new PositionComponent(0, 0));
+        PhysicsComponent carPhysics = new PhysicsComponent(carBody);
+        car.addComponent(carPhysics);
+        carPhysics.body.setUserData(car);
+
+        car.addComponent(ParticleFactory.getExhaustParticle());
+        car.addComponent(new ParticlePosition(0f, 0));
+
+        car.addComponent(new StaticImageComponent("player/taxi/taxi_dead"));
+
+        //car damage section
+        DamageComponent carDamage = new DamageComponent(2);
+        car.addComponent(carDamage);
+
+        //waypoint section
+        car.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.car")));
+        car.addComponent(new SizeComponent(2, 4));
+        car.addComponent(new RotationComponent(0));
+        car.addComponent(new OriginComponent(.5f, .5f));
+        gobs.add(car);
     }
 }

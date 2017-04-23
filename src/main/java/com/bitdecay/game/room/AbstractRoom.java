@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.Launcher;
 import com.bitdecay.game.MyGame;
 import com.bitdecay.game.camera.FollowOrthoCamera;
+import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.gameobject.MyGameObjects;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.SystemManager;
@@ -81,5 +82,9 @@ public abstract class AbstractRoom implements IUpdate, IDraw, IHasScreenSize, IC
     @Override
     public void dispose() {
         spriteBatch.dispose();
+    }
+
+    public void addGob(MyGameObject gob) {
+        gobs.add(gob);
     }
 }

@@ -198,7 +198,7 @@ public class GameObjectFactory {
         mailbox.addComponent(new RotationComponent(0));
         mailbox.addComponent(new StaticImageComponent("collidables/mailbox"));
         mailbox.addComponent(new SizeComponent(.8f,.8f));
-        mailbox.addComponent(new BreakableObjectComponent("collidables/mailbox_flying", 1, .85f,1.2f));
+        mailbox.addComponent(new BreakableObjectComponent("collidables/mailbox_flying", 1, .85f,1.2f, ParticleFactory.ParticleChoice.MAIL));
 
         return mailbox;
     }
@@ -234,7 +234,7 @@ public class GameObjectFactory {
         obj.addComponent(new TorqueableComponent(30));
         obj.addComponent(new FuelComponent(1, 0));
         obj.addComponent(new SizeComponent(1f,1f));
-        obj.addComponent(new BreakableObjectComponent("person/flyForward", 2, .6f, 0.9f));
+        obj.addComponent(new BreakableObjectComponent("person/flyForward", 2, .6f, 0.9f, ParticleFactory.ParticleChoice.BLOOD));
 
         return obj;
     }

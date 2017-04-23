@@ -21,7 +21,6 @@ public class BreakableObjectSystem extends AbstractForEachUpdatableSystem {
     protected boolean validateGob(MyGameObject gob) {
         return gob.hasComponents(
                 BreakableObjectComponent.class,
-                StaticImageComponent.class,
                 PhysicsComponent.class,
                 SizeComponent.class
         );

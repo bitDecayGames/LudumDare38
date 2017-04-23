@@ -75,7 +75,7 @@ public class DemoRoom extends AbstractRoom {
         new ObjectiveSystem(this, uiElements);
 
         new BreakableObjectSystem(this);
-        GameObjectFactory.createCar(gobs, phys, 0, 0, CarType.PLAYER, false);
+        GameObjectFactory.createCar(gobs, phys, new Vector2(), CarType.PLAYER, false);
 
         gobs.add(GameObjectFactory.makeTrashBin(phys,-5,5));
         gobs.add(GameObjectFactory.makeDumpster(phys,-5,10));

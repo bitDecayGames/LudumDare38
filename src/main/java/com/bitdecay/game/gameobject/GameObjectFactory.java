@@ -1,6 +1,7 @@
 package com.bitdecay.game.gameobject;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
@@ -350,7 +351,7 @@ public class GameObjectFactory {
         gobs.add(zone);
     }
 
-    public static void createCar(MyGameObjects gobs, PhysicsSystem phys, float x, float y, CarType type, boolean addWayPoint) {
+    public static void createCar(MyGameObjects gobs, PhysicsSystem phys, Vector2 pos, CarType type, boolean addWayPoint) {
 
         float carWidth = 2;
         float carHeight = 4;
@@ -363,7 +364,7 @@ public class GameObjectFactory {
         // create our car
         BodyDef carBodyDef = new BodyDef();
         carBodyDef.type = BodyDef.BodyType.DynamicBody;
-        carBodyDef.position.set(x, y);
+        carBodyDef.position.set(pos.x, pos.y);
 
         Body carBody = phys.world.createBody(carBodyDef);
 

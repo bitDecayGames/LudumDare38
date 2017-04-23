@@ -1,5 +1,6 @@
 package com.bitdecay.game.system;
 
+import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.component.BreakableObjectComponent;
 import com.bitdecay.game.component.PhysicsComponent;
 import com.bitdecay.game.component.SizeComponent;
@@ -34,9 +35,12 @@ public class BreakableObjectSystem extends AbstractForEachUpdatableSystem {
             gob.forEachComponentDo(StaticImageComponent.class, image -> {
                 gob.forEachComponentDo(PhysicsComponent.class, phys -> {
                     gob.forEachComponentDo(SizeComponent.class, size -> {
-                        if (phys.body.getLinearVelocity().len() > breaker.breakVelocity) {
+                        Vector2 linearVelocity = phys.body.getLinearVelocity();
+                        if (linearVelocity.len() > breaker.breakVelocity) {
                             image.setImage(breaker.image);
                             size.set(breaker.breakWidth, breaker.breakHeight);
+                            // TODO figure out how to get these to feel 'good'
+//                            phys.body.setTransform(phys.body.getPosition(), linearVelocity.angle());
                         }
                     });
                 });

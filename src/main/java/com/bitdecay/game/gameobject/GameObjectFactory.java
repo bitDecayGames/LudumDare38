@@ -234,7 +234,7 @@ public class GameObjectFactory {
         obj.addComponent(new TorqueableComponent(30));
         obj.addComponent(new FuelComponent(1, 0));
         obj.addComponent(new SizeComponent(1f,1f));
-        obj.addComponent(new BreakableObjectComponent("person/flyForward", 2, .6f, 0.9f, ParticleFactory.ParticleChoice.BLOOD));
+        obj.addComponent(new BreakableObjectComponent("person/flyForward", 2, 1f, 1.5f, ParticleFactory.ParticleChoice.BLOOD));
 
         return obj;
     }

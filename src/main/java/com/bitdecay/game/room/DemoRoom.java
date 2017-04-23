@@ -23,18 +23,13 @@ import com.bitdecay.game.gameobject.StaticGameObjectFactory;
 import com.bitdecay.game.pathfinding.*;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
-import com.bitdecay.game.ui.Fuel;
 import com.bitdecay.game.ui.HUD;
-import com.bitdecay.game.ui.UIElements;
 import com.bitdecay.game.util.CarType;
 import com.bitdecay.game.util.ContactDistributer;
 import com.bitdecay.game.util.ZoneType;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
-import java.util.stream.StreamSupport;
 
 /**
  * The demo room is just a super simple example of how to add systems and game objects to a room.

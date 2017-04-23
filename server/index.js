@@ -5,10 +5,20 @@ const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient
 
 const port = process.env.PORT || 8080;
+const apiKey = process.env.API_KEY || 'e1103cee83aee47220fc82e30c37143a';
 const mongoDB = 'ld38';
 const mongoUrl = process.env.MONGO_URL || `mongodb://localhost:27017/${mongoDB}`;
 
 const scoreUrl = '/score';
+
+const authMiddleware = (req, res, next) => {
+    const authorization = req.get('Authorization');
+    if (authorization !== apiKey) {
+        res.status(401).end();
+    }
+
+    next();
+}
 
 const connectDb = (url) => {
     return MongoClient.connect(url)
@@ -78,6 +88,7 @@ app.use(expressWinston.logger({
     ]
 }));
 app.use(bodyParser.json());
+app.use(authMiddleware);
 
 app.get(scoreUrl, getScores);
 app.post(scoreUrl, postScore);

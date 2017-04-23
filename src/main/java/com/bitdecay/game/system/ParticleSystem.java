@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.bitdecay.game.component.ParticleFXComponent;
-import com.bitdecay.game.component.PositionComponent;
+import com.bitdecay.game.component.ParticlePosition;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractDrawableSystem;
@@ -21,7 +21,7 @@ public class ParticleSystem extends AbstractDrawableSystem {
     protected boolean validateGob(MyGameObject gob) {
         return gob.hasComponents(
                 ParticleFXComponent.class,
-                PositionComponent.class
+                ParticlePosition.class
         );
     }
 
@@ -29,16 +29,16 @@ public class ParticleSystem extends AbstractDrawableSystem {
     public void draw(SpriteBatch spriteBatch, OrthographicCamera camera) {
         spriteBatch.begin();
         for (MyGameObject gob : gobs) {
-            gob.forEachComponentDo(ParticleFXComponent.class, fx -> gob.forEachComponentDo(PositionComponent.class, pos -> {
+            gob.forEachComponentDo(ParticleFXComponent.class, fx -> gob.forEachComponentDo(ParticlePosition.class, pos -> {
+                fx.effect.setPosition(pos.x, pos.y);
                 if (!fx.started) {
                     System.out.println("Starting particle");
                     System.out.println("Planned duration: " + fx.duration);
-                    fx.effect.setPosition(pos.x, pos.y);
                     fx.effect.start();
                     fx.started = true;
                 }
                 float delta = Gdx.graphics.getDeltaTime();
-                if (fx.timePassed >= fx.duration) {
+                if (fx.duration > 0 && fx.timePassed >= fx.duration) {
                     System.out.println("Removing particle");
                     gob.removeComponent(ParticleFXComponent.class);
                 } else {

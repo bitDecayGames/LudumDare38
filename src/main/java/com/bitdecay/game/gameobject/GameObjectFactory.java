@@ -79,7 +79,7 @@ public class GameObjectFactory {
         Body cartBody = phys.world.createBody(cartBodyDef);
 
         PolygonShape cartShape = new PolygonShape();
-        cartShape.setAsBox(.8f,.5f);
+        cartShape.setAsBox(.5f,.8f);
 
         Fixture cartFix = cartBody.createFixture(cartShape,.5f);
 
@@ -89,7 +89,11 @@ public class GameObjectFactory {
         cart.addComponent(new OriginComponent(.5f,.5f));
         cart.addComponent(new RotationComponent(0));
         cart.addComponent(new StaticImageComponent("collidables/cart"));
-        cart.addComponent(new SizeComponent(1.6f,1));
+        cart.addComponent(new SizeComponent(1,1.6f));
+        TireFrictionComponent.TireFrictionData cartFriction = new TireFrictionComponent.TireFrictionData();
+        cartFriction.rollingMaxForce = .1f;
+        cartFriction.driftingMaxForce = .1f;
+        cart.addComponent(new TireFrictionComponent(cartFriction));
 
         return cart;
     }
@@ -173,7 +177,7 @@ public class GameObjectFactory {
         hydrant.addComponent(new StaticImageComponent("collidables/hydrant"));
         hydrant.addComponent(new DamageComponent(2));
         hydrant.addComponent(new SizeComponent(.6f,.6f));
-        hydrant.addComponent(new BreakableObjectComponent("collidables/hydrant_flying", 2, .6f, 0.9f, ParticleFactory.ParticleChoice.WATER));
+        hydrant.addComponent(new BreakableObjectComponent("collidables/hydrant_flying", 0, .6f, 0.9f, ParticleFactory.ParticleChoice.WATER));
 
         return hydrant;
     }
@@ -337,6 +341,8 @@ public class GameObjectFactory {
                 break;
             case REPAIR:
             case OBJECTIVE:
+            case PICKUP:
+                break;
             default:
         }
 
@@ -376,6 +382,9 @@ public class GameObjectFactory {
         PhysicsComponent carPhysics = new PhysicsComponent(carBody);
         car.addComponent(carPhysics);
         carPhysics.body.setUserData(car);
+
+        car.addComponent(ParticleFactory.getExhaustParticle(0));
+        car.addComponent(new ParticlePosition(.5f, -2));
 
         //car health section
         HealthComponent carHealth;

@@ -1,6 +1,10 @@
 package com.bitdecay.game.system;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.bitdecay.game.component.*;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.gameobject.ParticleFactory;
@@ -10,7 +14,7 @@ import com.bitdecay.game.system.abstracted.AbstractForEachUpdatableSystem;
 /**
  * Created by Monday on 4/22/2017.
  */
-public class BreakableObjectSystem extends AbstractForEachUpdatableSystem {
+public class BreakableObjectSystem extends AbstractForEachUpdatableSystem implements ContactListener {
 
 
     public BreakableObjectSystem(AbstractRoom room) {
@@ -40,16 +44,36 @@ public class BreakableObjectSystem extends AbstractForEachUpdatableSystem {
                         gob.addComponent(new StaticImageComponent(breaker.imagePath));
                         size.set(breaker.breakWidth, breaker.breakHeight);
                         if (breaker.particle != null) {
-                            MyGameObject particleObject = ParticleFactory.getParticleObject(breaker.particle, phys.body.getWorldCenter());
+                            MyGameObject particleObject = ParticleFactory.getParticleObject(breaker.particle, phys.body.getWorldCenter(), linearVelocity.angle());
                             if (particleObject != null) {
                                 room.getGameObjects().add(particleObject);
                             }
                         }
                         // TODO figure out how to get these to feel 'good'
-//                            phys.body.setTransform(phys.body.getPosition(), linearVelocity.angle());
+                        phys.body.setTransform(phys.body.getPosition(), linearVelocity.angle());
                     }
                 });
             });
         });
+    }
+
+    @Override
+    public void beginContact(Contact contact) {
+
+    }
+
+    @Override
+    public void endContact(Contact contact) {
+
+    }
+
+    @Override
+    public void preSolve(Contact contact, Manifold manifold) {
+
+    }
+
+    @Override
+    public void postSolve(Contact contact, ContactImpulse contactImpulse) {
+
     }
 }

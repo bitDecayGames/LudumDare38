@@ -1,34 +1,34 @@
 package com.bitdecay.game.system;
 
 import com.bitdecay.game.component.ObjectiveComponent;
+import com.bitdecay.game.component.ZoneComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractUpdatableSystem;
+import com.bitdecay.game.ui.UIElements;
+import com.bitdecay.game.util.Tuple;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ObjectiveSystem extends AbstractUpdatableSystem{
+    List<Tuple<MyGameObject, MyGameObject>> objectives = new ArrayList<>();
 
-    //TODO increase to 5
-    private int maxObjectives = 1;
+    final private int MAXOBJECTIVES = 3;
     private int currentObjectives = 0;
-    public boolean haveDisplayedObjectives = false;
 
-    public ObjectiveSystem(AbstractRoom room) {
+    public ObjectiveSystem(AbstractRoom room, UIElements uiElements) {
         super(room);
+        uiElements.hud.phone.objectives = objectives;
     }
 
     @Override
     public void update(float delta){
-        if(!haveDisplayedObjectives){
-            DisplayObjectives();
-            haveDisplayedObjectives = true;
-        }
-
-        if(currentObjectives < maxObjectives){
-            for(;currentObjectives < maxObjectives;currentObjectives ++){
-                CreateObjective();
-            }
-            haveDisplayedObjectives = false;
-        }
+//        if(currentObjectives < MAXOBJECTIVES){
+//            for(; currentObjectives < MAXOBJECTIVES; currentObjectives ++){
+//                createObjective();
+//            }
+//        }
     }
 
     @Override
@@ -36,11 +36,19 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
         return gob.hasComponent(ObjectiveComponent.class);
     }
 
-    private void CreateObjective(){
+    private void createObjective(){
+        Random randomizer = new Random();
 
+        List<MyGameObject> zoneGobs = gobs.stream().filter(gob -> gob.hasComponent(ZoneComponent.class)).collect(Collectors.toList());
+        MyGameObject targetZone = zoneGobs.get(randomizer.nextInt(zoneGobs.size()));
+
+        //TODO pick random hooman
+        MyGameObject targetHooman = new MyGameObject();
+
+        objectives.add(new Tuple<>(targetHooman, targetZone));
     }
 
-    public void DisplayObjectives(){
-
-    }
+//    public Tuple<MyGameObject, MyGameObject> selectObjective(MyGameObject targetZone){
+//
+//    }
 }

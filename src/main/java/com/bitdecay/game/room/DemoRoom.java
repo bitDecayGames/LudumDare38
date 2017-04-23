@@ -60,6 +60,8 @@ public class DemoRoom extends AbstractRoom {
         new TireFrictionModifierSystem(this, contactDistrib);
         new TorqueableSystem(this);
 
+        new ParticlePositionSystem(this);
+
         new ParticleSystem(this);
 
         // various gauge things
@@ -69,18 +71,19 @@ public class DemoRoom extends AbstractRoom {
 
         new MoneySystem(this, uiElements, stage);
 
+        new ObjectiveSystem(this, uiElements);
+
         new BreakableObjectSystem(this);
         GameObjectFactory.createCar(gobs, phys, 0, 0, false, false);
 
         gobs.add(BuildingFactory.autoShop(phys, new Vector2(0, 5)));
-
-//        gobs.add(GameObjectFactory.makeTrashBin(phys,-5,5));
-//        gobs.add(GameObjectFactory.makeDumpster(phys,-5,10));
-//        gobs.add(GameObjectFactory.makeCart(phys,-5,15));
-//        gobs.add(GameObjectFactory.makeToilet(phys,-5,20));
-//        gobs.add(GameObjectFactory.makeTrashBag(phys,-5,25));
-//        gobs.add(GameObjectFactory.makeFirehydrant(phys,-5,30));
-//        gobs.add(GameObjectFactory.makeMailbox(phys,0,15));
+        gobs.add(GameObjectFactory.makeTrashBin(phys,-5,5));
+        gobs.add(GameObjectFactory.makeDumpster(phys,-5,10));
+        gobs.add(GameObjectFactory.makeCart(phys,-5,15));
+        gobs.add(GameObjectFactory.makeToilet(phys,-5,20));
+        gobs.add(GameObjectFactory.makeTrashBag(phys,-5,25));
+        gobs.add(GameObjectFactory.makeFirehydrant(phys,-5,30));
+        gobs.add(GameObjectFactory.makeMailbox(phys,0,15));
         gobs.add(GameObjectFactory.makeGrassField(phys,20,20));
 
 //        gobs.add(GameObjectFactory.makePerson(phys,5,5));

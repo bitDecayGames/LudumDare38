@@ -1,7 +1,8 @@
 package com.bitdecay.game.system;
 
-import com.bitdecay.game.component.FuelComponent;
-import com.bitdecay.game.component.PlayerTireComponent;
+import com.badlogic.gdx.math.MathUtils;
+import com.bitdecay.game.component.HungerComponent;
+import com.bitdecay.game.component.PlayerControlComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractForEachUpdatableSystem;
@@ -23,15 +24,17 @@ public class HungerGaugeSystem extends AbstractForEachUpdatableSystem {
     @Override
     protected boolean validateGob(MyGameObject gob) {
         return gob.hasComponents(
-                FuelComponent.class,
-                PlayerTireComponent.class
+                HungerComponent.class,
+                PlayerControlComponent.class
         );
     }
 
     @Override
     protected void forEach(float delta, MyGameObject gob) {
-        gob.forEachComponentDo(FuelComponent.class, fuel -> {
-            uiElements.hud.body.setFoodLevel(fuel.currentFuel/fuel.maxFuel);
+        gob.forEachComponentDo(HungerComponent.class, hunger -> {
+            hunger.currentFullness -= delta * hunger.digestionRate;
+            hunger.currentFullness = MathUtils.clamp(hunger.currentFullness, 0, hunger.maxFullness);
+            uiElements.hud.body.setFoodLevel(hunger.currentFullness/hunger.maxFullness);
         });
     }
 }

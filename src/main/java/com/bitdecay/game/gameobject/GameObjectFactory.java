@@ -5,8 +5,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
+import com.bitdecay.game.Launcher;
 import com.bitdecay.game.component.*;
 import com.bitdecay.game.component.money.MoneyComponent;
+import com.bitdecay.game.physics.FrictionDataFactory;
+import com.bitdecay.game.physics.TireFrictionData;
 import com.bitdecay.game.system.PhysicsSystem;
 import com.bitdecay.game.util.CarType;
 import com.bitdecay.game.util.ZoneType;
@@ -93,10 +96,7 @@ public class GameObjectFactory {
         cart.addComponent(new RotationComponent(0));
         cart.addComponent(new StaticImageComponent("collidables/cart"));
         cart.addComponent(new SizeComponent(1, 1.6f));
-        TireFrictionComponent.TireFrictionData cartFriction = new TireFrictionComponent.TireFrictionData();
-        cartFriction.rollingMaxForce = .1f;
-        cartFriction.driftingMaxForce = .1f;
-        cart.addComponent(new TireFrictionComponent(cartFriction));
+        cart.addComponent(new TireFrictionComponent(FrictionDataFactory.getCartFriction()));
 
         return cart;
     }
@@ -243,12 +243,13 @@ public class GameObjectFactory {
         obj.addComponent(new TorqueableComponent(30));
         obj.addComponent(new FuelComponent(1, 0));
         obj.addComponent(new SizeComponent(1f, 1f));
-        obj.addComponent(new BreakableObjectComponent("person/flyForward", 2, 1f, 1.5f, ParticleFactory.ParticleChoice.BLOOD));
+        obj.addComponent(new BreakableObjectComponent("person/flyForward", 30, 1f, 1.5f, ParticleFactory.ParticleChoice.BLOOD));
+        obj.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.person")));
 
         return obj;
     }
 
-    public static MyGameObject makeGrassField(PhysicsSystem phys, float x, float y) {
+    public static MyGameObject makeGrassKnoll(PhysicsSystem phys, float x, float y) {
         MyGameObject field = new MyGameObject();
 
         BodyDef fieldBodyDef = new BodyDef();
@@ -268,12 +269,7 @@ public class GameObjectFactory {
         field.addComponent(new PositionComponent(x, y));
         field.addComponent(new OriginComponent(.5f, .5f));
 
-        TireFrictionComponent.TireFrictionData grassFriction = new TireFrictionComponent.TireFrictionData();
-        grassFriction.rollingMaxForce = 2;
-        grassFriction.driftingMaxForce = .2f;
-        grassFriction.lockedTireGripVelocity = -1;
-
-        field.addComponent(new TireFrictionModifierComponent(grassFriction));
+        field.addComponent(new TireFrictionModifierComponent(FrictionDataFactory.getGrassFriction()));
 //        field.addComponent(new StaticImageComponent("collidables/dumpster"));
 //        field.addComponent(new SizeComponent(25, 10));
 
@@ -324,9 +320,6 @@ public class GameObjectFactory {
         OriginComponent zoneOrigin = new OriginComponent(.5f, .5f);
         zone.addComponent(zoneOrigin);
 
-        StaticImageComponent zoneImage = new StaticImageComponent("target");
-        zone.addComponent(zoneImage);
-
         SizeComponent zoneSize = new SizeComponent(width, length);
         zone.addComponent(zoneSize);
 
@@ -344,7 +337,10 @@ public class GameObjectFactory {
 
         zone.addComponent(new RotationComponent(0));
 
+        zone.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.zzone")));
+
         Shape zoneShape = null;
+        AnimatedImageComponent zoneAnim;
         switch (zoneType) {
             case BATHROOM:
             case FUEL:
@@ -353,11 +349,19 @@ public class GameObjectFactory {
                 PolygonShape s = new PolygonShape();
                 s.setAsBox(width / 2f, length / 2f);
                 zoneShape = s;
+
+                zoneAnim = new AnimatedImageComponent("uiStuff/missions/rectangleTarget", 0.1f);
+                zone.addComponent(zoneAnim);
+
                 break;
             case OBJECTIVE:
                 CircleShape c = new CircleShape();
                 c.setRadius(width / 2f);
                 zoneShape = c;
+
+                zoneAnim = new AnimatedImageComponent("uiStuff/missions/circleTarget", 0.1f);
+                zone.addComponent(zoneAnim);
+
                 break;
             default:
                 break;
@@ -386,8 +390,6 @@ public class GameObjectFactory {
                 break;
             case OBJECTIVE:
                 addDynamicObjectiveZone(0, zone, modifyGameObj);
-                break;
-            case PICKUP:
                 break;
             default:
                 break;
@@ -480,22 +482,17 @@ public class GameObjectFactory {
 
         //waypoint section
         if (addWayPoint) car.addComponent(new WaypointComponent(ZoneType.OBJECTIVE));
-        car.addComponent(new DrawOrderComponent(100));
+        car.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.car")));
         car.addComponent(new SizeComponent(2, 4));
         car.addComponent(new RotationComponent(0));
         car.addComponent(new OriginComponent(.5f, .5f));
         gobs.add(car);
 
         // TIRE DATA
-        TireFrictionComponent.TireFrictionData frontTireData = new TireFrictionComponent.TireFrictionData();
-        frontTireData.rollingMaxForce = 8;
-        frontTireData.driftingMaxForce = .5f;
-        frontTireData.lockedTireGripVelocity = 0;
+        TireFrictionData frontTireData = FrictionDataFactory.getStreetFriction();
         frontTireData.weightOnTire = carBody.getMass() / 4;
 
-        TireFrictionComponent.TireFrictionData rearTireData = frontTireData.copy();
-        rearTireData.driftingMaxForce = 0f;
-        rearTireData.lockedTireGripVelocity = 1f;
+        TireFrictionData rearTireData = frontTireData.copy();
         rearTireData.weightOnTire = carBody.getMass() / 10;
 
         // /////////////////////////////////
@@ -596,7 +593,7 @@ public class GameObjectFactory {
         return tireBody;
     }
 
-    private static MyGameObject makeTireObject(Body body, RevoluteJoint joint, TireFrictionComponent.TireFrictionData tireData, CarType type, boolean rear, boolean right) {
+    private static MyGameObject makeTireObject(Body body, RevoluteJoint joint, TireFrictionData tireData, CarType type, boolean rear, boolean right) {
         float maxSpeed = 30;
         float acceleration = 5;
 
@@ -620,7 +617,7 @@ public class GameObjectFactory {
         else path = "player/tireLeft";
         tire.addComponent(new AnimatedImageComponent(path, 0.0f));
         tire.addComponent(new VelocityBasedAnimationSpeedComponent(1f));
-        tire.addComponent(new DrawOrderComponent(90));
+        tire.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.tire")));
         tire.addComponent(new SizeComponent(.25f, 2/3.0f));
         tire.addComponent(new RotationComponent(0));
         tire.addComponent(new OriginComponent(.5f, .5f));

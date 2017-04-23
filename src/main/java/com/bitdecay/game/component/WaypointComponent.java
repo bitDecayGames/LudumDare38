@@ -9,7 +9,7 @@ import com.bitdecay.game.util.ZoneType;
 public class WaypointComponent extends AbstractComponent implements IUpdate {
     public AnimatedImageComponent animated = null;
     public StaticImageComponent staticImage = null;
-    public ZoneType zoneType = ZoneType.OBJECTIVE;
+    public ZoneType zoneType = null;
     public boolean rotates = false;
 
     public WaypointComponent(ZoneType zoneType){

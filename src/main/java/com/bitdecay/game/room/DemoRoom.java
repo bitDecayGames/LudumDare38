@@ -1,10 +1,12 @@
 package com.bitdecay.game.room;
 
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.maps.*;
-import com.badlogic.gdx.maps.tiled.*;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapLayers;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -105,11 +107,11 @@ public class DemoRoom extends AbstractRoom {
 
         MapLayers mapLayers = map.getLayers();
 
-        TiledMapTileLayer mapLayer = (TiledMapTileLayer) mapLayers.get("Collidables");
+        TiledMapTileLayer collidablesLayer = (TiledMapTileLayer) mapLayers.get("Collidables");
 
-        for (int x = 0; x < mapLayer.getWidth(); x++) {
-            for (int y = 0; y < mapLayer.getHeight(); y++) {
-                TiledMapTileLayer.Cell cell = mapLayer.getCell(x, y);
+        for (int x = 0; x < collidablesLayer.getWidth(); x++) {
+            for (int y = 0; y < collidablesLayer.getHeight(); y++) {
+                TiledMapTileLayer.Cell cell = collidablesLayer.getCell(x, y);
                 if (cell != null) {
                     String objName = (String) cell.getTile().getProperties().get("obj_name");
                     if (objName != null) {
@@ -120,8 +122,30 @@ public class DemoRoom extends AbstractRoom {
             }
         }
 
+        TiledMapTileLayer buildingsLayer = (TiledMapTileLayer) mapLayers.get("Buildings");
+
+        for (int x = 0; x < buildingsLayer.getWidth(); x++) {
+            for (int y = 0; y < buildingsLayer.getHeight(); y++) {
+                TiledMapTileLayer.Cell cell = buildingsLayer.getCell(x, y);
+                if (cell != null) {
+                    String objName = (String) cell.getTile().getProperties().get("obj_name");
+                    if (objName != null) {
+                        System.out.printf("Creating new object from tiled map (%d,%d): %s\n", x, y, objName);
+                        int widthTiles = (int) cell.getTile().getProperties().get("width_tiles");
+                        int heightTiles = (int) cell.getTile().getProperties().get("height_tiles");
+                        createBuildingCollisionBox(objName, x, y, widthTiles, heightTiles);
+                    }
+                }
+            }
+        }
+
         renderer = new OrthogonalTiledMapRenderer(map, scaleFactor);
     }
+
+    private void createBuildingCollisionBox(String name, float x, float y, int widthTiles, int heightTiles){
+        System.out.println(name + x + y + widthTiles + heightTiles);
+    }
+
 
     private void createObjectFromName(String name, float x, float y) {
 
@@ -156,11 +180,11 @@ public class DemoRoom extends AbstractRoom {
     }
 
     @Override
-    public void render(float delta) {
+    public void draw(SpriteBatch spriteBatch) {
         renderer.setView(camera);
         renderer.render();
-        super.render(delta);
-        stage.act(delta);
+        super.draw(spriteBatch);
+        stage.act(1/60f);
         stage.draw();
     }
 

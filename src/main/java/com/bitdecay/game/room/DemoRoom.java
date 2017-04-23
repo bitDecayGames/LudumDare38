@@ -58,6 +58,8 @@ public class DemoRoom extends AbstractRoom {
         new ZoneUpdateSystem(this, contactDistrib);
         new TorqueableSystem(this);
 
+        new ParticleSystem(this);
+
         // various gauge things
         new FuelGaugeSystem(this, uiElements);
         new HungerGaugeSystem(this, uiElements);

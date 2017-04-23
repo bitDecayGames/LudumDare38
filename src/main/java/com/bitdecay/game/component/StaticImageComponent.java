@@ -18,4 +18,8 @@ public class StaticImageComponent extends DrawableComponent {
     public TextureRegion image() {
         return image;
     }
+
+    public void setImage(TextureRegion region) {
+        image = region;
+    }
 }

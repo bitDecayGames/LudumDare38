@@ -33,7 +33,7 @@ public class MoneySystem extends AbstractForEachUpdatableSystem {
         gob.forEachComponentDo(MoneyDiffComponent.class, moneyDiff -> {
             moneyComp.diffMoney(moneyDiff);
 
-            stage.addActor(PointBurstEffect.money(moneyDiff.toString()));
+            stage.addActor(PointBurstEffect.money(moneyDiff.diff));
         });
 
         gob.removeComponent(MoneyDiffComponent.class);

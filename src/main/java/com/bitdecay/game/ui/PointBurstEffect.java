@@ -13,14 +13,19 @@ import com.bitdecay.game.MyGame;
 public class PointBurstEffect extends Group {
     final float DURATION = 2;
 
-    public static PointBurstEffect money(String text) {
+    public static PointBurstEffect money(float diff) {
         Image moneyIcon = new Image(MyGame.ATLAS.findRegion("uiStuff/btc-512"));
         moneyIcon.setScale(0.075f);
 
-        Image diffIcon = new Image(MyGame.ATLAS.findRegion("uiStuff/grubOff"));
+        Image diffIcon;
+        if (diff > 0) {
+            diffIcon = new Image(MyGame.ATLAS.findRegion("uiStuff/plus"));
+        } else {
+            diffIcon = new Image(MyGame.ATLAS.findRegion("uiStuff/minus"));
+        }
         diffIcon.setScale(0.5f);
 
-        return new PointBurstEffect(moneyIcon, diffIcon, text);
+        return new PointBurstEffect(moneyIcon, diffIcon, Float.toString(diff));
     }
 
     public PointBurstEffect(Image mainIcon, Image secondaryIcon, String text) {

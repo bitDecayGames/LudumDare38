@@ -45,7 +45,7 @@ public class DemoRoom extends AbstractRoom {
         new DespawnSystem(this, Integer.MIN_VALUE, Integer.MAX_VALUE, -1000, Integer.MAX_VALUE);
         new ShapeDrawSystem(this);
         new DrawSystem(this);
-        new WaypointSystem(this);
+        new WaypointSystem(this, uiElements);
         new RemovalSystem(this);
         new HealthSystem(this, contactDistrib);
         new ZoneUpdateSystem(this, contactDistrib);

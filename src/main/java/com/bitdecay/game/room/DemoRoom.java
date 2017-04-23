@@ -1,15 +1,23 @@
 package com.bitdecay.game.room;
 
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.bitdecay.game.component.*;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
+import com.bitdecay.game.ui.Fuel;
+import com.bitdecay.game.ui.HUD;
+import com.bitdecay.game.ui.UIElements;
 import com.bitdecay.game.util.ContactDistributer;
 
 /**
@@ -19,8 +27,13 @@ public class DemoRoom extends AbstractRoom {
 
     PhysicsSystem phys = null;
 
+    private Stage stage;
+    private UIElements uiElements;
+
     public DemoRoom(GameScreen gameScreen) {
         super(gameScreen);
+
+        createStage();
 
         // systems must be added before game objects
         phys = new PhysicsSystem(this);
@@ -44,15 +57,50 @@ public class DemoRoom extends AbstractRoom {
         new HealthSystem(this, contactDistrib);
         new ZoneUpdateSystem(this, contactDistrib);
 
+        new FuelGaugeSystem(this, uiElements);
+
         createCar(0, 0, false, false);
 
-        for (int x = -2; x < 2; x += 1) for (int y = -2; y < 2; y += 1) createCar(x * 30, y * 30, true, x % 2 == 0 && y % 2 == 0);
+        for (int x = -2; x < 2; x += 1)
+            for (int y = -2; y < 2; y += 1) createCar(x * 30, y * 30, true, x % 2 == 0 && y % 2 == 0);
 
         createZone(10, 0, 6, 10, 0, true);
         createZone(20, 16, 6, 10, 0, false);
 
         // this is required to be at the end here so that the systems have the latest gobs
         systemManager.cleanup();
+    }
+
+    @Override
+    public void render(float delta) {
+        super.render(delta);
+
+        //      hud.update(room.getGameObjects());
+//        stage.getViewport().update(width, height, true);
+
+        stage.act(delta);
+        stage.draw();
+    }
+
+    private void createStage() {
+        this.stage = new Stage(new ScreenViewport());
+        Gdx.input.setInputProcessor(stage);
+
+        uiElements = new UIElements();
+
+        Fuel fuel = new Fuel(screenSize());
+        uiElements.fuel = fuel;
+        stage.addActor(fuel);
+
+        uiElements.hud = new HUD(screenSize());
+        stage.addActor(uiElements.hud);
+
+        stage.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                uiElements.hud.toggle();
+                return true;
+            }
+        });
     }
 
     private void createCar(float x, float y, boolean npc, boolean addWayPoint) {
@@ -91,9 +139,9 @@ public class DemoRoom extends AbstractRoom {
 
         //car health section
         HealthComponent carHealth;
-        if(npc){
+        if (npc) {
             carHealth = new HealthComponent(3);
-        }else{
+        } else {
             carHealth = new HealthComponent(10);
         }
         car.addComponent(carHealth);
@@ -103,7 +151,7 @@ public class DemoRoom extends AbstractRoom {
         car.addComponent(carDamage);
 
         //camera section
-        if (!npc){
+        if (!npc) {
             car.addComponent(new CameraFollowComponent());
             car.addComponent(new PlayerControlComponent());
         }
@@ -235,14 +283,19 @@ public class DemoRoom extends AbstractRoom {
         PhysicsComponent tirePhysics = new PhysicsComponent(body);
         tire.addComponent(tirePhysics);
         tire.addComponent(new TireFrictionComponent(tireData));
-        if (rear && !npc) tire.addComponent(new DriveTireComponent(maxSpeed, acceleration));
-        else {
-            if (!npc) tire.addComponent(new SteerableComponent(MathUtils.PI / 4));
+        if (rear && !npc) {
+            tire.addComponent(new DriveTireComponent(maxSpeed, acceleration));
+            tire.addComponent(new PlayerTireComponent());
+        } else {
+            if (!npc) {
+                tire.addComponent(new SteerableComponent(MathUtils.PI / 4));
+            }
             tire.addComponent(new RevoluteJointComponent(joint));
         }
         tire.addComponent(new PositionComponent(0, 0));
         String path;
-        if (right) path = "player/tireRight"; else path = "player/tireLeft";
+        if (right) path = "player/tireRight";
+        else path = "player/tireLeft";
         tire.addComponent(new AnimatedImageComponent(path, 0.0f));
         tire.addComponent(new VelocityBasedAnimationSpeedComponent(1f));
         tire.addComponent(new DrawOrderComponent(90));
@@ -281,6 +334,11 @@ public class DemoRoom extends AbstractRoom {
         } else {
             ZoneComponent zComp = new ZoneComponent(() -> {
                 System.out.println("I TALK SOOO MUCH AND YOU CANT STOP ME!!");
+                zone.getComponent(ZoneComponent.class).get().active = false;
+                zone.addComponent(new TimerComponent(5, () -> {
+                        zone.getComponent(ZoneComponent.class).get().active = true;
+                        zone.removeComponent(TimerComponent.class);
+                }));
             });
             zComp.active = true;
             zComp.canDeactivate = false;
@@ -288,5 +346,11 @@ public class DemoRoom extends AbstractRoom {
         }
 
         gobs.add(zone);
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        stage.dispose();
     }
 }

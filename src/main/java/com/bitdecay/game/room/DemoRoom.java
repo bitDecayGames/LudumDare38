@@ -17,6 +17,7 @@ import com.bitdecay.game.system.*;
 import com.bitdecay.game.ui.Fuel;
 import com.bitdecay.game.ui.HUD;
 import com.bitdecay.game.ui.UIElements;
+import com.bitdecay.game.util.CarType;
 import com.bitdecay.game.util.ContactDistributer;
 
 import java.util.Iterator;
@@ -80,7 +81,7 @@ public class DemoRoom extends AbstractRoom {
         new ObjectiveSystem(this, uiElements);
 
         new BreakableObjectSystem(this);
-        GameObjectFactory.createCar(gobs, phys, 0, 0, false, false);
+        GameObjectFactory.createCar(gobs, phys, 0, 0, CarType.PLAYER, false);
 
         gobs.add(GameObjectFactory.makePerson(phys,5,5));
 

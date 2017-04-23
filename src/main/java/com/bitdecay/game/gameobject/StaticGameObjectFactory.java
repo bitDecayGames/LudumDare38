@@ -6,7 +6,7 @@ import com.bitdecay.game.component.*;
 import com.bitdecay.game.system.PhysicsSystem;
 
 public class StaticGameObjectFactory {
-    public static MyGameObject create(PhysicsSystem phys, Vector2 pos, Vector2 size){
+    public static MyGameObject create(PhysicsSystem phys, Vector2 pos, Vector2 size, int damage){
         MyGameObject gameObject  = new MyGameObject();
 
         BodyDef bodyDef = new BodyDef();
@@ -29,6 +29,7 @@ public class StaticGameObjectFactory {
         gameObject.addComponent(new OriginComponent(0.5f, 0.5f));
         gameObject.addComponent(new RotationComponent(0));
         gameObject.addComponent(new SizeComponent(size.x, size.y));
+        gameObject.addComponent(new DamageComponent(damage));
 
         return gameObject;
     }

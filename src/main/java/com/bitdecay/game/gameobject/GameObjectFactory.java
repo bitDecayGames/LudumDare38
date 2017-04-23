@@ -8,6 +8,7 @@ import com.bitdecay.game.component.*;
 import com.bitdecay.game.component.money.MoneyComponent;
 import com.bitdecay.game.component.money.MoneyDiffComponent;
 import com.bitdecay.game.system.PhysicsSystem;
+import com.bitdecay.game.util.CarType;
 import com.bitdecay.game.util.ZoneType;
 
 import java.util.function.Consumer;
@@ -349,7 +350,7 @@ public class GameObjectFactory {
         gobs.add(zone);
     }
 
-    public static void createCar(MyGameObjects gobs, PhysicsSystem phys, float x, float y, boolean npc, boolean addWayPoint) {
+    public static void createCar(MyGameObjects gobs, PhysicsSystem phys, float x, float y, CarType type, boolean addWayPoint) {
 
         float carWidth = 2;
         float carHeight = 4;
@@ -386,32 +387,42 @@ public class GameObjectFactory {
         car.addComponent(ParticleFactory.getExhaustParticle());
         car.addComponent(new ParticlePosition(.5f, -2));
 
-        //car health section
-        HealthComponent carHealth;
-        if (npc) {
-            carHealth = new HealthComponent(3);
-        } else {
-            carHealth = new HealthComponent(10);
+        // Car type section
+        int health;
+        String imageName;
+
+        switch (type) {
+            case PLAYER:
+                health = 10;
+                imageName = "player/taxi/taxi";
+                // Add camera and other stats
+                car.addComponent(new CameraFollowComponent());
+                car.addComponent(new PlayerControlComponent());
+                car.addComponent(new HungerComponent(100, 0.5f));
+                car.addComponent(new PoopooComponent(100, 0.5f));
+                car.addComponent(new MoneyComponent(100));
+                break;
+            case COP:
+                health = 20;
+                imageName = "cop/cop";
+                break;
+            case NPC:
+                health = 2;
+                imageName = "player/taxi/taxi";
+                break;
+            default:
+                health = 1;
+                imageName = "player/taxi/taxi";
         }
-        car.addComponent(carHealth);
+        car.addComponent(new HealthComponent(health));
+        car.addComponent(new StaticImageComponent(imageName));
 
         //car damage section
         DamageComponent carDamage = new DamageComponent(2);
         car.addComponent(carDamage);
 
-        //camera section
-        if (!npc) {
-            car.addComponent(new CameraFollowComponent());
-            car.addComponent(new PlayerControlComponent());
-            car.addComponent(new HungerComponent(100, 0.5f));
-            car.addComponent(new PoopooComponent(100, 0.5f));
-            car.addComponent(new MoneyComponent(0));
-            car.addComponent(new MoneyDiffComponent(100));
-        }
-
         //waypoint section
         if (addWayPoint) car.addComponent(new WaypointComponent(ZoneType.OBJECTIVE));
-        car.addComponent(new StaticImageComponent("player/taxi/taxi"));
         car.addComponent(new DrawOrderComponent(100));
         car.addComponent(new SizeComponent(2, 4));
         car.addComponent(new RotationComponent(0));
@@ -446,7 +457,7 @@ public class GameObjectFactory {
         frontLeftTireJointDef.localAnchorA.set(-1f, 1.25f);
         RevoluteJoint frontLeftJoint = (RevoluteJoint) phys.world.createJoint(frontLeftTireJointDef);
 
-        gobs.add(makeTireObject(frontLeftTire, frontLeftJoint, frontTireData, npc, false, false));
+        gobs.add(makeTireObject(frontLeftTire, frontLeftJoint, frontTireData,  type, false, false));
 
         // /////////////////////////////////
         // create front right tire
@@ -465,7 +476,7 @@ public class GameObjectFactory {
         frontRightTireJointDef.localAnchorA.set(1f, 1.25f);
         RevoluteJoint frontRightJoint = (RevoluteJoint) phys.world.createJoint(frontRightTireJointDef);
 
-        gobs.add(makeTireObject(frontRightTire, frontRightJoint, frontTireData, npc, false, true));
+        gobs.add(makeTireObject(frontRightTire, frontRightJoint, frontTireData, type, false, true));
 
         // /////////////////////////////////
         // create back right tire
@@ -486,7 +497,7 @@ public class GameObjectFactory {
 
         FuelComponent sharedFuelComponent = new FuelComponent(100, 0.25f);
 
-        MyGameObject BRtire = makeTireObject(backRightTire, backRightTireJoint, rearTireData, npc, true, true);
+        MyGameObject BRtire = makeTireObject(backRightTire, backRightTireJoint, rearTireData, type, true, true);
         BRtire.addComponent(sharedFuelComponent);
         gobs.add(BRtire);
 
@@ -507,7 +518,7 @@ public class GameObjectFactory {
         backLeftTireJointDef.localAnchorA.set(1f, -1.25f);
         RevoluteJoint backLeftTireJoint = (RevoluteJoint) phys.world.createJoint(backLeftTireJointDef);
 
-        MyGameObject BLtire = makeTireObject(backLeftTire, backLeftTireJoint, rearTireData, npc, true, false);
+        MyGameObject BLtire = makeTireObject(backLeftTire, backLeftTireJoint, rearTireData, type, true, false);
         BLtire.addComponent(sharedFuelComponent);
 
         gobs.add(BLtire);
@@ -528,7 +539,7 @@ public class GameObjectFactory {
         return tireBody;
     }
 
-    private static MyGameObject makeTireObject(Body body, RevoluteJoint joint, TireFrictionComponent.TireFrictionData tireData, boolean npc, boolean rear, boolean right) {
+    private static MyGameObject makeTireObject(Body body, RevoluteJoint joint, TireFrictionComponent.TireFrictionData tireData, CarType type, boolean rear, boolean right) {
         float maxSpeed = 30;
         float acceleration = 5;
 
@@ -537,11 +548,11 @@ public class GameObjectFactory {
         tirePhysics.body.setUserData(tire);
         tire.addComponent(tirePhysics);
         tire.addComponent(new TireFrictionComponent(tireData));
-        if (rear && !npc) {
+        if (rear && type == CarType.PLAYER) {
             tire.addComponent(new DriveTireComponent(maxSpeed, acceleration));
             tire.addComponent(new PlayerTireComponent());
         } else {
-            if (!npc) {
+            if (type == CarType.PLAYER) {
                 tire.addComponent(new SteerableComponent(MathUtils.PI / 4));
             }
             tire.addComponent(new RevoluteJointComponent(joint));

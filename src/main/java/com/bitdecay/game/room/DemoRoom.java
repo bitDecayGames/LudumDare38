@@ -69,6 +69,8 @@ public class DemoRoom extends AbstractRoom {
 
         new MoneySystem(this, uiElements, stage);
 
+        new ObjectiveSystem(this, uiElements);
+
         new BreakableObjectSystem(this);
         GameObjectFactory.createCar(gobs, phys, 0, 0, false, false);
 

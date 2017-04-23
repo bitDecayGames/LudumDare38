@@ -346,6 +346,8 @@ public class GameObjectFactory {
                 break;
             case REPAIR:
             case OBJECTIVE:
+            case PICKUP:
+                break;
             default:
         }
 
@@ -406,8 +408,8 @@ public class GameObjectFactory {
         if (!npc) {
             car.addComponent(new CameraFollowComponent());
             car.addComponent(new PlayerControlComponent());
-            car.addComponent(new HungerComponent(100, 10));
-            car.addComponent(new PoopooComponent(100, 5));
+            car.addComponent(new HungerComponent(100, 0.5f));
+            car.addComponent(new PoopooComponent(100, 0.5f));
             car.addComponent(new MoneyComponent(0));
             car.addComponent(new MoneyDiffComponent(100));
         }
@@ -487,7 +489,7 @@ public class GameObjectFactory {
         RevoluteJoint backRightTireJoint = (RevoluteJoint) phys.world.createJoint(backRightTireJointDef);
 
 
-        FuelComponent sharedFuelComponent = new FuelComponent(100, 2);
+        FuelComponent sharedFuelComponent = new FuelComponent(100, 0.25f);
 
         MyGameObject BRtire = makeTireObject(backRightTire, backRightTireJoint, rearTireData, npc, true, true);
         BRtire.addComponent(sharedFuelComponent);

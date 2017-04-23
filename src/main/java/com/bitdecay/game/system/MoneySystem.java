@@ -6,8 +6,8 @@ import com.bitdecay.game.component.money.MoneyDiffComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractForEachUpdatableSystem;
-import com.bitdecay.game.ui.PointBurstEffect;
 import com.bitdecay.game.ui.UIElements;
+import com.bitdecay.game.ui.pointBurst.PointBurstFactory;
 
 public class MoneySystem extends AbstractForEachUpdatableSystem {
     private UIElements uiElements;
@@ -33,7 +33,7 @@ public class MoneySystem extends AbstractForEachUpdatableSystem {
         gob.forEachComponentDo(MoneyDiffComponent.class, moneyDiff -> {
             moneyComp.diffMoney(moneyDiff);
 
-            stage.addActor(PointBurstEffect.money(moneyDiff.toString()));
+            stage.addActor(PointBurstFactory.money(moneyDiff.diff));
         });
 
         gob.removeComponent(MoneyDiffComponent.class);

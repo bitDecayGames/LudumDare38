@@ -10,13 +10,13 @@ public class StaticGameObjectFactory {
         MyGameObject gameObject  = new MyGameObject();
 
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(pos.x, pos.y);
+        bodyDef.position.set(pos.x + size.x/2, pos.y + size.y/2);
         bodyDef.type = BodyDef.BodyType.StaticBody;
         Body body = phys.world.createBody(bodyDef);
+        body.setUserData(gameObject);
 
         PolygonShape shape = new PolygonShape();
-        Vector2 box2dSize = (new Vector2(size)).scl(0.5f);
-        shape.setAsBox(box2dSize.x, box2dSize.y);
+        shape.setAsBox(size.x, size.y);
 
         FixtureDef carFixtureDef = new FixtureDef();
         carFixtureDef.shape = shape;

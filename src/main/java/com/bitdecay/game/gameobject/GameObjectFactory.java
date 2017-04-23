@@ -245,6 +245,7 @@ public class GameObjectFactory {
         obj.addComponent(new SizeComponent(1f, 1f));
         obj.addComponent(new BreakableObjectComponent("person/flyForward", 30, 1f, 1.5f, ParticleFactory.ParticleChoice.BLOOD));
         obj.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.person")));
+        obj.addComponent(new PersonComponent());
 
         return obj;
     }
@@ -464,6 +465,7 @@ public class GameObjectFactory {
             case COP:
                 health = 20;
                 imageName = "cop/cop";
+//                car.addComponent(new CameraFollowComponent());
                 break;
             case NPC:
                 health = 2;

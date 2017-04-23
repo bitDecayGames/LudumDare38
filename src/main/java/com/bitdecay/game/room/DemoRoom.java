@@ -15,6 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.gameobject.MyGameObject;
+import com.bitdecay.game.gameobject.StaticGameObjectFactory;
+import com.bitdecay.game.pathfinding.Node;
+import com.bitdecay.game.pathfinding.NodeComponent;
+import com.bitdecay.game.pathfinding.NodeSystem;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
 import com.bitdecay.game.ui.Fuel;
@@ -24,10 +28,16 @@ import com.bitdecay.game.util.CarType;
 import com.bitdecay.game.util.ContactDistributer;
 import com.bitdecay.game.util.ZoneType;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * The demo room is just a super simple example of how to add systems and game objects to a room.
  */
 public class DemoRoom extends AbstractRoom {
+
+    public static int TILE_SIZE = 80;
 
     PhysicsSystem phys = null;
 
@@ -81,23 +91,42 @@ public class DemoRoom extends AbstractRoom {
 
         new MoneySystem(this, uiElements, stage);
 
+        // ObjectiveSystem is based on objects added to the world, it needs to go after those.
         new ObjectiveSystem(this, uiElements);
 
         new BreakableObjectSystem(this);
         new RemovalSystem(this);
-
+        new NodeSystem(this);
         GameObjectFactory.createCar(gobs, phys, new Vector2(), CarType.PLAYER, false);
         GameObjectFactory.createCarCass(gobs, phys.world,new Vector2(5,20),0);
 
-        MyGameObject jim = GameObjectFactory.makePerson(phys,5,5);
-        gobs.add(jim);
-        gobs.add(GameObjectFactory.createZone(jim, 1000, 1000, 5, 5, 0, ZoneType.OBJECTIVE, (o)->{}));
+        gobs.add(GameObjectFactory.makePerson(phys,5,5));
+        gobs.add(GameObjectFactory.makePerson(phys,15,5));
+        gobs.add(GameObjectFactory.makePerson(phys,-5,5));
 
         gobs.add(GameObjectFactory.createZone(10, 0, 6, 10, 0, ZoneType.BATHROOM));
         gobs.add(GameObjectFactory.createZone(20, 16, 6, 10, 0, ZoneType.FUEL));
         gobs.add(GameObjectFactory.createZone(-10, 0, 6, 10, 0, ZoneType.FOOD));
 
         loadTileMapAndStartingObjects();
+
+        Node a = new Node(new Vector2());
+        Node b = new Node(new Vector2(4, 4));
+        Node c = new Node(new Vector2(-3, 3));
+        c.connectTo(b);
+        Node d = new Node(new Vector2(6, 6));
+        Node e = new Node(new Vector2(-6, 6));
+        e.connectTo(d);
+
+        Node[] nodes = new Node[] {
+            a, b, c, d, e
+        };
+
+        Arrays.stream(nodes).forEach(node -> {
+            MyGameObject temp = new MyGameObject();
+            temp.addComponent(new NodeComponent(node));
+            gobs.add(temp);
+        });
 
         // this is required to be at the end here so that the systems have the latest gobs
         systemManager.cleanup();
@@ -131,9 +160,10 @@ public class DemoRoom extends AbstractRoom {
                 if (cell != null) {
                     String objName = (String) cell.getTile().getProperties().get("obj_name");
                     if (objName != null) {
-                        System.out.printf("Creating new object from tiled map (%d,%d): %s\n", x, y, objName);
-                        int widthTiles = (int) cell.getTile().getProperties().get("width_tiles");
-                        int heightTiles = (int) cell.getTile().getProperties().get("height_tiles");
+                        String stringWidthTiles = (String)cell.getTile().getProperties().get("width_tiles");
+                        String stringHeightTiles = (String)cell.getTile().getProperties().get("height_tiles");
+                        int widthTiles = Integer.parseInt(stringWidthTiles);
+                        int heightTiles = Integer.parseInt(stringHeightTiles);
                         createBuildingCollisionBox(objName, x, y, widthTiles, heightTiles);
                     }
                 }
@@ -144,7 +174,10 @@ public class DemoRoom extends AbstractRoom {
     }
 
     private void createBuildingCollisionBox(String name, float x, float y, int widthTiles, int heightTiles){
-        System.out.println(name + x + y + widthTiles + heightTiles);
+        x = (widthTiles/2f) + (x * 2);
+        y = (heightTiles/2f) + (y * 2);
+        System.out.printf("Creating static body for %s at (%f,%f) of size (%d,%d)\n", name, x, y, widthTiles, heightTiles);
+        gobs.add(StaticGameObjectFactory.create(phys, new Vector2(x,y), new Vector2(widthTiles, heightTiles), 1));
     }
 
 

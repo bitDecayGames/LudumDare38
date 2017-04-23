@@ -5,10 +5,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.bitdecay.game.gameobject.BuildingFactory;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
@@ -69,6 +71,8 @@ public class DemoRoom extends AbstractRoom {
 
         new BreakableObjectSystem(this);
         GameObjectFactory.createCar(gobs, phys, 0, 0, false, false);
+
+        gobs.add(BuildingFactory.autoShop(phys, new Vector2(0, 5)));
 
 //        gobs.add(GameObjectFactory.makeTrashBin(phys,-5,5));
 //        gobs.add(GameObjectFactory.makeDumpster(phys,-5,10));

@@ -17,6 +17,7 @@ import java.util.Arrays;
 
 public class Phone extends Group {
     Image phone;
+    Money money;
 
     final WaypointButtonType[] waypointButtons = new WaypointButtonType[] {
         new WaypointButtonType("fix", ZoneType.REPAIR),
@@ -35,11 +36,18 @@ public class Phone extends Group {
 
         makeWaypointButtons();
 
+        money = new Money(screenSize);
+        addActor(money);
+
         phoneGlare.setTouchable(Touchable.childrenOnly);
         addActor(phoneGlare);
 
         float scale = screenSize.y / phone.getHeight() - 1;
         scaleBy(scale);
+    }
+
+    public void setMoney(float value) {
+        money.setMoney(value);
     }
 
     public boolean getWaypointEnabled(ZoneType type) {

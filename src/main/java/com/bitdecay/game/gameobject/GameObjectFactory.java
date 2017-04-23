@@ -5,6 +5,8 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.bitdecay.game.component.*;
+import com.bitdecay.game.component.money.MoneyComponent;
+import com.bitdecay.game.component.money.MoneyDiffComponent;
 import com.bitdecay.game.system.PhysicsSystem;
 import com.bitdecay.game.util.ZoneType;
 
@@ -174,6 +176,68 @@ public class GameObjectFactory {
 
         return hydrant;
     }
+    public static MyGameObject makeMailbox(PhysicsSystem phys,float x, float y){
+        MyGameObject mailbox  = new MyGameObject();
+
+        BodyDef mailboxBodyDef = new BodyDef();
+        mailboxBodyDef.position.set(x,y);
+        mailboxBodyDef.type = BodyDef.BodyType.DynamicBody;
+        mailboxBodyDef.linearDamping = 3f;
+        mailboxBodyDef.angularDamping = 3;
+        Body mailboxBody = phys.world.createBody(mailboxBodyDef);
+
+        PolygonShape mailboxShape = new PolygonShape();
+        mailboxShape.setAsBox(.4f,.4f);
+
+        Fixture mailboxFix = mailboxBody.createFixture(mailboxShape,15);
+
+        PhysicsComponent physComp = new PhysicsComponent(mailboxBody);
+        mailbox.addComponent(physComp);
+        mailbox.addComponent(new PositionComponent(x,y));
+        mailbox.addComponent(new OriginComponent(.5f,.5f));
+        mailbox.addComponent(new RotationComponent(0));
+        mailbox.addComponent(new StaticImageComponent("collidables/mailbox"));
+        mailbox.addComponent(new SizeComponent(.8f,.8f));
+        mailbox.addComponent(new BreakableObjectComponent("collidables/mailbox_flying", 1, .85f,1.2f));
+
+        return mailbox;
+    }
+
+    public static MyGameObject makePerson(PhysicsSystem phys, float x, float y){
+        MyGameObject obj  = new MyGameObject();
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.position.set(x,y);
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.linearDamping = .5f;
+        bodyDef.angularDamping = 3;
+        Body body = phys.world.createBody(bodyDef);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(.5f,.5f);
+
+        body.createFixture(shape,35f);
+
+        PhysicsComponent physComp = new PhysicsComponent(body);
+        obj.addComponent(physComp);
+        obj.addComponent(new PositionComponent(x,y));
+        obj.addComponent(new OriginComponent(.5f,.5f));
+        obj.addComponent(new RotationComponent(0));
+        AnimatedImageComponent slow = new AnimatedImageComponent("person/walk", 0f);
+        obj.addComponent(slow);
+        AnimatedImageComponent fast = new AnimatedImageComponent("person/run", 0f);
+        fast.scaleY = 1.5f;
+        obj.addComponent(fast);
+        obj.addComponent(new MultiTieredVelocityAnimationComponent(3, 10, slow, fast));
+        obj.addComponent(new VelocityBasedAnimationSpeedComponent(5f));
+        obj.addComponent(new DriveTireComponent(25, 5));
+        obj.addComponent(new TorqueableComponent(30));
+        obj.addComponent(new FuelComponent(1, 0));
+        obj.addComponent(new SizeComponent(1f,1f));
+        obj.addComponent(new BreakableObjectComponent("person/flyForward", 2, .6f, 0.9f));
+
+        return obj;
+    }
 
     public static void createZone(MyGameObjects gobs, PhysicsSystem phys, float x, float y, float width, float length, float rotation, ZoneType zoneType){
         MyGameObject zone = new MyGameObject();
@@ -316,6 +380,8 @@ public class GameObjectFactory {
             car.addComponent(new PlayerControlComponent());
             car.addComponent(new HungerComponent(100, 10));
             car.addComponent(new PoopooComponent(100, 5));
+            car.addComponent(new MoneyComponent(0));
+            car.addComponent(new MoneyDiffComponent(100));
         }
 
         //waypoint section

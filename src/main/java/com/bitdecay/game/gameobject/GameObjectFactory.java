@@ -39,7 +39,6 @@ public class GameObjectFactory {
         trashBin.addComponent(new SizeComponent(1.5f,1.5f));
         trashBin.addComponent(new BreakableObjectComponent("collidables/trash_flying", 3, 1.5f,1.5f, ParticleFactory.ParticleChoice.TRASH));
 
-
         return trashBin;
     }
 
@@ -275,10 +274,6 @@ public class GameObjectFactory {
 //        field.addComponent(new SizeComponent(25, 10));
 
         return field;
-    }
-
-    interface ZoneRunnable {
-        void run(MyGameObjects gobs);
     }
 
     private static void addZoneComponent(MyGameObject zone, Consumer<MyGameObject> modifyGameObj) {

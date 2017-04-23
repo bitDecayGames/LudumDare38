@@ -250,7 +250,7 @@ public class GameObjectFactory {
         Body fieldBody = phys.world.createBody(fieldBodyDef);
 
         PolygonShape fieldShape = new PolygonShape();
-        fieldShape.setAsBox(30f, 40);
+        fieldShape.setAsBox(20f, 20);
 
         Fixture fieldFix = fieldBody.createFixture(fieldShape, 0);
         fieldFix.setSensor(true);

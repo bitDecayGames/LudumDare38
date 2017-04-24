@@ -30,7 +30,7 @@ public class DrawSystem extends AbstractDrawableSystem {
         }).forEach(gob -> gob.forEach(DrawableComponent.class, drawable -> gob.forEach(PositionComponent.class, pos -> gob.forEach(SizeComponent.class, size -> {
             if (drawable.isVisible) {
                 if (drawable instanceof ParticleFXComponent) {
-                    maybeDrawParticle(spriteBatch, (ParticleFXComponent) drawable);
+                    maybeDrawParticle(spriteBatch, gob, (ParticleFXComponent) drawable);
                 } else {
                     float rotation = gob.getComponent(RotationComponent.class).map(RotationComponent::toDegrees).orElseGet(() -> 0f);
                     Vector2 origin = gob.getComponent(OriginComponent.class).map(OriginComponent::toVector2).orElseGet(() -> new Vector2(0, 0)).scl(size.w, size.h);
@@ -42,7 +42,9 @@ public class DrawSystem extends AbstractDrawableSystem {
         spriteBatch.end();
     }
 
-    private void maybeDrawParticle(SpriteBatch spriteBatch, ParticleFXComponent particle) {
-        particle.effect.draw(spriteBatch);
+    private void maybeDrawParticle(SpriteBatch spriteBatch, MyGameObject gob, ParticleFXComponent particle) {
+        if (gob.hasComponent(DrawInDrawSystemComponent.class)) {
+            particle.effect.draw(spriteBatch);
+        }
     }
 }

@@ -572,12 +572,13 @@ public class GameObjectFactory {
         MyGameObject BRtire = makeTireObject(backRightTire, backRightTireJoint, rearTireData, type, true, true);
         MyGameObject BRSkidChaser = new MyGameObject();
         ParticleFXComponent BRskidParticle = ParticleFactory.getSkidParticle();
+        BRskidParticle.requestStart = false;
         BRSkidChaser.addComponent(BRskidParticle);
         BRSkidChaser.addComponent(new PositionComponent(0, 0));
         BRSkidChaser.addComponent(new ParticlePosition(0, 0));
         BRSkidChaser.addComponent(new RotationComponent(0));
         BRSkidChaser.addComponent(new FollowOtherPositionComponent(BRtire.getFreshComponent(PositionComponent.class).get()));
-        BRSkidChaser.addComponent(new SpecialDrawParticleComponent());
+        BRSkidChaser.addComponent(new DrawInDrawSystemComponent());
         BRSkidChaser.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.person")));
         BRSkidChaser.addComponent(new SizeComponent(0, 0)); // this is just here to get the drawsystem to see this object
 
@@ -609,12 +610,13 @@ public class GameObjectFactory {
 
         MyGameObject BLSkidChaser = new MyGameObject();
         ParticleFXComponent BLskidParticle = ParticleFactory.getSkidParticle();
+        BLskidParticle.requestStart = false;
         BLSkidChaser.addComponent(BLskidParticle);
         BLSkidChaser.addComponent(new PositionComponent(0, 0));
         BLSkidChaser.addComponent(new ParticlePosition(0, 0));
         BLSkidChaser.addComponent(new RotationComponent(0));
         BLSkidChaser.addComponent(new FollowOtherPositionComponent(BLtire.getFreshComponent(PositionComponent.class).get()));
-        BLSkidChaser.addComponent(new SpecialDrawParticleComponent());
+        BLSkidChaser.addComponent(new DrawInDrawSystemComponent());
         BLSkidChaser.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.person")));
         BLSkidChaser.addComponent(new SizeComponent(0, 0)); // this is just here to get the drawsystem to see this object
 

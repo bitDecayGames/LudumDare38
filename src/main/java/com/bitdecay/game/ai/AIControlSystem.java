@@ -46,21 +46,33 @@ public class AIControlSystem extends AbstractUpdatableSystem {
                         Vector2 currentPos = physComp.body.getPosition().cpy();
 
                         Vector2 diff = targetPos.sub(currentPos);
-
-                        if (diff.len() < 1f) {
+                        float diffRads = diff.angle() * MathUtils.degreesToRadians;
+                        if (diff.len() < 2f) {
                             if (!aiComp.currentPath.hasNext()) {
                                 aiComp.setPath(createRandomPath(aiComp.currentNode));
                             }
                             aiComp.currentNode = null;
                         } else {
-                            // TODO Better facing.
-//                            physComp.body.setTransform(physComp.body.getPosition(), diff.angle() - 90);
-                            physComp.body.applyLinearImpulse(diff, physComp.body.getWorldCenter(), true);
+                            physComp.body.setTransform(physComp.body.getPosition(), diffRads - MathUtils.PI/2);
+                            float walkSpeed = 1.1f;
+                            physComp.body.applyLinearImpulse(diff.nor().scl(walkSpeed - diff.len()).scl(physComp.body.getMass()), physComp.body.getWorldCenter(), true);
                         }
                     }
                 });
             });
         });
+    }
+
+    private float normalizedAngle(float in) {
+        while (in > MathUtils.PI2) {
+            in -= MathUtils.PI2;
+        }
+
+        while (in < 0) {
+            in += MathUtils.PI2;
+        }
+
+        return in;
     }
 
     private DefaultGraphPath<Node> createRandomPath(Node startNode) {
@@ -69,7 +81,8 @@ public class AIControlSystem extends AbstractUpdatableSystem {
 
         IndexedAStarPathFinder<Node> pathFinder = new IndexedAStarPathFinder<>(graph);
         Array<Node> nodes = graph.getNodes();
-        Node start = startNode != null ? startNode : nodes.get(MathUtils.random(0, nodes.size - 1));
+//        Node start = startNode != null ? startNode : nodes.get(MathUtils.random(0, nodes.size - 1));
+        Node start = startNode != null ? startNode : nodes.get(0);
         Node end = nodes.get(MathUtils.random(0, nodes.size - 1));
         pathFinder.searchNodePath(start, end, manhattanHeuristic, graphPath);
 

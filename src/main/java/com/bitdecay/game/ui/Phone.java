@@ -10,12 +10,14 @@ import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.MyGame;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
 
 public class Phone extends Group {
-    private Logger log = Logger.getLogger(Phone.class);
+
+    protected Logger log = LogManager.getLogger(this.getClass());
 
     public TaskList tasks;
     public WaypointList waypoints;

@@ -9,13 +9,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.bitdecay.game.MyGame;
 import com.bitdecay.game.util.ZoneType;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class WaypointList extends Table {
-    private Logger log = Logger.getLogger(WaypointList.class);
+
+    protected Logger log = LogManager.getLogger(this.getClass());
 
     private float padding = Gdx.graphics.getWidth() * 0.01f;
 

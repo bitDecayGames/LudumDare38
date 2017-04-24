@@ -8,7 +8,8 @@ import com.bitdecay.game.Launcher;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigList;
 import com.typesafe.config.ConfigObject;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.HashMap;
 import java.util.function.BiConsumer;
@@ -17,7 +18,7 @@ import java.util.function.BiConsumer;
  * SoundLibrary is now fully built and configured based on the location of files and the sounds.conf file.  Look at the /resources/conf/sounds.conf file to figure out how to change the volume for each individual sound effect and music.  If you don't enter a value into sounds.conf, a default value will be used.
  */
 public class SoundLibrary {
-    private static final Logger log = Logger.getLogger(SoundLibrary.class);
+    private static final Logger log = LogManager.getLogger(SoundLibrary.class);
 
     private static final String fxDir = Launcher.conf.getString("sounds.fxDir");
     private static final float defaultFxVolume = (float) Launcher.conf.getDouble("sounds.defaultFxVolume");

@@ -3,13 +3,15 @@ package com.bitdecay.game.component;
 import com.bitdecay.game.trait.IUpdate;
 import com.bitdecay.game.util.Quest;
 import com.bitdecay.game.util.ZoneType;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Use this component to mark an object on or off screen with a little indicator
  */
 public class WaypointComponent extends AbstractComponent implements IUpdate {
-    private Logger log = Logger.getLogger(WaypointComponent.class);
+
+    protected Logger log = LogManager.getLogger(this.getClass());
 
     public AnimatedImageComponent animated = null;
     public StaticImageComponent staticImage = null;

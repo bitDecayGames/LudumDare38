@@ -1,7 +1,8 @@
 package com.bitdecay.game.util;
 
 import com.bytebreakstudios.animagic.texture.AnimagicTexturePacker;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 
@@ -10,7 +11,7 @@ import java.io.File;
  */
 public class TexturePackerUtils {
 
-    private static final Logger log = Logger.getLogger(TexturePackerUtils.class);
+    private static final Logger log = LogManager.getLogger(TexturePackerUtils.class);
 
     private TexturePackerUtils(){}
 

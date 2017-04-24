@@ -186,7 +186,7 @@ public class DemoRoom extends AbstractRoom {
                 if (cell != null) {
                     String objName = (String) cell.getTile().getProperties().get("obj_name");
                     if (objName != null) {
-                        System.out.printf("Creating new object from tiled map (%d,%d): %s\n", x, y, objName);
+                        log.info("Creating new object from tiled map ({},{}): {}", x, y, objName);
                         createObjectFromName(objName, x, y);
                     }
                 }
@@ -227,7 +227,8 @@ public class DemoRoom extends AbstractRoom {
     private void createBuildingCollisionBox(String name, float x, float y, int widthTiles, int heightTiles) {
         x = (widthTiles / 2f) + (x * 2);
         y = (heightTiles / 2f) + (y * 2);
-        System.out.printf("Creating static body for %s at (%f,%f) of size (%d,%d)\n", name, x, y, widthTiles, heightTiles);
+
+        log.info("Creating static body for {} at ({},{}) of size ({},{})", name, x, y, widthTiles, heightTiles);
         gobs.add(StaticGameObjectFactory.create(phys, new Vector2(x, y), new Vector2(widthTiles, heightTiles), 1));
     }
 
@@ -260,7 +261,7 @@ public class DemoRoom extends AbstractRoom {
                 gobs.add(GameObjectFactory.makeCart(phys, x, y));
                 break;
             default:
-                System.out.println("Item name not recognized. Not spawning in an object");
+                log.info("Item name({}) not recognized. Not spawning in an object", name);
         }
     }
 

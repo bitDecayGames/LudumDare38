@@ -2,7 +2,8 @@ package com.bitdecay.game.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -18,7 +19,7 @@ public class ServerCommunication {
         return i;
     }
 
-    private Logger log = Logger.getLogger(ServerCommunication.class);
+    protected Logger log = LogManager.getLogger(this.getClass());
     private final String baseUrl = "http://bytebreakstudios.com:8080";
     private Client client = ClientBuilder.newClient();
     private final static String auth = "e1103cee83aee47220fc82e30c37143a";

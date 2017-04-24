@@ -4,7 +4,8 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +14,7 @@ import java.util.Map;
 
 public class ContactDistributer implements ContactListener{
     public List<ContactListener> listeners = new ArrayList<>();
-    Logger logger = Logger.getLogger(ContactDistributer.class);
+    protected Logger log = LogManager.getLogger(this.getClass());
 
     private Map<Long, Contact> ongoingContacts = new HashMap<>();
 

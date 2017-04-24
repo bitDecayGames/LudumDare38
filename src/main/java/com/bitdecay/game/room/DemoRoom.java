@@ -32,10 +32,7 @@ import com.bitdecay.game.pathfinding.NodeSystem;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
 import com.bitdecay.game.ui.HUD;
-import com.bitdecay.game.util.CarType;
-import com.bitdecay.game.util.ContactDistributer;
-import com.bitdecay.game.util.InputHelper;
-import com.bitdecay.game.util.ZoneType;
+import com.bitdecay.game.util.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -316,7 +313,7 @@ public class DemoRoom extends AbstractRoom {
         stage.act(1 / 60f);
         stage.draw();
 
-        if (InputHelper.isKeyJustPressed(Input.Keys.TAB)) {
+        if (InputHelper.isKeyJustPressed(Input.Keys.TAB) || InputHelper.isButtonJustPressed(Xbox360Pad.START)) {
             HUD.instance().phone.toggle();
         }
     }

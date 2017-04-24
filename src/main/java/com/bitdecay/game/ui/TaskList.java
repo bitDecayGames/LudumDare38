@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.bitdecay.game.util.InputHelper;
 import com.bitdecay.game.util.Quest;
 import com.bitdecay.game.util.Tuple;
+import com.bitdecay.game.util.Xbox360Pad;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -101,8 +102,8 @@ public class TaskList extends Group {
         super.act(delta);
         updateStartedQuests(delta);
 
-        if (InputHelper.isKeyJustPressed(Input.Keys.E)) moveSelectionDown();
-        else if (InputHelper.isKeyJustPressed(Input.Keys.Q)) moveSelectionUp();
+        if (InputHelper.isKeyJustPressed(Input.Keys.E) || InputHelper.isButtonJustPressed(Xbox360Pad.RB)) moveSelectionDown();
+        else if (InputHelper.isKeyJustPressed(Input.Keys.Q) || InputHelper.isButtonJustPressed(Xbox360Pad.LB)) moveSelectionUp();
 
         boolean found = false;
         for (int i = 0; i < quests.size(); i++){

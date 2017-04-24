@@ -32,10 +32,7 @@ import com.bitdecay.game.pathfinding.NodeSystem;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
 import com.bitdecay.game.ui.HUD;
-import com.bitdecay.game.util.CarType;
-import com.bitdecay.game.util.ContactDistributer;
-import com.bitdecay.game.util.InputHelper;
-import com.bitdecay.game.util.ZoneType;
+import com.bitdecay.game.util.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -139,7 +136,7 @@ public class DemoRoom extends AbstractRoom {
 
         GameObjectFactory.createCarCass(gobs, phys.world, new Vector2(5, 20), 0);
 
-        for (int x = -3; x < 3; x++) for (int y = -3; y < 3; y++) gobs.add(GameObjectFactory.makePerson(phys, x * 5 + 100, y * 5 + 100, false));
+//        for (int x = -3; x < 3; x++) for (int y = -3; y < 3; y++) gobs.add(GameObjectFactory.makePerson(phys, x * 5 + 100, y * 5 + 100, false));
 
         gobs.add(GameObjectFactory.createZone(10, 0, 6, 10, 0, ZoneType.BATHROOM, null));
         gobs.add(GameObjectFactory.createZone(20, 16, 6, 10, 0, ZoneType.FUEL, null));
@@ -316,7 +313,7 @@ public class DemoRoom extends AbstractRoom {
         stage.act(1 / 60f);
         stage.draw();
 
-        if (InputHelper.isKeyJustPressed(Input.Keys.TAB)) {
+        if (InputHelper.isKeyJustPressed(Input.Keys.TAB) || InputHelper.isButtonJustPressed(Xbox360Pad.START)) {
             HUD.instance().phone.toggle();
         }
     }

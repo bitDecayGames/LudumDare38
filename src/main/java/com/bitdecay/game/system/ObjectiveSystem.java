@@ -17,9 +17,7 @@ import com.bitdecay.game.util.Quest;
 import com.bitdecay.game.util.Tuple;
 import com.bitdecay.game.util.ZoneType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ObjectiveSystem extends AbstractUpdatableSystem{
@@ -35,6 +33,8 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
     private Vector2 zone1 = new Vector2(5, 30);
     private Vector2 zone2 = new Vector2(15, 30);
     private Vector2 zone3 = new Vector2(-5, 30);
+
+    private Map<Quest, MyGameObject> questMap = new HashMap<>();
 
     private List<Vector2> zoneCoordsList = new ArrayList<>();
 
@@ -57,22 +57,28 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
             float reward = (float) questConf.getDouble("reward");
             List<ObjectiveZone> zones = questConf.getConfigList("targetZones").stream().map(zoneConf -> {
                 String name = zoneConf.getString("name");
-                Vector2 position = room.pickupLocations.get(zoneConf.getString("position"));
+                Vector2 position = room.dropoffLocations.get(zoneConf.getString("position"));
                 if (position == null) {
                     System.out.println("NOTHING FOUND FOR " + zoneConf.getString("position"));
+                    position = new Vector2();
                 }
+                position = position.cpy().scl(2);
                 String flavorText = zoneConf.getString("flavorText");
                 float timer = (float) zoneConf.getDouble("timer");
                 return new ObjectiveZone(name, position, flavorText, timer);
             }).collect(Collectors.toList());
-            gobs.add(GameObjectFactory.makePerson(room.phys, pickupLocation.x, pickupLocation.y, true));
-            return new Quest(personName, icon, reward, zones, null, null);
+            MyGameObject person = GameObjectFactory.makePerson(room.phys, pickupLocation.x*2, pickupLocation.y*2, true);
+            room.getGameObjects().add(person);
+            Quest quest = new Quest(personName, icon, reward, zones, null, null);
+            people.add(person);
+            questMap.put(quest, person);
+            return quest;
         }).collect(Collectors.toList()));
     }
 
     @Override
     public void update(float delta){
-        peopleInTheWorld = (int) gobs.stream().filter(gob -> gob.hasComponent(PersonComponent.class)).count();
+        peopleInTheWorld = people.size();
 
         if(currentObjectives < MAXOBJECTIVES && peopleInTheWorld >= 3){
             for(; currentObjectives < MAXOBJECTIVES; currentObjectives ++){
@@ -94,16 +100,21 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
     }
 
     private void createObjective(){
-        if (quests.size() > 0) {
+        if (questMap.size() > 0) {
             Random randomizer = new Random();
-            List<MyGameObject> currentHoomans = objectives.stream().map(tup -> tup.x).collect(Collectors.toList());
+//            List<MyGameObject> currentHoomans = objectives.stream().map(tup -> tup.x).collect(Collectors.toList());
 
-            List<MyGameObject> hoomanGobs = gobs.stream().filter(gob -> gob.hasComponent(PersonComponent.class) &&
-                    !currentHoomans.contains(gob)).collect(Collectors.toList());
-            MyGameObject targetHooman = hoomanGobs.get(randomizer.nextInt(hoomanGobs.size()));
+//            List<MyGameObject> hoomanGobs = gobs.stream().filter(gob -> gob.hasComponent(PersonComponent.class) &&
+//                    !currentHoomans.contains(gob)).collect(Collectors.toList());
 
-            int questIndex = randomizer.nextInt(quests.size());
-            Quest quest = quests.get(questIndex).copy((q, o) -> {
+//            MyGameObject targetHooman = hoomanGobs.get(randomizer.nextInt(hoomanGobs.size()));
+
+            int questIndex = randomizer.nextInt(questMap.size());
+
+            MyGameObject customerObject = questMap.get(questMap.keySet().toArray()[questIndex]);
+            Quest referenceQuest = (Quest) questMap.keySet().toArray()[questIndex];
+
+            Quest quest =((Quest) questMap.keySet().toArray()[questIndex]).copy((q, o) -> {
                 if (q.currentZone().isPresent()) {
                     ObjectiveZone curZone = q.currentZone().get();
                     MyGameObject nextZone = GameObjectFactory.createZone(curZone.position.x, curZone.position.y, 15, 15, 0, ZoneType.OBJECTIVE, (obj) -> {
@@ -114,6 +125,7 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
                     nextZone.getFreshComponent(WaypointComponent.class).ifPresent(wp -> wp.quest = q);
                     log.info("Add new zone");
                     room.addGob(nextZone);
+                    room.getGameObjects().remove(customerObject);
                 } else q.onCompletion.accept(q, o);
             }, (q, o) -> {
                 log.info("End of quest: {}", q.personName);
@@ -121,11 +133,13 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
                 HUD.instance().phone.tasks.removeQuest(q);
             });
             log.info("Got quest: {}", quest);
-            quests.remove(questIndex);
+            questMap.remove(referenceQuest);
             log.info("Remaining Quests: {}", quests);
 
-            MyGameObject humanZone = GameObjectFactory.createZone(targetHooman, 10000, 10000, 5, 5, 0, ZoneType.OBJECTIVE, (gameObj) -> {
+            MyGameObject humanZone = GameObjectFactory.createZone(customerObject, 10000, 10000, 5, 5, 0, ZoneType.OBJECTIVE, (gameObj) -> {
                 quest.started = true;
+                System.out.println(quest);
+                System.out.println(gameObj);
                 quest.onZoneTrigger.accept(quest, gameObj);
             });
             humanZone.getFreshComponent(WaypointComponent.class).ifPresent(wp -> {
@@ -135,7 +149,7 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
             room.addGob(humanZone);
             HUD.instance().phone.tasks.addQuest(quest);
 
-            objectives.add(new Tuple<>(targetHooman, quest));
+            objectives.add(new Tuple<>(customerObject, quest));
         }
     }
 }

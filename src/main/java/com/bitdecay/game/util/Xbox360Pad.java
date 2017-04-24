@@ -1,5 +1,8 @@
 package com.bitdecay.game.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Xbox360Pad {
     public static final int X = 13;
     public static final int Y = 14;
@@ -23,4 +26,28 @@ public class Xbox360Pad {
     public static final int RIGHT = 202;
     public static final int DOWN = 203;
     public static final int UP = 303;
+
+    public static List<Integer> buttons = new ArrayList<>();
+    static {
+        buttons.add(X);
+        buttons.add(Y);
+        buttons.add(A);
+        buttons.add(B);
+        buttons.add(BACK);
+        buttons.add(START);
+        buttons.add(DPAD_UP);
+        buttons.add(DPAD_DOWN);
+        buttons.add(DPAD_RIGHT);
+        buttons.add(DPAD_LEFT);
+        buttons.add(LB);
+        buttons.add(L3);
+        buttons.add(RB);
+        buttons.add(R3);
+        buttons.add(LT);
+        buttons.add(RT);
+        buttons.add(LEFT);
+        buttons.add(RIGHT);
+        buttons.add(DOWN);
+        buttons.add(UP);
+    }
 }

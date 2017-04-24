@@ -128,7 +128,7 @@ public class MainMenuScreen implements Screen {
         game.setScreen(new CreditsScreen(game));
     }
 
-    private void gotoHighscores() { game.setScreen(new HighscoresScreen(game)); }
+    private void gotoHighscores() { game.setScreen(new HighscoresScreen(game, null, 0)); }
 
     private void exitGame() {
         Gdx.app.exit();

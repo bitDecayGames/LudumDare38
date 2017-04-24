@@ -38,12 +38,13 @@ public class HighscoresScreen implements Screen {
     private Label lblBack;
     private Label lblScores;
 
-    public HighscoresScreen(MyGame game) {
+    public HighscoresScreen(MyGame game, String name, int score) {
         this.game = game;
 
+        if (name != null && !name.equalsIgnoreCase("")) ServerCommunication.instance().sendHighscore(new Highscore(name, score));
         highscores = ServerCommunication.instance().getHighscores();
 
-        Skin skin = new Skin(Gdx.files.classpath(Launcher.conf.getString("highscore.skin")));
+        Skin skin = new Skin(Gdx.files.classpath(Launcher.conf.getString("menu.skin")));
 
         background = new Image(new Texture(Gdx.files.classpath(Launcher.conf.getString("highscore.background"))));
         background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

@@ -12,6 +12,5 @@ public class InvincibleComponent extends AbstractComponent{
         public Color origColor;
     public InvincibleComponent(Color original){
         origColor = original;
-
     }
 }

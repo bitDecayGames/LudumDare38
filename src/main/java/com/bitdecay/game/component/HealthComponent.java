@@ -9,15 +9,15 @@ import com.bitdecay.game.trait.IRemovable;
  */
 public class HealthComponent extends AbstractComponent {
 
-    public int maxHealth;
-    public int currentHealth;
+    public float maxHealth;
+    public float currentHealth;
 
-    public HealthComponent(int max, int current){
+    public HealthComponent(float max, float current){
         maxHealth = max;
         currentHealth = current;
     }
 
-    public HealthComponent(int max){
+    public HealthComponent(float max){
         maxHealth = max;
         currentHealth = max;
     }
@@ -26,7 +26,7 @@ public class HealthComponent extends AbstractComponent {
         return currentHealth <= 0;
     }
 
-    public HealthComponent set(int currentHealth){
+    public HealthComponent set(float currentHealth){
         this.currentHealth = currentHealth;
         return this;
     }

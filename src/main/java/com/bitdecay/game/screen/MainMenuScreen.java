@@ -56,6 +56,7 @@ public class MainMenuScreen implements Screen {
         // Here is where you add more menu options
         // ////////////////////////////////////////////////
         menu.add(buildNewMenuOption("Start", this::gotoGame)).height(60).padBottom(20).padTop(150).row();
+        menu.add(buildNewMenuOption("Instructions", this::gotoInstructions)).height(60).padBottom(20).row();
         menu.add(buildNewMenuOption("Highscores", this::gotoHighscores)).height(60).padBottom(20).row();
         menu.add(buildNewMenuOption("Credits", this::gotoCredits)).height(60).padBottom(20).row();
         menu.add(buildNewMenuOption("Quit", this::exitGame)).height(60).padBottom(20).row();
@@ -119,6 +120,10 @@ public class MainMenuScreen implements Screen {
         game.setScreen(new GameScreen(game));
     }
 
+    private void gotoInstructions(){
+        game.setScreen(new InstructionsScreen(game));
+    }
+
     private void gotoCredits() {
         game.setScreen(new CreditsScreen(game));
     }
@@ -130,7 +135,7 @@ public class MainMenuScreen implements Screen {
     }
 
     private void makeSelection(){
-        SoundLibrary.playSound(Launcher.conf.getString("menu.selectSoundFx"));
+//        SoundLibrary.playSound(Launcher.conf.getString("menu.selectSoundFx"));
 
         menuOptions.get(menuSelection).runnable.run();
     }

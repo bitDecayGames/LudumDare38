@@ -63,7 +63,7 @@ public class HealthSystem extends AbstractSystem implements ContactListener {
 
             attacked.forEachComponentDo(DrawableComponent.class, drawable -> {
                 float min = 0.3f;
-                float grey = (((float) health.currentHealth / (float) health.maxHealth) * (1 - min)) + min;
+                float grey = ((health.currentHealth / health.maxHealth) * (1 - min)) + min;
 
                 drawable.color.set(grey, grey, grey, 1);
             });
@@ -82,8 +82,5 @@ public class HealthSystem extends AbstractSystem implements ContactListener {
             }
 
         }));
-
-
-
     }
 }

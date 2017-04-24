@@ -11,6 +11,7 @@ import com.bitdecay.game.component.money.MoneyDiffComponent;
 import com.bitdecay.game.physics.FrictionDataFactory;
 import com.bitdecay.game.physics.TireFrictionData;
 import com.bitdecay.game.system.PhysicsSystem;
+import com.bitdecay.game.ui.HUD;
 import com.bitdecay.game.util.CarType;
 import com.bitdecay.game.util.SoundLibrary;
 import com.bitdecay.game.util.ZoneType;
@@ -446,10 +447,21 @@ public class GameObjectFactory {
                 break;
             case FUEL:
                 addStaticUtilityZone(zone, (gameObj) -> {
-                    gameObj.forEachComponentDo(FuelComponent.class, fuel -> fuel.currentFuel = fuel.maxFuel);
+                    gameObj.getComponent(PhysicsComponent.class).get().body.getJointList().forEach(jointEdge ->
+                        ((MyGameObject)jointEdge.other.getUserData()).forEachComponentDo(FuelComponent.class, fuelComponent ->
+                            fuelComponent.currentFuel = fuelComponent.maxFuel));
                 },"FuelingUp");
                 break;
             case REPAIR:
+                addStaticUtilityZone(zone, (gameObj -> {
+                    gameObj.forEachComponentDo(HealthComponent.class, health -> { gameObj.forEachComponentDo(DrawableComponent.class, draw -> {
+                        health.currentHealth = health.maxHealth;
+                        float min = 0.3f;
+                        float grey = ((health.currentHealth / health.maxHealth) * (1 - min)) + min;
+                        draw.color.set(grey, grey, grey, 1);
+                    });
+                    });
+                }), "RepairSound");
                 break;
             case OBJECTIVE:
                 addDynamicObjectiveZone(zone, modifyGameObj, "DoorChaChing");

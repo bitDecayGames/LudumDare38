@@ -150,6 +150,7 @@ public class DemoRoom extends AbstractRoom {
         gobs.add(GameObjectFactory.createZone(10, 0, 6, 10, 0, ZoneType.BATHROOM, null));
         gobs.add(GameObjectFactory.createZone(20, 16, 6, 10, 0, ZoneType.FUEL, null));
         gobs.add(GameObjectFactory.createZone(-10, 0, 6, 10, 0, ZoneType.FOOD, null));
+        gobs.add(GameObjectFactory.createZone(-20, 0, 6, 10, 0, ZoneType.REPAIR, null));
 
         loadTileMapAndStartingObjects();
 

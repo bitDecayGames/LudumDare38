@@ -5,9 +5,9 @@ package com.bitdecay.game.component;
  */
 public class DamageComponent extends AbstractComponent {
 
-    public int damage;
+    public float damage;
 
-    public DamageComponent(int dmg){
+    public DamageComponent(float dmg){
         damage = dmg;
     }
 }

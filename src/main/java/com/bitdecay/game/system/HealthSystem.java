@@ -4,6 +4,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.bitdecay.game.component.DamageComponent;
 import com.bitdecay.game.component.DrawableComponent;
 import com.bitdecay.game.component.HealthComponent;
+import com.bitdecay.game.component.TimerComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractSystem;
@@ -29,13 +30,27 @@ public class HealthSystem extends AbstractSystem implements ContactListener {
         MyGameObject objectA = (MyGameObject) contact.getFixtureA().getBody().getUserData();
         MyGameObject objectB = (MyGameObject) contact.getFixtureB().getBody().getUserData();
         if(objectA != null && objectB != null){
-            applyDamage(objectA, objectB);
-            applyDamage(objectB, objectA);
 
+            if(!objectB.hasComponent(InvincibleComponent.class)){
+                applyDamage(objectA, objectB);
 
-            //for testing only
-//            objectA.forEachComponentDo(HealthComponent.class, health -> System.out.println(health.currentHealth));
-//            objectB.forEachComponentDo(HealthComponent.class, health -> System.out.println(health.currentHealth));
+                objectB.addComponent(new InvincibleComponent());
+                objectB.addComponent(new TimerComponent(2, ()->{
+
+                    objectB.removeComponent(TimerComponent.class);
+                    objectB.removeComponent(InvincibleComponent.class);
+                }));
+            }
+            if(!objectA.hasComponent(InvincibleComponent.class)){
+                applyDamage(objectB, objectA);
+
+                objectA.addComponent(new InvincibleComponent());
+                objectA.addComponent(new TimerComponent(2, ()->{
+
+                    objectA.removeComponent(TimerComponent.class);
+                    objectA.removeComponent(InvincibleComponent.class);
+                }));
+            }
         }
     }
 

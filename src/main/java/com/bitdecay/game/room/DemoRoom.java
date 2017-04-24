@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapObject;
@@ -22,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.bitdecay.game.MyGame;
 import com.bitdecay.game.ai.AIControlSystem;
 import com.bitdecay.game.component.PhysicsComponent;
 import com.bitdecay.game.gameobject.GameObjectFactory;
@@ -63,8 +65,14 @@ public class DemoRoom extends AbstractRoom {
     public Map<String, Vector2> pickupLocations;
     public Map<String, Vector2> dropoffLocations;
 
+    SpriteBatch staticSpriteBatch;
+    TextureRegion background;
+
     public DemoRoom(GameScreen gameScreen) {
         super(gameScreen);
+
+        staticSpriteBatch = new SpriteBatch();
+        background = MyGame.ATLAS.findRegion("background");
 
         createStage();
 
@@ -304,6 +312,10 @@ public class DemoRoom extends AbstractRoom {
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
+        staticSpriteBatch.begin();
+        staticSpriteBatch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        staticSpriteBatch.end();
+
         //fps.log();
         renderer.setView(camera);
         renderer.render();

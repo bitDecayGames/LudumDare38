@@ -43,7 +43,7 @@ public class GameObjectFactory {
         headstone.addComponent(new RotationComponent(0));
         headstone.addComponent(new StaticImageComponent("collidables/headstone"));
         headstone.addComponent(new SizeComponent(1, 1));
-        headstone.addComponent(new BreakableObjectComponent("collidables/headstone_flying", 0.2f, 1f, 1.3f, ParticleFactory.ParticleChoice.HEADSTONE));
+        headstone.addComponent(new BreakableObjectComponent("collidables/headstone_flying", 0.2f, 1f, 1.3f, ParticleFactory.ParticleChoice.HEADSTONE, "HitStone"));
 
         return headstone;
     }
@@ -72,7 +72,8 @@ public class GameObjectFactory {
         trashBin.addComponent(new RotationComponent(0));
         trashBin.addComponent(new StaticImageComponent("collidables/trash_lid"));
         trashBin.addComponent(new SizeComponent(1.5f, 1.5f));
-        trashBin.addComponent(new BreakableObjectComponent("collidables/trash_flying", 3, 1.5f, 1.5f, ParticleFactory.ParticleChoice.TRASH));
+        trashBin.addComponent(new BreakableObjectComponent("collidables/trash_flying", 3, 1.5f, 1.5f, ParticleFactory.ParticleChoice.TRASH, "HitTrashBin"));
+
 
         return trashBin;
     }
@@ -157,7 +158,7 @@ public class GameObjectFactory {
         toilet.addComponent(new RotationComponent(0));
         toilet.addComponent(new StaticImageComponent("collidables/toilet"));
         toilet.addComponent(new SizeComponent(1.9f, 1.8f));
-        toilet.addComponent(new BreakableObjectComponent("collidables/toilet_flying", 1, 1.6f, 2.9f, ParticleFactory.ParticleChoice.POOP,"Portapotty"));
+        toilet.addComponent(new BreakableObjectComponent("collidables/toilet_flying", 1, 1.6f, 2.9f, ParticleFactory.ParticleChoice.POOP,"HitMetal"));
 
         return toilet;
     }
@@ -185,7 +186,7 @@ public class GameObjectFactory {
         trashBag.addComponent(new RotationComponent(0));
         trashBag.addComponent(new StaticImageComponent("collidables/trashbag"));
         trashBag.addComponent(new SizeComponent(1.2f, 1.2f));
-        trashBag.addComponent(new BreakableObjectComponent("collidables/trashbag_flying", 1, 1.2f, 1.8f, ParticleFactory.ParticleChoice.TRASH));
+        trashBag.addComponent(new BreakableObjectComponent("collidables/trashbag_flying", 1, 1.2f, 1.8f, ParticleFactory.ParticleChoice.TRASH,"HitTrashbag"));
 
 
         return trashBag;
@@ -215,7 +216,7 @@ public class GameObjectFactory {
         hydrant.addComponent(new StaticImageComponent("collidables/hydrant"));
         hydrant.addComponent(new DamageComponent(2));
         hydrant.addComponent(new SizeComponent(.6f, .6f));
-        hydrant.addComponent(new BreakableObjectComponent("collidables/hydrant_flying", 0, .6f, 0.9f, ParticleFactory.ParticleChoice.WATER));
+        hydrant.addComponent(new BreakableObjectComponent("collidables/hydrant_flying", 0, .6f, 0.9f, ParticleFactory.ParticleChoice.WATER, "HitFireHydrant1"));
 
         return hydrant;
     }
@@ -243,12 +244,12 @@ public class GameObjectFactory {
         mailbox.addComponent(new RotationComponent(0));
         mailbox.addComponent(new StaticImageComponent("collidables/mailbox"));
         mailbox.addComponent(new SizeComponent(.8f, .8f));
-        mailbox.addComponent(new BreakableObjectComponent("collidables/mailbox_flying", 1, .85f, 1.2f, ParticleFactory.ParticleChoice.MAIL));
+        mailbox.addComponent(new BreakableObjectComponent("collidables/mailbox_flying", 1, .85f, 1.2f, ParticleFactory.ParticleChoice.MAIL, "HitMetal"));
 
         return mailbox;
     }
 
-    public static MyGameObject makePerson(PhysicsSystem phys, float x, float y) {
+    public static MyGameObject makePerson(PhysicsSystem phys, float x, float y, boolean stationary) {
         MyGameObject obj = new MyGameObject();
         obj.addComponent(new NameComponent("Person"));
 
@@ -278,9 +279,11 @@ public class GameObjectFactory {
         obj.addComponent(new VelocityBasedAnimationSpeedComponent(5f));
         obj.addComponent(new DriveTireComponent(25, 5));
         obj.addComponent(new TorqueableComponent(30));
-        obj.addComponent(new FuelComponent(1, 0));
+        if (!stationary) {
+            obj.addComponent(new FuelComponent(1, 0));
+        }
         obj.addComponent(new SizeComponent(1f, 1f));
-        obj.addComponent(new BreakableObjectComponent("person/flyForward", 30, 1f, 1.5f, ParticleFactory.ParticleChoice.BLOOD));
+        obj.addComponent(new BreakableObjectComponent("person/flyForward", 30, 1f, 1.5f, ParticleFactory.ParticleChoice.BLOOD, "HitPerson"));
         obj.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.person")));
         obj.addComponent(new PersonComponent());
         obj.addComponent(new AIControlComponent());

@@ -58,6 +58,7 @@ public class BreakableObjectSystem extends AbstractForEachUpdatableSystem implem
                         if(breaker.soundName != null){
                             SoundLibrary.playSound(breaker.soundName);
                         }
+
                     }
                 });
             });

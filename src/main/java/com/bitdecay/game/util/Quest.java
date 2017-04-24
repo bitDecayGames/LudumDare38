@@ -28,6 +28,8 @@ public class Quest {
         this.targetZones = targetZones;
         this.onZoneTrigger = onZoneTrigger;
         this.onCompletion = onCompletion;
+
+        if (MyGame.ATLAS.findRegion(icon) == null) throw new RuntimeException("Could not find icon: " + icon + " on quest: " + personName);
     }
 
     public Quest removeCurrentZone(){

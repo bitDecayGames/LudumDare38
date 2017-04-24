@@ -14,6 +14,7 @@ public class ObjectiveZone implements IUpdate {
     public ObjectiveZone(String name, Vector2 position, String flavorText, float timer){
         this.name = name;
         this.position = position;
+        if (this.position == null) this.position = new Vector2(0, 0);
         if ("".equalsIgnoreCase(flavorText)) this.flavorText = null;
         else this.flavorText = flavorText;
         this.originalTimerValue = timer;

@@ -85,6 +85,7 @@ public class DemoRoom extends AbstractRoom {
         new TireSteeringSystem(this);
         new DriveTireSystem(this);
         new TireFrictionSystem(this);
+        new PlayerControlSoundSystem(this);
         new EBrakeSystem(this);
         new TimerSystem(this);
         new SimpleUpdateSystem(this);

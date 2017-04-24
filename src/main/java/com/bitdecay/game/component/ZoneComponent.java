@@ -11,6 +11,7 @@ public class ZoneComponent extends AbstractComponent {
     public boolean strict = true;
     public ZoneType type = null;
     private Consumer<MyGameObject> func;
+    public String sound;
 
     public ZoneComponent(Consumer<MyGameObject> func){
         this.func = func;

@@ -12,6 +12,7 @@ import com.bitdecay.game.physics.FrictionDataFactory;
 import com.bitdecay.game.physics.TireFrictionData;
 import com.bitdecay.game.system.PhysicsSystem;
 import com.bitdecay.game.util.CarType;
+import com.bitdecay.game.util.SoundLibrary;
 import com.bitdecay.game.util.ZoneType;
 
 import java.util.function.Consumer;
@@ -319,29 +320,40 @@ public class GameObjectFactory {
         return field;
     }
 
-    private static void addStaticUtilityZone(MyGameObject zone, Consumer<MyGameObject> modifyGameObj) {
+    private static void addStaticUtilityZone(MyGameObject zone, Consumer<MyGameObject> modifyGameObj, String soundName) {
         ZoneComponent zComp = new ZoneComponent((gameObj) -> {
             gameObj.addComponent(new MoneyDiffComponent(-10f));
-            zone.getComponent(ZoneComponent.class).get().active = false;
+            ZoneComponent zoneComp = zone.getComponent(ZoneComponent.class).get();
+            zoneComp.active = false;
+            if(zoneComp.sound != null){
+                SoundLibrary.playSound(zoneComp.sound);
+            }
             zone.addComponent(new TimerComponent(5, () -> {
                 zone.getComponent(ZoneComponent.class).get().active = true;
                 zone.removeComponent(TimerComponent.class);
+
             }));
             modifyGameObj.accept(gameObj);
         });
         zComp.active = true;
         zComp.canDeactivate = false;
+        zComp.sound = soundName;
         zComp.strict = true;
         zone.addComponent(zComp);
     }
 
-    private static void addDynamicObjectiveZone(MyGameObject zone, Consumer<MyGameObject> modifyGameObj){
+    private static void addDynamicObjectiveZone(MyGameObject zone, Consumer<MyGameObject> modifyGameObj,String soundName){
         ZoneComponent zComp = new ZoneComponent((gameObj) -> {
-            zone.getComponent(ZoneComponent.class).get().active = false;
+            ZoneComponent zoneComp = zone.getComponent(ZoneComponent.class).get();
+            zoneComp.active = false;
+            if(zoneComp.sound != null){
+                SoundLibrary.playSound(zoneComp.sound);
+            }
             zone.addComponent(new RemoveNowComponent());
             modifyGameObj.accept(gameObj);
         });
         zComp.active = true;
+        zComp.sound = soundName;
         zComp.canDeactivate = true;
         zComp.strict = false;
         zone.addComponent(zComp);
@@ -350,6 +362,8 @@ public class GameObjectFactory {
     public static MyGameObject createZone(float x, float y, float width, float length, float rotation, ZoneType zoneType, Consumer<MyGameObject> modifyGameObj){
         return createZone(null, x, y, width, length, rotation, zoneType, modifyGameObj);
     }
+
+
     public static MyGameObject createZone(MyGameObject followTarget, float x, float y, float width, float length, float rotation, ZoneType zoneType, Consumer<MyGameObject> modifyGameObj){
         MyGameObject zone = new MyGameObject();
         zone.addComponent(new NameComponent("Zone<" + zoneType + ">"));
@@ -419,22 +433,22 @@ public class GameObjectFactory {
             case BATHROOM:
                 addStaticUtilityZone(zone, (gameObj) -> {
                     gameObj.forEachComponentDo(PoopooComponent.class, poo -> poo.currentPoopoo = 0);
-                });
+                },"Portapotty");
                 break;
             case FOOD:
                 addStaticUtilityZone(zone, (gameObj) -> {
                     gameObj.forEachComponentDo(HungerComponent.class, hungry -> hungry.currentFullness = hungry.maxFullness);
-                });
+                },"DriveInSound");
                 break;
             case FUEL:
                 addStaticUtilityZone(zone, (gameObj) -> {
                     gameObj.forEachComponentDo(FuelComponent.class, fuel -> fuel.currentFuel = fuel.maxFuel);
-                });
+                },"FuelingUp");
                 break;
             case REPAIR:
                 break;
             case OBJECTIVE:
-                addDynamicObjectiveZone(zone, modifyGameObj);
+                addDynamicObjectiveZone(zone, modifyGameObj, "DoorChaChing");
                 break;
             default:
                 break;

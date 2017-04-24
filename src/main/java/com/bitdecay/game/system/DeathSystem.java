@@ -1,7 +1,5 @@
 package com.bitdecay.game.system;
 
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.bitdecay.game.component.*;
 import com.bitdecay.game.gameobject.GameObjectFactory;
@@ -37,18 +35,32 @@ public class DeathSystem extends AbstractForEachUpdatableSystem {
         gob.forEach(PoopooComponent.class, poop -> {
             if(poop.currentPoopoo >= poop.maxPoopoo){
 
+                gob.removeComponent(PlayerControlComponent.class);
+                gob.removeComponent(CameraFollowComponent.class);
+
                 for (JointEdge joint:gob.getComponent(PhysicsComponent.class).get().body.getJointList()) {
-                    ((MyGameObject) joint.other.getUserData()).removeComponent(DriveTireComponent.class);
-                    ((MyGameObject) joint.other.getUserData()).removeComponent(SteerableComponent.class);
+                    MyGameObject other = ((MyGameObject) joint.other.getUserData());
+                    other.removeComponent(PlayerControlComponent.class);
+                    other.removeComponent(DriveTireComponent.class);
+                    other.removeComponent(SteerableComponent.class);
+                    other.removeComponent(CameraFollowComponent.class);
+                    other.removeComponent(PlayerTireComponent.class);
                 }
             }
         });
         gob.forEach(HungerComponent.class, hunger -> {
             if(hunger.currentFullness <= 0){
 
+                gob.removeComponent(PlayerControlComponent.class);
+                gob.removeComponent(CameraFollowComponent.class);
+
                 for (JointEdge joint:gob.getComponent(PhysicsComponent.class).get().body.getJointList()) {
-                    ((MyGameObject) joint.other.getUserData()).removeComponent(DriveTireComponent.class);
-                    ((MyGameObject) joint.other.getUserData()).removeComponent(SteerableComponent.class);
+                    MyGameObject other = ((MyGameObject) joint.other.getUserData());
+                    other.removeComponent(PlayerControlComponent.class);
+                    other.removeComponent(DriveTireComponent.class);
+                    other.removeComponent(SteerableComponent.class);
+                    other.removeComponent(CameraFollowComponent.class);
+                    other.removeComponent(PlayerTireComponent.class);
                 }
             }
         });

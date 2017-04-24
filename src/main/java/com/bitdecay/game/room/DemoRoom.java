@@ -2,6 +2,7 @@ package com.bitdecay.game.room;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -53,6 +54,8 @@ public class DemoRoom extends AbstractRoom {
     float scaleFactor = 1 / 40f;
     float worldOffsetY = 1f;
     float worldOffsetX = 1f;
+
+    FPSLogger fps = new FPSLogger();
 
     public DemoRoom(GameScreen gameScreen) {
         super(gameScreen);
@@ -130,6 +133,7 @@ public class DemoRoom extends AbstractRoom {
 
         GameObjectFactory.createCarCass(gobs, phys.world, new Vector2(5, 20), 0);
 
+        gobs.add(GameObjectFactory.makePerson(phys, 5, 5));
         for (int x = -3; x < 3; x++) for (int y = -3; y < 3; y++) gobs.add(GameObjectFactory.makePerson(phys, x * 5, y * 5));
 
         gobs.add(GameObjectFactory.createZone(10, 0, 6, 10, 0, ZoneType.BATHROOM, null));
@@ -160,14 +164,18 @@ public class DemoRoom extends AbstractRoom {
 
         // Background to graph nodes.
         TiledMapTileLayer backgroundLayer = (TiledMapTileLayer) mapLayers.get("Background");
+//        int mapWidth = 10;
+//        int mapHeight = 10;
+        int mapWidth = backgroundLayer.getWidth();
+        int mapHeight = backgroundLayer.getHeight();
 
         float graphScale = 2.05f;
         Vector2 offset = (new Vector2(1, 1)).scl(0.35f);
-        graph.populate(backgroundLayer.getWidth(), backgroundLayer.getHeight(), graphScale, offset);
+        graph.populate(mapWidth, mapHeight, graphScale, offset);
 
-        int nodeIdx = backgroundLayer.getHeight() * backgroundLayer.getWidth() - 1;
-        for (int y = backgroundLayer.getHeight() - 1; y >= 0; y--) {
-            for (int x = backgroundLayer.getWidth() - 1; x >= 0; x--) {
+        int nodeIdx = mapHeight * mapWidth - 1;
+        for (int y = mapHeight - 1; y >= 0; y--) {
+            for (int x = mapWidth - 1; x >= 0; x--) {
                 TiledMapTileLayer.Cell cell = backgroundLayer.getCell(x, y);
                 if (cell == null) {
                     graph.removeNode(nodeIdx);
@@ -267,6 +275,8 @@ public class DemoRoom extends AbstractRoom {
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
+        fps.log();
+
         renderer.setView(camera);
         renderer.render();
         super.draw(spriteBatch);

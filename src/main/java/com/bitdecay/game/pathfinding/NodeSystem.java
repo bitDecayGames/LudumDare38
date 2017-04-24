@@ -33,11 +33,11 @@ public class NodeSystem extends AbstractDrawableSystem {
         renderer.setProjectionMatrix(spriteBatch.getProjectionMatrix());
         renderer.setTransformMatrix(spriteBatch.getTransformMatrix());
 
-        gobs.stream().forEach(gob -> gob.forEach(NodeComponent.class, nodeComp -> {
+        renderer.begin(ShapeRenderer.ShapeType.Line);
+        gobs.forEach(gob -> gob.forEach(NodeComponent.class, nodeComp -> {
             Node node = nodeComp.node;
             Vector2 nodePos = node.position;
 
-            renderer.begin(ShapeRenderer.ShapeType.Filled);
             Color color = Color.FOREST;
             switch (node.type) {
                 case ROAD:
@@ -49,15 +49,13 @@ public class NodeSystem extends AbstractDrawableSystem {
             }
             renderer.setColor(color);
             renderer.point(nodePos.x, nodePos.y, 0);
-            renderer.end();
 
             // Connections
-//            renderer.setColor(Color.FIREBRICK);
-//            node.connections.forEach(connection -> {
-//                renderer.begin(ShapeRenderer.ShapeType.Line);
-//                renderer.line(connection.getFromNode().position, connection.getToNode().position);
-//                renderer.end();
-//            });
+            renderer.setColor(Color.FIREBRICK);
+            node.connections.forEach(connection -> {
+                renderer.line(connection.getFromNode().position, connection.getToNode().position);
+            });
         }));
+        renderer.end();
     }
 }

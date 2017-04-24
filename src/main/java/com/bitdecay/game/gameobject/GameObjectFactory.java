@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.bitdecay.game.Launcher;
 import com.bitdecay.game.ai.AIControlComponent;
 import com.bitdecay.game.component.*;
+import com.bitdecay.game.component.money.MoneyDiffComponent;
 import com.bitdecay.game.physics.FrictionDataFactory;
 import com.bitdecay.game.physics.TireFrictionData;
 import com.bitdecay.game.system.PhysicsSystem;
@@ -16,6 +17,36 @@ import com.bitdecay.game.util.ZoneType;
 import java.util.function.Consumer;
 
 public class GameObjectFactory {
+
+    public static MyGameObject makeHeadstone(PhysicsSystem phys, float x, float y) {
+        MyGameObject headstone = new MyGameObject();
+        headstone.addComponent(new NameComponent("Headstone"));
+
+        BodyDef headstoneBodyDef = new BodyDef();
+        headstoneBodyDef.position.set(x, y);
+        headstoneBodyDef.type = BodyDef.BodyType.DynamicBody;
+        headstoneBodyDef.linearDamping = 6;
+        headstoneBodyDef.angularDamping = 4;
+
+        Body headstoneBody = phys.world.createBody(headstoneBodyDef);
+
+        PolygonShape headstoneShape = new PolygonShape();
+        headstoneShape.setAsBox(.5f, .5f);
+
+        headstoneBody.createFixture(headstoneShape, 10);
+
+        PhysicsComponent physComp = new PhysicsComponent(headstoneBody);
+
+        headstone.addComponent(physComp);
+        headstone.addComponent(new PositionComponent(x, y));
+        headstone.addComponent(new OriginComponent(.5f, .5f));
+        headstone.addComponent(new RotationComponent(0));
+        headstone.addComponent(new StaticImageComponent("collidables/headstone"));
+        headstone.addComponent(new SizeComponent(1, 1));
+        headstone.addComponent(new BreakableObjectComponent("collidables/headstone_flying", 0.2f, 1f, 1.3f, ParticleFactory.ParticleChoice.HEADSTONE));
+
+        return headstone;
+    }
 
     public static MyGameObject makeTrashBin(PhysicsSystem phys, float x, float y) {
 
@@ -286,7 +317,8 @@ public class GameObjectFactory {
     }
 
     private static void addStaticUtilityZone(MyGameObject zone, Consumer<MyGameObject> modifyGameObj) {
-        ZoneComponent zComp = new ZoneComponent(10.0f, (gameObj) -> {
+        ZoneComponent zComp = new ZoneComponent((gameObj) -> {
+            gameObj.addComponent(new MoneyDiffComponent(-10f));
             zone.getComponent(ZoneComponent.class).get().active = false;
             zone.addComponent(new TimerComponent(5, () -> {
                 zone.getComponent(ZoneComponent.class).get().active = true;
@@ -300,8 +332,8 @@ public class GameObjectFactory {
         zone.addComponent(zComp);
     }
 
-    private static void addDynamicObjectiveZone(float cost, MyGameObject zone, Consumer<MyGameObject> modifyGameObj){
-        ZoneComponent zComp = new ZoneComponent(cost, (gameObj) -> {
+    private static void addDynamicObjectiveZone(MyGameObject zone, Consumer<MyGameObject> modifyGameObj){
+        ZoneComponent zComp = new ZoneComponent((gameObj) -> {
             zone.getComponent(ZoneComponent.class).get().active = false;
             zone.addComponent(new RemoveNowComponent());
             modifyGameObj.accept(gameObj);
@@ -399,7 +431,7 @@ public class GameObjectFactory {
             case REPAIR:
                 break;
             case OBJECTIVE:
-                addDynamicObjectiveZone(0, zone, modifyGameObj);
+                addDynamicObjectiveZone(zone, modifyGameObj);
                 break;
             default:
                 break;

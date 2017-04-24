@@ -59,6 +59,7 @@ public class RespawnGameOverSystem extends AbstractUpdatableSystem {
             if (tire.hasComponent(RevoluteJointComponent.class)) {
                 tire.addComponent(new PlayerControlComponent());
                 tire.addComponent(new DriveTireComponent(maxSpeed, acceleration));
+                tire.addComponent(new PlayerTireComponent());
                 tire.addComponent(new SteerableComponent(MathUtils.PI / 6));
             }
         }

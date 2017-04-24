@@ -17,6 +17,34 @@ import java.util.function.Consumer;
 
 public class GameObjectFactory {
 
+    public static MyGameObject makeHeadstone(PhysicsSystem phys, float x, float y) {
+        MyGameObject headstone = new MyGameObject();
+
+        BodyDef headstoneBodyDef = new BodyDef();
+        headstoneBodyDef.position.set(x, y);
+        headstoneBodyDef.type = BodyDef.BodyType.DynamicBody;
+        headstoneBodyDef.linearDamping = 6;
+        headstoneBodyDef.angularDamping = 4;
+
+        Body headstoneBody = phys.world.createBody(headstoneBodyDef);
+
+        PolygonShape headstoneShape = new PolygonShape();
+        headstoneShape.setAsBox(.25f, .1f);
+
+        headstoneBody.createFixture(headstoneShape, 10);
+
+        PhysicsComponent physComp = new PhysicsComponent(headstoneBody);
+
+        headstone.addComponent(physComp);
+        headstone.addComponent(new OriginComponent(.5f, .5f));
+        headstone.addComponent(new RotationComponent(0));
+        headstone.addComponent(new StaticImageComponent("collidables/headstone"));
+        headstone.addComponent(new SizeComponent(.5f, .2f));
+        headstone.addComponent(new BreakableObjectComponent("collidables/headstone_flying", 0.2f, .5f, .2f, ParticleFactory.ParticleChoice.BLOOD));
+
+        return headstone;
+    }
+
     public static MyGameObject makeTrashBin(PhysicsSystem phys, float x, float y) {
 
         MyGameObject trashBin = new MyGameObject();

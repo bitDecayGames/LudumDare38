@@ -2,6 +2,7 @@ package com.bitdecay.game.room;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -53,6 +54,8 @@ public class DemoRoom extends AbstractRoom {
     float scaleFactor = 1 / 40f;
     float worldOffsetY = 1f;
     float worldOffsetX = 1f;
+
+    FPSLogger fps = new FPSLogger();
 
     public DemoRoom(GameScreen gameScreen) {
         super(gameScreen);
@@ -124,6 +127,9 @@ public class DemoRoom extends AbstractRoom {
         MyGameObject car4 = GameObjectFactory.createCar(gobs, phys, new Vector2(43, 80), CarType.TAXI, false);
         carBody = car4.getFreshComponent(PhysicsComponent.class).get().body;
         carBody.setTransform(carBody.getPosition(), -MathUtils.PI/2);
+
+        gobs.add(GameObjectFactory.makeHeadstone(phys, 46, 85));
+
 
         new RespawnGameOverSystem(this, Array.with(car1, car2, car3, car4));
 
@@ -267,6 +273,8 @@ public class DemoRoom extends AbstractRoom {
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
+        fps.log();
+
         renderer.setView(camera);
         renderer.render();
         super.draw(spriteBatch);

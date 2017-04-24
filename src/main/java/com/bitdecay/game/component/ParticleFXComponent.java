@@ -25,14 +25,22 @@ public class ParticleFXComponent extends DrawableComponent {
     public boolean requestStart = true;
     public boolean requestStop;
 
+    public static Map<String, ParticleEffect> particleCache = new HashMap<>();
     public static Map<String, Map<ParticleEmitter, ParticleEmitter.ScaledNumericValue>> saved = new HashMap<>();
 
     public ParticleFXComponent(boolean continuous, FileHandle effectFile, FileHandle particleDir) {
         this.continuous = continuous;
         this.effectName = effectFile.name();
-        effect = new ParticleEffect();
-        effect.load(effectFile, particleDir);
-        effect.scaleEffect(.01f);
+
+        if (!particleCache.containsKey(effectName)) {
+            System.out.println("Caching new effect: " + effectName);
+            ParticleEffect forCache = new ParticleEffect();
+            forCache.load(effectFile, particleDir);
+            forCache.scaleEffect(.01f);
+            particleCache.put(effectName, forCache);
+        }
+
+        effect = new ParticleEffect(particleCache.get(effectName));
 
         if (!saved.containsKey(effectName)) {
             saved.put(effectName, new HashMap<>(effect.getEmitters().size));

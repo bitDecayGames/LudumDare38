@@ -36,6 +36,12 @@ public class ParticleFactory {
             case EXHAUST:
                 particleComp = getExhaustParticle();
                 break;
+            case FENCE:
+                particleComp = getFenceParticle();
+                break;
+            case HEADSTONE:
+                particleComp = getHeadstoneParticle();
+                break;
             case NONE:
             default:
                 return null;
@@ -70,6 +76,8 @@ public class ParticleFactory {
         TRASH,
         WATER,
         EXHAUST,
+        FENCE,
+        HEADSTONE,
         NONE
     }
 
@@ -103,6 +111,14 @@ public class ParticleFactory {
 
     public static ParticleFXComponent getSkidParticle() {
         return getParticleFX(true, "src/main/resources/particle/skid.p", "src/main/resources/img/packable/main/particles/");
+    }
+
+    public static ParticleFXComponent getFenceParticle() {
+        return getParticleFX(false, "src/main/resources/particle/fence.p", "src/main/resources/img/packable/main/particle/");
+    }
+
+    public static ParticleFXComponent getHeadstoneParticle() {
+        return getParticleFX(false, "src/main/resources/particle/headstone.p", "src/main/resources/img/packable/main/particle/");
     }
 
     public static ParticleFXComponent getParticleFX(boolean continuous, String particleFile, String particleDir) {

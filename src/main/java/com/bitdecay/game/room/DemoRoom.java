@@ -305,7 +305,7 @@ public class DemoRoom extends AbstractRoom {
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
-        fps.log();
+        //fps.log();
         renderer.setView(camera);
         renderer.render();
         super.draw(spriteBatch);

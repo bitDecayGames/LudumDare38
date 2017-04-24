@@ -4,7 +4,7 @@ import com.bitdecay.game.gameobject.MyGameObject;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 public class Quest {
 
@@ -12,14 +12,21 @@ public class Quest {
     public String icon = "uiStuff/missions/pokey";
     public float reward = 0;
     public List<ObjectiveZone> targetZones = null;
-    public Consumer<MyGameObject> onCompletion = null;
+    public BiConsumer<Quest, MyGameObject> onZoneTrigger = null;
+    public BiConsumer<Quest, MyGameObject> onCompletion = null;
 
-    public Quest(String personName, String icon, float reward, List<ObjectiveZone> targetZones, Consumer<MyGameObject> onCompletion){
+    public Quest(String personName, String icon, float reward, List<ObjectiveZone> targetZones, BiConsumer<Quest, MyGameObject> onZoneTrigger, BiConsumer<Quest, MyGameObject> onCompletion){
         this.personName = personName;
         this.icon = icon;
         this.reward = reward;
         this.targetZones = targetZones;
+        this.onZoneTrigger = onZoneTrigger;
         this.onCompletion = onCompletion;
+    }
+
+    public Quest removeCurrentZone(){
+        if (targetZones != null && targetZones.size() > 0) targetZones.remove(0);
+        return this;
     }
 
     public Optional<ObjectiveZone> currentZone(){

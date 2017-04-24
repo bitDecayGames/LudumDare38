@@ -21,7 +21,7 @@ public class Tray extends Group {
 
         Vector2 screenSize = new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        taskCard = new TaskCard(new Quest("Pokey Dickson", "uiStuff/missions/pokey", 0, null, null));
+        taskCard = new TaskCard(new Quest("Pokey Dickson", "uiStuff/missions/pokey", 0, null, null, null));
         taskCard.setPosition(0, 0);
         taskCard.setScale(0.7f);
         addActor(taskCard);

@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -43,6 +44,8 @@ public class DemoRoom extends AbstractRoom {
     private Stage stage;
     TiledMap map;
     OrthogonalTiledMapRenderer renderer;
+    TiledMap roofMap;
+    OrthogonalTiledMapRenderer roofRenderer;
     NodeGraph graph;
 
     float scaleFactor = 1/40f;
@@ -133,6 +136,9 @@ public class DemoRoom extends AbstractRoom {
     private void loadTileMapAndStartingObjects() {
         map = new TmxMapLoader().load(Gdx.files.internal("img/tiled/town.tmx").path());
         renderer = new OrthogonalTiledMapRenderer(map, scaleFactor);
+
+        roofMap = new TmxMapLoader().load(Gdx.files.internal("img/tiled/town_roof.tmx").path());
+        roofRenderer = new OrthogonalTiledMapRenderer(roofMap, scaleFactor);
 
         MapLayers mapLayers = map.getLayers();
 
@@ -227,6 +233,8 @@ public class DemoRoom extends AbstractRoom {
         renderer.setView(camera);
         renderer.render();
         super.draw(spriteBatch);
+        roofRenderer.setView(camera);
+        roofRenderer.render();
         stage.act(1/60f);
         stage.draw();
     }

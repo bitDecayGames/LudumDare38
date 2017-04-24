@@ -10,7 +10,7 @@ public class Node implements IndexedNode<Node> {
     private int index;
 
     public Vector2 position;
-    public NodeType type;
+    public NodeType type = NodeType.NONE;
     public Array<Connection<Node>> connections;
 
     public Node(Vector2 position, int index) {
@@ -48,6 +48,10 @@ public class Node implements IndexedNode<Node> {
     @Override
     public int getIndex() {
         return index;
+    }
+
+    public void setIndex(int value) {
+        index = value;
     }
 
     @Override

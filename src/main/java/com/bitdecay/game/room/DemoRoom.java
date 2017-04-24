@@ -116,12 +116,12 @@ public class DemoRoom extends AbstractRoom {
         ManhattanHeuristic manhattanHeuristic = new ManhattanHeuristic();
 
         IndexedAStarPathFinder<Node> pathFinder = new IndexedAStarPathFinder<>(graph);
-//        System.out.println("!!!!!!!!!!! " + pathFinder.searchNodePath(graph.getNodes().get(0), graph.getNodes().get(49), manhattanHeuristic, graphPath));
+        pathFinder.searchNodePath(graph.getNodes().get(0), graph.getNodes().get(48), manhattanHeuristic, graphPath);
 
         Iterator<Node> foundNodes = graphPath.iterator();
         while (foundNodes.hasNext()) {
             Node n = foundNodes.next();
-//            System.out.println("??????????? " + n.getIndex());
+            n.type = NodeType.ROAD;
         }
 
         Arrays.stream(graph.getNodes().toArray()).forEach(node -> {

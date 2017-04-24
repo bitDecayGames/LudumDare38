@@ -4,7 +4,11 @@ package com.bitdecay.game.room;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -32,6 +36,8 @@ import com.bitdecay.game.util.ContactDistributer;
 import com.bitdecay.game.util.ZoneType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The demo room is just a super simple example of how to add systems and game objects to a room.
@@ -229,12 +235,16 @@ public class DemoRoom extends AbstractRoom {
             }
         }
 
-//        Map<String, Vector2> locations = new HashMap<String, Vector2>();
-//        TiledMapTileLayer objectsLayer = (TiledMapTileLayer) mapLayers.get("locations");
-//        MapObjects objects = objectsLayer.getObjects();
-//        for (MapObject object : objects) {
-////            object.getProperties().
-//        }
+        Map<String, Vector2> pickups = new HashMap<>();
+        MapLayer objectsLayer = mapLayers.get("pickups");
+        MapObjects objects = objectsLayer.getObjects();
+        System.out.println("Objects in pickup locations: " + objects.getCount());
+        for (MapObject object : objects) {
+            EllipseMapObject circle = (EllipseMapObject) object;
+            pickups.put(object.getName(), new Vector2(circle.getEllipse().x, circle.getEllipse().y));
+        }
+
+        System.out.println(pickups);
 
     }
 

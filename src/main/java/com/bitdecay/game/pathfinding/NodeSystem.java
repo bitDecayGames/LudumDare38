@@ -10,7 +10,7 @@ import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractDrawableSystem;
 
 public class NodeSystem extends AbstractDrawableSystem {
-    private final static boolean ENABLE_RENDERING = false;
+    private final static boolean ENABLE_RENDERING = true;
     private ShapeRenderer renderer;
 
     public NodeSystem(AbstractRoom room) {

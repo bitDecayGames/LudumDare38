@@ -16,6 +16,6 @@ public class PointBurstFactory {
         }
         diffIcon.setScale(0.5f);
 
-        return new PointBurstEffect(moneyIcon, diffIcon, Float.toString(diff));
+        return new PointBurstEffect(moneyIcon, diffIcon, Float.toString(Math.abs(diff)));
     }
 }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 public class Node implements IndexedNode<Node> {
+    // Must be unique among all nodes.
     private int index;
 
     public Vector2 position;
@@ -19,7 +20,6 @@ public class Node implements IndexedNode<Node> {
     }
 
     public void connectTo(Node node) {
-        // TODO From connection may be needed for 2 direction graph.
         NodeConnection to = new NodeConnection(this, node);
         NodeConnection from = new NodeConnection(node, this);
 
@@ -28,6 +28,21 @@ public class Node implements IndexedNode<Node> {
 
         node.connections.add(to);
         node.connections.add(from);
+    }
+
+    public void disconnectFromAllNodes() {
+        connections.forEach(conn -> {
+            removeConnection(conn.getToNode(), conn.getFromNode(), conn);
+            removeConnection(conn.getFromNode(), conn.getToNode(), conn);
+        });
+
+        connections.clear();
+    }
+
+    private void removeConnection(Node localNode, Node remoteNode, Connection<Node> conn) {
+        if (localNode == this) {
+            remoteNode.connections.removeValue(conn, true);
+        }
     }
 
     @Override

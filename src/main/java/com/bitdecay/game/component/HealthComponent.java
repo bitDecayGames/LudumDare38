@@ -22,8 +22,8 @@ public class HealthComponent extends AbstractComponent {
         currentHealth = max;
     }
 
-    public boolean notDead(){
-        return currentHealth > 0;
+    public boolean isDead(){
+        return currentHealth <= 0;
     }
 
     public HealthComponent set(int currentHealth){

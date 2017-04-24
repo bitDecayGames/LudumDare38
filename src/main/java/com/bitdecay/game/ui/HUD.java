@@ -42,8 +42,9 @@ public class HUD extends Group {
         fuel.setScale(0.60f);
         addActor(fuel);
 
-        tray = new Tray();
+        tray = new Tray(phone.tasks);
         tray.setPosition(screenSize.x * 0.2f, screenSize.y * 1.01f);
+        tray.showTray();
         addActor(tray);
 
         setBounds(0, -screenSize.y, screenSize.x, screenSize.y);

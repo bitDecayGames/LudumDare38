@@ -13,7 +13,7 @@ import com.bitdecay.game.MyGame;
 import com.bitdecay.game.trait.IUpdate;
 import com.bitdecay.game.util.Quest;
 
-public class TaskCard extends ImageButton implements IUpdate {
+public class TrayCard extends ImageButton implements IUpdate {
 
     private static final Quest defaultQuest = new Quest("", "uiStuff/missions/pokey", 0, null, null, null);
 
@@ -23,12 +23,12 @@ public class TaskCard extends ImageButton implements IUpdate {
     private Money reward;
     public Quest quest;
 
-    public TaskCard(){
+    public TrayCard(){
         super(new TextureRegionDrawable(MyGame.ATLAS.findRegion("uiStuff/missions/selected")));
         init(defaultQuest);
     }
 
-    public TaskCard(Quest quest) {
+    public TrayCard(Quest quest) {
         super(
             new TextureRegionDrawable(MyGame.ATLAS.findRegion("uiStuff/missions/unselected")),
             new TextureRegionDrawable(MyGame.ATLAS.findRegion("uiStuff/missions/selected")),
@@ -51,12 +51,12 @@ public class TaskCard extends ImageButton implements IUpdate {
         name = new Label(quest.personName, new Label.LabelStyle(MyGame.FONT, Color.WHITE));
         name.setAlignment(Align.topLeft);
         name.setFontScale(2.5f);
-        name.setPosition(Gdx.graphics.getWidth() * 0.11f, Gdx.graphics.getHeight() * 0.16f);
+        name.setPosition(Gdx.graphics.getWidth() * 0.11f, Gdx.graphics.getHeight() * 0.19f);
         addActor(name);
         location = new Label(quest.currentZone().map(z -> z.name).orElse(""), new Label.LabelStyle(MyGame.FONT, Color.WHITE));
         location.setAlignment(Align.topLeft);
         location.setFontScale(2f);
-        location.setPosition(Gdx.graphics.getWidth() * 0.11f, Gdx.graphics.getHeight() * 0.11f);
+        location.setPosition(Gdx.graphics.getWidth() * 0.11f, Gdx.graphics.getHeight() * 0.145f);
         addActor(location);
         reward = new Money(3f);
         reward.align(Align.right);

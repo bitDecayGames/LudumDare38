@@ -248,7 +248,7 @@ public class GameObjectFactory {
         return mailbox;
     }
 
-    public static MyGameObject makePerson(PhysicsSystem phys, float x, float y) {
+    public static MyGameObject makePerson(PhysicsSystem phys, float x, float y, boolean stationary) {
         MyGameObject obj = new MyGameObject();
         obj.addComponent(new NameComponent("Person"));
 
@@ -278,7 +278,9 @@ public class GameObjectFactory {
         obj.addComponent(new VelocityBasedAnimationSpeedComponent(5f));
         obj.addComponent(new DriveTireComponent(25, 5));
         obj.addComponent(new TorqueableComponent(30));
-        obj.addComponent(new FuelComponent(1, 0));
+        if (!stationary) {
+            obj.addComponent(new FuelComponent(1, 0));
+        }
         obj.addComponent(new SizeComponent(1f, 1f));
         obj.addComponent(new BreakableObjectComponent("person/flyForward", 30, 1f, 1.5f, ParticleFactory.ParticleChoice.BLOOD));
         obj.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.person")));

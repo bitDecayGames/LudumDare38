@@ -9,7 +9,7 @@ import com.bitdecay.game.component.ZoneComponent;
 import com.bitdecay.game.component.money.MoneyDiffComponent;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.gameobject.MyGameObject;
-import com.bitdecay.game.room.AbstractRoom;
+import com.bitdecay.game.room.DemoRoom;
 import com.bitdecay.game.system.abstracted.AbstractUpdatableSystem;
 import com.bitdecay.game.ui.HUD;
 import com.bitdecay.game.util.ObjectiveZone;
@@ -38,7 +38,9 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
 
     private List<Vector2> zoneCoordsList = new ArrayList<>();
 
-    public ObjectiveSystem(AbstractRoom room) {
+    private List<MyGameObject> people = new ArrayList<>();
+
+    public ObjectiveSystem(DemoRoom room) {
         super(room);
 //        HUD.instance().phone.tasks = objectives;
         zoneCoordsList.add(zone1);
@@ -48,14 +50,22 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
         quests.addAll(Launcher.conf.getConfigList("quest.list").stream().map(questConf -> {
             String personName = questConf.getString("personName");
             String icon = questConf.getString("icon");
+            Vector2 pickupLocation = room.pickupLocations.get(questConf.getString("pickup"));
+            if (pickupLocation == null) {
+                System.out.println("NOTHING FOUND FOR " + questConf.getString("pickup"));
+            }
             float reward = (float) questConf.getDouble("reward");
             List<ObjectiveZone> zones = questConf.getConfigList("targetZones").stream().map(zoneConf -> {
                 String name = zoneConf.getString("name");
-                Vector2 position = new Vector2((float) zoneConf.getDouble("position.x"), (float) zoneConf.getDouble("position.x"));
+                Vector2 position = room.pickupLocations.get(zoneConf.getString("position"));
+                if (position == null) {
+                    System.out.println("NOTHING FOUND FOR " + zoneConf.getString("position"));
+                }
                 String flavorText = zoneConf.getString("flavorText");
                 float timer = (float) zoneConf.getDouble("timer");
                 return new ObjectiveZone(name, position, flavorText, timer);
             }).collect(Collectors.toList());
+            gobs.add(GameObjectFactory.makePerson(room.phys, pickupLocation.x, pickupLocation.y, true));
             return new Quest(personName, icon, reward, zones, null, null);
         }).collect(Collectors.toList()));
     }

@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.MyGame;
 import com.bitdecay.game.trait.IUpdate;
 import com.bitdecay.game.util.Quest;
+import org.apache.logging.log4j.LogManager;
 
 public class TaskCard extends ImageButton implements IUpdate {
 
@@ -23,6 +24,7 @@ public class TaskCard extends ImageButton implements IUpdate {
     private Label timer;
     private Money reward;
     public Quest quest;
+    private org.apache.logging.log4j.Logger log = LogManager.getLogger(this.getClass());
 
     public TaskCard(){
         super(new TextureRegionDrawable(MyGame.ATLAS.findRegion("uiStuff/missions/selected")));
@@ -55,6 +57,8 @@ public class TaskCard extends ImageButton implements IUpdate {
                 return true;
             }
         });
+        log.info(quest.personName);
+        log.info(quest.getIcon());
         icon = new Image(quest.getIcon());
         icon.setScale(1.68f);
         addActor(icon);

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.bitdecay.game.component.DrawInDrawSystemComponent;
 import com.bitdecay.game.component.ParticleFXComponent;
 import com.bitdecay.game.component.ParticlePosition;
 import com.bitdecay.game.gameobject.MyGameObject;
@@ -57,7 +58,9 @@ public class ParticleSystem extends AbstractDrawableSystem {
                 }
                 float delta = Gdx.graphics.getDeltaTime();
                 fx.effect.update(delta);
-                fx.effect.draw(spriteBatch);
+                if (!gob.hasComponent(DrawInDrawSystemComponent.class)) {
+                    fx.effect.draw(spriteBatch);
+                }
                 fx.timePassed += delta;
                 if (fx.effect.isComplete()) {
                     if (fx.continuous) {

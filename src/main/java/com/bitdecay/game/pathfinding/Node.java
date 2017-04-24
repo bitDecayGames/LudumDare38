@@ -24,10 +24,10 @@ public class Node implements IndexedNode<Node> {
         NodeConnection from = new NodeConnection(node, this);
 
         connections.add(to);
-        connections.add(from);
+//        connections.add(from);
 
-        node.connections.add(to);
-        node.connections.add(from);
+//        node.connections.add(to);
+//        node.connections.add(from);
     }
 
     public void disconnectFromAllNodes() {

@@ -10,8 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.MyGame;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
 
@@ -35,6 +35,12 @@ public class Phone extends Group {
         tasks.align(Align.top);
         tasks.setPosition(Gdx.graphics.getWidth() * 0.17f, Gdx.graphics.getHeight() * 0.90f);
         addActor(tasks);
+
+//        Quest a = new Quest("A", "uiStuff/missions/jason", 0, new ArrayList<>(), null, null);
+//        Quest b = new Quest("B", "uiStuff/missions/jason", 0, new ArrayList<>(), null, null);
+//        tasks.addQuest(a);
+//        tasks.addQuest(b);
+//        tasks.removeQuest(b);
 
         money = new Money(3);
         money.setPosition(Gdx.graphics.getWidth() * 0.17f, Gdx.graphics.getHeight() * 0.95f);

@@ -8,31 +8,30 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.bitdecay.game.MyGame;
 import com.bitdecay.game.util.Quest;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class TaskList extends Table {
     private float padding = Gdx.graphics.getHeight() * 0.03f;
 
-    private Map<Quest, Cell> quests = new HashMap<>();
+    private List<Quest> quests = new ArrayList<>();
 
     public void addQuest(Quest quest){
         Cell c = add(listItem(quest));
-        quests.put(quest, c);
         c.pad(0, 0, padding, 0).row();
+        quests.add(quest);
     }
 
     public boolean removeQuest(Quest quest){
-        Cell cell = quests.get(quest);
+        int row = quests.indexOf(quest);
         quests.remove(quest);
-        cell.getActor().remove();
-        return getCells().removeValue(cell, true);
+        return removeActor(getChildren().get(row));
     }
 
     public Optional<Quest> currentQuest(){
-        for (Quest quest : quests.keySet()){
+        for (Quest quest : quests){
             if (quest.isActive) return Optional.of(quest);
         }
         return Optional.empty();
@@ -52,7 +51,7 @@ public class TaskList extends Table {
     }
 
     public void updateStartedQuests(float delta){
-        quests.keySet().forEach(q -> {
+        quests.forEach(q -> {
             if (q.started) q.currentZone().ifPresent(z -> {
                 z.update(delta);
                 if (z.isOutOfTime()){
@@ -63,7 +62,7 @@ public class TaskList extends Table {
     }
 
     public void removeFailedQuests(){
-        quests.keySet().stream().collect(Collectors.toList()).forEach(q -> {
+        quests.stream().collect(Collectors.toList()).forEach(q -> {
             if (q.failed) removeQuest(q);
         });
     }

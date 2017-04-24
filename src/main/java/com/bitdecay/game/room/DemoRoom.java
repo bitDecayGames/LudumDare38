@@ -130,9 +130,7 @@ public class DemoRoom extends AbstractRoom {
 
         GameObjectFactory.createCarCass(gobs, phys.world, new Vector2(5, 20), 0);
 
-        gobs.add(GameObjectFactory.makePerson(phys, 5, 5));
-        gobs.add(GameObjectFactory.makePerson(phys, 15, 5));
-        gobs.add(GameObjectFactory.makePerson(phys, -5, 5));
+        for (int x = -3; x < 3; x++) for (int y = -3; y < 3; y++) gobs.add(GameObjectFactory.makePerson(phys, x * 5, y * 5));
 
         gobs.add(GameObjectFactory.createZone(10, 0, 6, 10, 0, ZoneType.BATHROOM, null));
         gobs.add(GameObjectFactory.createZone(20, 16, 6, 10, 0, ZoneType.FUEL, null));

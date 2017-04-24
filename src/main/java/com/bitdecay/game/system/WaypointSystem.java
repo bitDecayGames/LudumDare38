@@ -37,7 +37,7 @@ public class WaypointSystem extends AbstractDrawableSystem {
     public void draw(SpriteBatch spriteBatch, OrthographicCamera camera) {
         spriteBatch.begin();
         gobs.forEach(gob -> gob.forEachComponentDo(PositionComponent.class, pos -> gob.forEachComponentDo(WaypointComponent.class, wp -> {
-            if (HUD.instance().phone.waypoints.isWaypointOn(wp.zoneType)) {
+            if (HUD.instance().phone.waypoints.isWaypointOn(wp.zoneType) && wp.isQuestActive()) {
                 Vector2 camPos = VectorMath.toVector2(camera.position);
                 Vector2 camToPos = pos.toVector2().sub(camPos);
                 float modWidth = camera.viewportWidth * 0.9f;

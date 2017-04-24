@@ -35,7 +35,7 @@ public class ZoneUpdateSystem extends AbstractUpdatableSystem implements Contact
 
             Optional<ZoneComponent> zoneOpt = ((MyGameObject) zoneBody.getUserData()).getComponent(ZoneComponent.class);
             if(checkPlayerStoppedInZone(playerFixture, zoneFixture, zoneOpt.map(z -> z.strict).orElse(true))){
-                if(playerBody.getLinearVelocity().len() < .1){
+                if(playerBody.getLinearVelocity().len() < 100f){
                     zoneOpt.ifPresent(theZone -> {
                         if(theZone.active) {
                             theZone.execute(player);

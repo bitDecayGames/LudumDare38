@@ -304,8 +304,8 @@ public class GameObjectFactory {
         zone.addComponent(zComp);
     }
 
-    public static MyGameObject createZone(float x, float y, float width, float length, float rotation, ZoneType zoneType){
-        return createZone(null, x, y, width, length, rotation, zoneType, null);
+    public static MyGameObject createZone(float x, float y, float width, float length, float rotation, ZoneType zoneType, Consumer<MyGameObject> modifyGameObj){
+        return createZone(null, x, y, width, length, rotation, zoneType, modifyGameObj);
     }
     public static MyGameObject createZone(MyGameObject followTarget, float x, float y, float width, float length, float rotation, ZoneType zoneType, Consumer<MyGameObject> modifyGameObj){
         MyGameObject zone = new MyGameObject();

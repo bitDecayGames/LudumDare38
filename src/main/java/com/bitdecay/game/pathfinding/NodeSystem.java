@@ -37,15 +37,20 @@ public class NodeSystem extends AbstractDrawableSystem {
             Node node = nodeComp.node;
             Vector2 nodePos = node.position;
 
-            // Node
             renderer.begin(ShapeRenderer.ShapeType.Filled);
-            renderer.setColor(Color.FOREST);
+            Color color = Color.FOREST;
+            switch (node.type) {
+                case ROAD:
+                    color = Color.BLUE;
+                    break;
+            }
+            renderer.setColor(color);
             renderer.point(nodePos.x, nodePos.y, 0);
             renderer.end();
 
             // Connections
             renderer.setColor(Color.FIREBRICK);
-            node.connections.stream().forEach(connection -> {
+            node.connections.forEach(connection -> {
                 renderer.begin(ShapeRenderer.ShapeType.Line);
                 renderer.line(connection.getFromNode().position, connection.getToNode().position);
                 renderer.end();

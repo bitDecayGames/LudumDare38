@@ -31,6 +31,7 @@ public class DrawSystem extends AbstractDrawableSystem {
             if (drawable.isVisible) {
                 float rotation = gob.getComponent(RotationComponent.class).map(RotationComponent::toDegrees).orElseGet(() -> 0f);
                 Vector2 origin = gob.getComponent(OriginComponent.class).map(OriginComponent::toVector2).orElseGet(() -> new Vector2(0, 0)).scl(size.w, size.h);
+                spriteBatch.setColor(drawable.color);
                 spriteBatch.draw(drawable.image(), pos.x - origin.x, pos.y - origin.y, origin.x, origin.y, size.w, size.h, drawable.scaleX, drawable.scaleY, rotation);
             }
         }))));

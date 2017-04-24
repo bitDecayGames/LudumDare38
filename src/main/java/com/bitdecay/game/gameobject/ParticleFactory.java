@@ -101,6 +101,10 @@ public class ParticleFactory {
         return getParticleFX(true, "src/main/resources/particle/fire.p", "src/main/resources/img/packable/main/particles/");
     }
 
+    public static ParticleFXComponent getSkidParticle() {
+        return getParticleFX(true, "src/main/resources/particle/skid.p", "src/main/resources/img/packable/main/particles/");
+    }
+
     public static ParticleFXComponent getParticleFX(boolean continuous, String particleFile, String particleDir) {
         return new ParticleFXComponent(continuous, Gdx.files.internal(particleFile), Gdx.files.internal(particleDir));
     }

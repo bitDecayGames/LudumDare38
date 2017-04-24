@@ -34,6 +34,10 @@ public class MyGameObject implements ICleanup {
         return components.stream().filter(componentClass::isInstance).findFirst().map(componentClass::cast);
     }
 
+    public <T extends AbstractComponent> Optional<T> getFreshComponent(Class<T> componentClass){
+        return componentsToAdd.stream().filter(componentClass::isInstance).findFirst().map(componentClass::cast);
+    }
+
     public Optional<AbstractComponent> getComponent(AbstractComponent component){
         return components.stream().filter(component::equals).findFirst();
     }

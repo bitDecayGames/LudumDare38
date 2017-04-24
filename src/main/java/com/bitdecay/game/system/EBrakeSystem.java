@@ -1,7 +1,7 @@
 package com.bitdecay.game.system;
 
 import com.badlogic.gdx.Input;
-import com.bitdecay.game.component.DriveTireComponent;
+import com.bitdecay.game.component.EBrakeComponent;
 import com.bitdecay.game.component.TireFrictionComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
@@ -22,17 +22,21 @@ public class EBrakeSystem extends AbstractForEachUpdatableSystem {
     @Override
     protected boolean validateGob(MyGameObject gob) {
         return gob.hasComponents(
-                DriveTireComponent.class,
+                EBrakeComponent.class,
                 TireFrictionComponent.class
         );
     }
 
     @Override
     protected void forEach(float delta, MyGameObject gob) {
-        gob.forEachComponentDo(DriveTireComponent.class, drive -> gob.forEachComponentDo(TireFrictionComponent.class, friction -> {
+        gob.forEachComponentDo(EBrakeComponent.class, drive -> gob.forEachComponentDo(TireFrictionComponent.class, friction -> {
             boolean brakesEngaged = InputHelper.isKeyPressed(Input.Keys.SPACE) || InputHelper.isButtonPressed(Xbox360Pad.X);
-            drive.hasPower = !brakesEngaged;
             friction.tireLocked = brakesEngaged;
+            if (brakesEngaged) {
+                drive.skidParticle.requestStart = true;
+            } else {
+                drive.skidParticle.requestStop = true;
+            }
         }));
     }
 }

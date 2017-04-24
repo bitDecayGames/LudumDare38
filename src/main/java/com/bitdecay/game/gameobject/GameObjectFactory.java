@@ -512,7 +512,7 @@ public class GameObjectFactory {
 
         // /////////////////////////////////
         // create our front left tire
-        Body frontLeftTire = makeTire(phys, 6, tireWidth, tireHeight);
+        Body frontLeftTire = makeTire(phys, pos, 6, tireWidth, tireHeight);
 
         RevoluteJointDef frontLeftTireJointDef = new RevoluteJointDef();
         frontLeftTireJointDef.bodyA = carBody;
@@ -534,7 +534,7 @@ public class GameObjectFactory {
 
         // /////////////////////////////////
         // create front right tire
-        Body frontRightTire = makeTire(phys, 6, tireWidth, tireHeight);
+        Body frontRightTire = makeTire(phys, pos, 6, tireWidth, tireHeight);
 
         RevoluteJointDef frontRightTireJointDef = new RevoluteJointDef();
         frontRightTireJointDef.bodyA = carBody;
@@ -557,7 +557,7 @@ public class GameObjectFactory {
 
         // /////////////////////////////////
         // create back right tire
-        Body backRightTire = makeTire(phys, 1, tireWidth, tireHeight);
+        Body backRightTire = makeTire(phys, pos, 1, tireWidth, tireHeight);
 
         RevoluteJointDef backRightTireJointDef = new RevoluteJointDef();
         backRightTireJointDef.bodyA = carBody;
@@ -595,7 +595,7 @@ public class GameObjectFactory {
 
         // /////////////////////////////////
         // create back left tire
-        Body backLeftTire = makeTire(phys, 1, tireWidth, tireHeight);
+        Body backLeftTire = makeTire(phys, pos, 1, tireWidth, tireHeight);
 
         RevoluteJointDef backLeftTireJointDef = new RevoluteJointDef();
         backLeftTireJointDef.bodyA = carBody;
@@ -630,9 +630,10 @@ public class GameObjectFactory {
         gobs.add(BLSkidChaser);
     }
 
-    private static Body makeTire(PhysicsSystem phys, float density, float width, float height) {
+    private static Body makeTire(PhysicsSystem phys, Vector2 pos, float density, float width, float height) {
         BodyDef tireBodyDef = new BodyDef();
         tireBodyDef.type = BodyDef.BodyType.DynamicBody;
+        tireBodyDef.position.set(pos.x, pos.y);
         Body tireBody = phys.world.createBody(tireBodyDef);
 
         PolygonShape tireShape = new PolygonShape();

@@ -3,7 +3,6 @@ package com.bitdecay.game.room;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.pfa.DefaultGraphPath;
-import com.badlogic.gdx.ai.pfa.Heuristic;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayers;
@@ -43,6 +42,7 @@ public class DemoRoom extends AbstractRoom {
     private Stage stage;
     TiledMap map;
     OrthogonalTiledMapRenderer renderer;
+    NodeGraph graph;
 
     float scaleFactor = 1/40f;
     float worldOffsetY = 1f;
@@ -109,22 +109,7 @@ public class DemoRoom extends AbstractRoom {
         loadTileMapAndStartingObjects();
 
         // Graph/Nodes
-        Node a = new Node(new Vector2(), 0);
-        Node b = new Node(new Vector2(4, 4), 1);
-        Node c = new Node(new Vector2(-3, 3), 2);
-        Node d = new Node(new Vector2(6, 6), 3);
-        Node e = new Node(new Vector2(-6, 6), 4);
-
-        e.connectTo(d);
-        d.connectTo(c);
-        c.connectTo(b);
-        b.connectTo(a);
-
-        NodeGraph graph = new NodeGraph();
-        Node[] nodes = new Node[] {
-                a, b, c, d, e
-        };
-        graph.nodes = new Array<>(nodes);
+        graph = new NodeGraph(10, 5);
 
         DefaultGraphPath<Node> graphPath = new DefaultGraphPath<>();
         ManhattanHeuristic manhattanHeuristic = new ManhattanHeuristic();
@@ -138,7 +123,7 @@ public class DemoRoom extends AbstractRoom {
 //            System.out.println("??????????? " + n.getIndex());
         }
 
-        Arrays.stream(nodes).forEach(node -> {
+        Arrays.stream(graph.getNodes().toArray()).forEach(node -> {
             MyGameObject temp = new MyGameObject();
             temp.addComponent(new NodeComponent(node));
             gobs.add(temp);

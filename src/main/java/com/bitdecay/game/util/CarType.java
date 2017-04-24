@@ -1,8 +1,9 @@
 package com.bitdecay.game.util;
 
 public enum CarType {
-    PLAYER,
+    TAXI,
     NPC,
+    CLOWN,
     COP
 }
 

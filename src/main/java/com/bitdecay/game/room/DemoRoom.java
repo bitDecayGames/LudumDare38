@@ -2,26 +2,28 @@ package com.bitdecay.game.room;
 
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ai.pfa.DefaultGraphPath;
-import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.bitdecay.game.ai.AIControlSystem;
+import com.bitdecay.game.component.*;
+import com.bitdecay.game.component.money.MoneyComponent;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.gameobject.StaticGameObjectFactory;
-import com.bitdecay.game.pathfinding.*;
-import com.bitdecay.game.room.AbstractRoom;
+import com.bitdecay.game.pathfinding.NodeComponent;
+import com.bitdecay.game.pathfinding.NodeGraph;
+import com.bitdecay.game.pathfinding.NodeSystem;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
 import com.bitdecay.game.ui.HUD;
@@ -31,7 +33,6 @@ import com.bitdecay.game.util.ZoneType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 
 /**
  * The demo room is just a super simple example of how to add systems and game objects to a room.
@@ -49,7 +50,7 @@ public class DemoRoom extends AbstractRoom {
 //    OrthogonalTiledMapRenderer roofRenderer;
     NodeGraph graph;
 
-    float scaleFactor = 1/40f;
+    float scaleFactor = 1 / 40f;
     float worldOffsetY = 1f;
     float worldOffsetX = 1f;
 
@@ -107,13 +108,20 @@ public class DemoRoom extends AbstractRoom {
         new BreakableObjectSystem(this);
         new RemovalSystem(this);
         new NodeSystem(this);
-        GameObjectFactory.createCar(gobs, phys, new Vector2(140, 0), CarType.PLAYER, false);
         new AIControlSystem(this, graph);
-        GameObjectFactory.createCarCass(gobs, phys.world,new Vector2(5,20),0);
 
-        gobs.add(GameObjectFactory.makePerson(phys,5,5));
-        gobs.add(GameObjectFactory.makePerson(phys,15,5));
-        gobs.add(GameObjectFactory.makePerson(phys,-5,5));
+        MyGameObject car1 = GameObjectFactory.createCar(gobs, phys, new Vector2(140, 0), CarType.TAXI, false);
+        MyGameObject car2 = GameObjectFactory.createCar(gobs, phys, new Vector2(142.5f, 0), CarType.TAXI, false);
+        MyGameObject car3 = GameObjectFactory.createCar(gobs, phys, new Vector2(145, 0), CarType.TAXI, false);
+        MyGameObject car4 = GameObjectFactory.createCar(gobs, phys, new Vector2(147.5f, 0), CarType.TAXI, false);
+
+        createPlayerCar(car2);
+
+        GameObjectFactory.createCarCass(gobs, phys.world, new Vector2(5, 20), 0);
+
+        gobs.add(GameObjectFactory.makePerson(phys, 5, 5));
+        gobs.add(GameObjectFactory.makePerson(phys, 15, 5));
+        gobs.add(GameObjectFactory.makePerson(phys, -5, 5));
 
         gobs.add(GameObjectFactory.createZone(10, 0, 6, 10, 0, ZoneType.BATHROOM, null));
         gobs.add(GameObjectFactory.createZone(20, 16, 6, 10, 0, ZoneType.FUEL, null));
@@ -130,6 +138,28 @@ public class DemoRoom extends AbstractRoom {
 
         // this is required to be at the end here so that the systems have the latest gobs
         systemManager.cleanup();
+    }
+
+    private void createPlayerCar(MyGameObject car) {
+        float maxSpeed = 30;
+        float acceleration = 10;
+
+        // Add camera and other stats
+        car.addComponent(new CameraFollowComponent());
+        car.addComponent(new PlayerControlComponent());
+        car.addComponent(new HungerComponent(100, 0.5f));
+        car.addComponent(new PoopooComponent(100, 0.5f));
+        car.addComponent(new MoneyComponent(100));
+
+        PhysicsComponent p = car.getFreshComponent(PhysicsComponent.class).get();
+        for (JointEdge jointEdge : p.body.getJointList()) {
+            MyGameObject tire = (MyGameObject) jointEdge.other.getUserData();
+            if (tire.hasFreshComponent(RevoluteJointComponent.class)) {
+                tire.addComponent(new PlayerControlComponent());
+                tire.addComponent(new DriveTireComponent(maxSpeed, acceleration));
+                tire.addComponent(new SteerableComponent(MathUtils.PI / 6));
+            }
+        }
     }
 
     private void loadTileMapAndStartingObjects() {
@@ -184,8 +214,8 @@ public class DemoRoom extends AbstractRoom {
                 if (cell != null) {
                     String objName = (String) cell.getTile().getProperties().get("obj_name");
                     if (objName != null) {
-                        String stringWidthTiles = (String)cell.getTile().getProperties().get("width_tiles");
-                        String stringHeightTiles = (String)cell.getTile().getProperties().get("height_tiles");
+                        String stringWidthTiles = (String) cell.getTile().getProperties().get("width_tiles");
+                        String stringHeightTiles = (String) cell.getTile().getProperties().get("height_tiles");
                         int widthTiles = Integer.parseInt(stringWidthTiles);
                         int heightTiles = Integer.parseInt(stringHeightTiles);
                         createBuildingCollisionBox(objName, x, y, widthTiles, heightTiles);
@@ -201,17 +231,17 @@ public class DemoRoom extends AbstractRoom {
             for (int y = 0; y < spawnpointsLayer.getHeight(); y++) {
                 TiledMapTileLayer.Cell cell = spawnpointsLayer.getCell(x, y);
                 if (cell != null) {
-                    spawnPoints.add(new Vector2(x,y));
+                    spawnPoints.add(new Vector2(x, y));
                 }
             }
         }
     }
 
-    private void createBuildingCollisionBox(String name, float x, float y, int widthTiles, int heightTiles){
-        x = (widthTiles/2f) + (x * 2);
-        y = (heightTiles/2f) + (y * 2);
+    private void createBuildingCollisionBox(String name, float x, float y, int widthTiles, int heightTiles) {
+        x = (widthTiles / 2f) + (x * 2);
+        y = (heightTiles / 2f) + (y * 2);
         System.out.printf("Creating static body for %s at (%f,%f) of size (%d,%d)\n", name, x, y, widthTiles, heightTiles);
-        gobs.add(StaticGameObjectFactory.create(phys, new Vector2(x,y), new Vector2(widthTiles, heightTiles), 1));
+        gobs.add(StaticGameObjectFactory.create(phys, new Vector2(x, y), new Vector2(widthTiles, heightTiles), 1));
     }
 
 
@@ -220,7 +250,7 @@ public class DemoRoom extends AbstractRoom {
         x = worldOffsetX + (x * 2);
         y = worldOffsetY + (y * 2);
 
-        switch(name) {
+        switch (name) {
             case "mail":
                 gobs.add(GameObjectFactory.makeMailbox(phys, x, y));
                 break;
@@ -231,16 +261,16 @@ public class DemoRoom extends AbstractRoom {
                 gobs.add(GameObjectFactory.makeDumpster(phys, x, y));
                 break;
             case "bag":
-                gobs.add(GameObjectFactory.makeTrashBag(phys,x,y));
+                gobs.add(GameObjectFactory.makeTrashBag(phys, x, y));
                 break;
             case "bin":
-                gobs.add(GameObjectFactory.makeTrashBin(phys,x,y));
+                gobs.add(GameObjectFactory.makeTrashBin(phys, x, y));
                 break;
             case "potty":
-                gobs.add(GameObjectFactory.makeToilet(phys,x,y));
+                gobs.add(GameObjectFactory.makeToilet(phys, x, y));
                 break;
             case "cart":
-                gobs.add(GameObjectFactory.makeCart(phys,x,y));
+                gobs.add(GameObjectFactory.makeCart(phys, x, y));
                 break;
             default:
                 System.out.println("Item name not recognized. Not spawning in an object");
@@ -254,7 +284,7 @@ public class DemoRoom extends AbstractRoom {
         super.draw(spriteBatch);
 //        roofRenderer.setView(camera);
 //        roofRenderer.render();
-        stage.act(1/60f);
+        stage.act(1 / 60f);
         stage.draw();
     }
 

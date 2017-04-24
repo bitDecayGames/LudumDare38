@@ -1,6 +1,5 @@
 package com.bitdecay.game.gameobject;
 
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
@@ -8,7 +7,6 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.bitdecay.game.Launcher;
 import com.bitdecay.game.ai.AIControlComponent;
 import com.bitdecay.game.component.*;
-import com.bitdecay.game.component.money.MoneyComponent;
 import com.bitdecay.game.physics.FrictionDataFactory;
 import com.bitdecay.game.physics.TireFrictionData;
 import com.bitdecay.game.system.PhysicsSystem;
@@ -401,7 +399,7 @@ public class GameObjectFactory {
         return zone;
     }
 
-    public static void createCar(MyGameObjects gobs, PhysicsSystem phys, Vector2 pos, CarType type, boolean addWayPoint) {
+    public static MyGameObject createCar(MyGameObjects gobs, PhysicsSystem phys, Vector2 pos, CarType type, boolean addWayPoint) {
 
         float carWidth = 2;
         float carHeight = 4;
@@ -460,20 +458,13 @@ public class GameObjectFactory {
         String imageName;
 
         switch (type) {
-            case PLAYER:
+            case TAXI:
                 health = 100;
                 imageName = "player/taxi/taxi";
-                // Add camera and other stats
-                car.addComponent(new CameraFollowComponent());
-                car.addComponent(new PlayerControlComponent());
-                car.addComponent(new HungerComponent(100, 0.5f));
-                car.addComponent(new PoopooComponent(100, 0.5f));
-                car.addComponent(new MoneyComponent(100));
                 break;
             case COP:
                 health = 20;
                 imageName = "cop/cop";
-//                car.addComponent(new CameraFollowComponent());
                 break;
             case NPC:
                 health = 2;
@@ -502,10 +493,8 @@ public class GameObjectFactory {
         TireFrictionData frontTireData = FrictionDataFactory.getStreetFriction();
         frontTireData.weightOnTire = carBody.getMass() / 4;
 
-//        TireFrictionData rearTireData = frontTireData.copy();
         TireFrictionData rearTireData = FrictionDataFactory.getStreetFriction();
         rearTireData.weightOnTire = carBody.getMass() / 10;
-//        rearTireData.weightOnTire = 0;
 
         FuelComponent sharedFuelComponent = new FuelComponent(100, .25f);
 
@@ -528,7 +517,6 @@ public class GameObjectFactory {
 
         MyGameObject FLTire = makeTireObject(frontLeftTire, frontLeftJoint, frontTireData, type, false, false);
         FLTire.addComponent(sharedFuelComponent);
-        FLTire.addComponent(new PlayerTireComponent());
 
         gobs.add(FLTire);
 
@@ -551,7 +539,6 @@ public class GameObjectFactory {
 
         MyGameObject FRTire = makeTireObject(frontRightTire, frontRightJoint, frontTireData, type, false, true);
         FRTire.addComponent(sharedFuelComponent);
-        FRTire.addComponent(new PlayerTireComponent());
 
         gobs.add(FRTire);
 
@@ -574,6 +561,9 @@ public class GameObjectFactory {
 
 
         MyGameObject BRtire = makeTireObject(backRightTire, backRightTireJoint, rearTireData, type, true, true);
+        BRtire.addComponent(sharedFuelComponent);
+
+
         MyGameObject BRSkidChaser = new MyGameObject();
         ParticleFXComponent BRskidParticle = ParticleFactory.getSkidParticle();
         BRskidParticle.requestStart = false;
@@ -610,7 +600,7 @@ public class GameObjectFactory {
         RevoluteJoint backLeftTireJoint = (RevoluteJoint) phys.world.createJoint(backLeftTireJointDef);
 
         MyGameObject BLtire = makeTireObject(backLeftTire, backLeftTireJoint, rearTireData, type, true, false);
-//        BLtire.addComponent(sharedFuelComponent);
+        BLtire.addComponent(sharedFuelComponent);
 
         MyGameObject BLSkidChaser = new MyGameObject();
         ParticleFXComponent BLskidParticle = ParticleFactory.getSkidParticle();
@@ -628,6 +618,8 @@ public class GameObjectFactory {
 
         gobs.add(BLtire);
         gobs.add(BLSkidChaser);
+
+        return car;
     }
 
     private static Body makeTire(PhysicsSystem phys, Vector2 pos, float density, float width, float height) {
@@ -647,26 +639,15 @@ public class GameObjectFactory {
     }
 
     private static MyGameObject makeTireObject(Body body, RevoluteJoint joint, TireFrictionData tireData, CarType type, boolean rear, boolean right) {
-        float maxSpeed = 30;
-        float acceleration = 10;
-
         MyGameObject tire = new MyGameObject();
         PhysicsComponent tirePhysics = new PhysicsComponent(body);
         tirePhysics.body.setUserData(tire);
         tire.addComponent(tirePhysics);
         tire.addComponent(new TireFrictionComponent(tireData));
-        if (rear && type == CarType.PLAYER) {
-//            ParticleFXComponent skidParticle = ParticleFactory.getSkidParticle();
-//            tire.addComponent(skidParticle);
-//            tire.addComponent(new ParticlePosition(0, 0));
-//            tire.addComponent(new EBrakeComponent(skidParticle));
-            tire.addComponent(new PlayerTireComponent());
-        } else {
-            if (type == CarType.PLAYER) {
-                tire.addComponent(new SteerableComponent(MathUtils.PI / 6));
-                tire.addComponent(new DriveTireComponent(maxSpeed, acceleration));
-            }
-            tire.addComponent(new RevoluteJointComponent(joint));
+        if (CarType.CLOWN.equals(type) && rear) {
+                tire.addComponent(new RevoluteJointComponent(joint));
+        } else if (!CarType.CLOWN.equals(type) && !rear) {
+                tire.addComponent(new RevoluteJointComponent(joint));
         }
         tire.addComponent(new PositionComponent(0, 0));
         String path;

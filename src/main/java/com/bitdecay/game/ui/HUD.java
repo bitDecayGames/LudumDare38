@@ -17,6 +17,8 @@ public class HUD extends Group {
     public Fuel fuel;
     public Tray tray;
 
+    public GameOverBanner gameOver;
+
     public TaskCard selectedTask = null;
 
     public HUD() {
@@ -48,6 +50,13 @@ public class HUD extends Group {
         tray.setPosition(screenSize.x * 0.2f, screenSize.y * 1.01f);
         tray.showTray();
         addActor(tray);
+
+        gameOver = new GameOverBanner();
+//        gameOver.setPosition(screenSize.x * .5f, screenSize.y * .5f);
+        gameOver.setPosition(screenSize.x * 0.3f, screenSize.y * 1.5f);
+
+        addActor(gameOver);
+        gameOver.setVisible(false);
 
         setBounds(0, -screenSize.y, screenSize.x, screenSize.y);
     }

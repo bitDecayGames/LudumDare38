@@ -2,6 +2,7 @@ package com.bitdecay.game.system;
 
 import com.badlogic.gdx.Input;
 import com.bitdecay.game.component.EBrakeComponent;
+import com.bitdecay.game.component.PlayerTireComponent;
 import com.bitdecay.game.component.TireFrictionComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
@@ -23,7 +24,8 @@ public class EBrakeSystem extends AbstractForEachUpdatableSystem {
     protected boolean validateGob(MyGameObject gob) {
         return gob.hasComponents(
                 EBrakeComponent.class,
-                TireFrictionComponent.class
+                TireFrictionComponent.class,
+                PlayerTireComponent.class
         );
     }
 

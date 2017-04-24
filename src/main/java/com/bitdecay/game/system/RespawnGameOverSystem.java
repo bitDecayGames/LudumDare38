@@ -1,5 +1,6 @@
 package com.bitdecay.game.system;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.badlogic.gdx.utils.Array;
@@ -8,6 +9,7 @@ import com.bitdecay.game.component.money.MoneyComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractUpdatableSystem;
+import com.bitdecay.game.ui.HUD;
 
 /**
  * Created by Monday on 4/24/2017.
@@ -36,7 +38,9 @@ public class RespawnGameOverSystem extends AbstractUpdatableSystem {
                 createPlayerCar(nextLife);
                 playerCars.removeValue(nextLife, true);
             } else {
-                log.info("NO MORE BREH");
+                HUD.instance().gameOver.setVisible(true);
+                Gdx.input.setInputProcessor(null);
+
             }
         }
     }
@@ -48,18 +52,17 @@ public class RespawnGameOverSystem extends AbstractUpdatableSystem {
         // Add camera and other stats
         car.addComponent(new CameraFollowComponent());
         car.addComponent(new PlayerControlComponent());
-        car.addComponent(new HungerComponent(100, 0.5f));
-        car.addComponent(new PoopooComponent(100, 0.5f));
+        car.addComponent(new HungerComponent(40, 0.5f));
+        car.addComponent(new PoopooComponent(60, 0.5f));
         car.addComponent(new MoneyComponent(100));
         car.addComponent(new PlayerBodyComponent());
 
         PhysicsComponent p = car.getComponent(PhysicsComponent.class).get();
         for (JointEdge jointEdge : p.body.getJointList()) {
             MyGameObject tire = (MyGameObject) jointEdge.other.getUserData();
+            tire.addComponent(new PlayerTireComponent());
             if (tire.hasComponent(RevoluteJointComponent.class)) {
-                tire.addComponent(new PlayerControlComponent());
                 tire.addComponent(new DriveTireComponent(maxSpeed, acceleration));
-                tire.addComponent(new PlayerTireComponent());
                 tire.addComponent(new SteerableComponent(MathUtils.PI / 6));
             }
         }

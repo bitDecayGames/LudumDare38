@@ -1,5 +1,6 @@
 package com.bitdecay.game.system;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.physics.box2d.*;
 import com.bitdecay.game.component.DamageComponent;
 import com.bitdecay.game.component.DrawableComponent;
@@ -33,23 +34,9 @@ public class HealthSystem extends AbstractSystem implements ContactListener {
 
             if(!objectB.hasComponent(InvincibleComponent.class)){
                 applyDamage(objectA, objectB);
-
-                objectB.addComponent(new InvincibleComponent());
-                objectB.addComponent(new TimerComponent(2, ()->{
-
-                    objectB.removeComponent(TimerComponent.class);
-                    objectB.removeComponent(InvincibleComponent.class);
-                }));
             }
             if(!objectA.hasComponent(InvincibleComponent.class)){
                 applyDamage(objectB, objectA);
-
-                objectA.addComponent(new InvincibleComponent());
-                objectA.addComponent(new TimerComponent(2, ()->{
-
-                    objectA.removeComponent(TimerComponent.class);
-                    objectA.removeComponent(InvincibleComponent.class);
-                }));
             }
         }
     }
@@ -71,16 +58,29 @@ public class HealthSystem extends AbstractSystem implements ContactListener {
 
     public void applyDamage(MyGameObject attacker, MyGameObject attacked){
         attacker.forEach(DamageComponent.class, dmg -> attacked.forEach(HealthComponent.class, health ->{
-            log.info("Health " + health.currentHealth + "/" + health.maxHealth + " - " + dmg.damage + " == " + (health.currentHealth - dmg.damage));
+
             health.set(health.currentHealth - dmg.damage);
 
             attacked.forEachComponentDo(DrawableComponent.class, drawable -> {
                 float min = 0.3f;
                 float grey = (((float) health.currentHealth / (float) health.maxHealth) * (1 - min)) + min;
-                log.info("Grey: " + grey);
+
                 drawable.color.set(grey, grey, grey, 1);
             });
+            InvincibleComponent i = new InvincibleComponent(attacked.getComponent(DrawableComponent.class).map((d)->d.color.cpy()).orElse(Color.WHITE.cpy()));
+            attacked.addComponent(i);
+            attacked.addComponent(new TimerComponent(2, ()->{
+
+                attacked.forEachComponentDo(InvincibleComponent.class, grace -> attacked.forEachComponentDo(DrawableComponent.class, draw -> {
+
+                    draw.color = grace.origColor.cpy();
+                }));
+                attacked.removeComponentInstance(i);
+                attacked.removeComponent(TimerComponent.class);
+            }));
         }));
+
+
 
     }
 }

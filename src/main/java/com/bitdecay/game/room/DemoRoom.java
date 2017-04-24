@@ -4,7 +4,11 @@ package com.bitdecay.game.room;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -32,6 +36,8 @@ import com.bitdecay.game.util.ContactDistributer;
 import com.bitdecay.game.util.ZoneType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The demo room is just a super simple example of how to add systems and game objects to a room.
@@ -40,13 +46,13 @@ public class DemoRoom extends AbstractRoom {
 
     public ArrayList<Vector2> spawnPoints;
 
-    PhysicsSystem phys = null;
+    public PhysicsSystem phys = null;
 
     private Stage stage;
     TiledMap map;
     OrthogonalTiledMapRenderer renderer;
-    //    TiledMap roofMap;
-//    OrthogonalTiledMapRenderer roofRenderer;
+    TiledMap roofMap;
+    OrthogonalTiledMapRenderer roofRenderer;
     NodeGraph graph;
 
     float scaleFactor = 1 / 40f;
@@ -54,6 +60,9 @@ public class DemoRoom extends AbstractRoom {
     float worldOffsetX = 1f;
 
     FPSLogger fps = new FPSLogger();
+
+    public Map<String, Vector2> pickupLocations;
+    public Map<String, Vector2> dropoffLocations;
 
     public DemoRoom(GameScreen gameScreen) {
         super(gameScreen);
@@ -103,9 +112,6 @@ public class DemoRoom extends AbstractRoom {
 
         new MoneySystem(this, stage);
 
-        // ObjectiveSystem is based on objects added to the world, it needs to go after those.
-        new ObjectiveSystem(this);
-
         new BreakableObjectSystem(this);
         new RemovalSystem(this);
         new NodeSystem(this);
@@ -131,14 +137,16 @@ public class DemoRoom extends AbstractRoom {
 
         GameObjectFactory.createCarCass(gobs, phys.world, new Vector2(5, 20), 0);
 
-        gobs.add(GameObjectFactory.makePerson(phys, 5, 5));
-        for (int x = -3; x < 3; x++) for (int y = -3; y < 3; y++) gobs.add(GameObjectFactory.makePerson(phys, x * 5, y * 5));
+        for (int x = -3; x < 3; x++) for (int y = -3; y < 3; y++) gobs.add(GameObjectFactory.makePerson(phys, x * 5 + 100, y * 5 + 100, false));
 
         gobs.add(GameObjectFactory.createZone(10, 0, 6, 10, 0, ZoneType.BATHROOM, null));
         gobs.add(GameObjectFactory.createZone(20, 16, 6, 10, 0, ZoneType.FUEL, null));
         gobs.add(GameObjectFactory.createZone(-10, 0, 6, 10, 0, ZoneType.FOOD, null));
 
         loadTileMapAndStartingObjects();
+
+        // ObjectiveSystem is based on objects added to the world, it needs to go after those.
+        new ObjectiveSystem(this);
 
         // Add debug graph layer
 //        Arrays.stream(graph.getNodes().toArray()).forEach(node -> {
@@ -155,8 +163,8 @@ public class DemoRoom extends AbstractRoom {
         map = new TmxMapLoader().load(Gdx.files.internal("img/tiled/world_lite.tmx").path());
         renderer = new OrthogonalTiledMapRenderer(map, scaleFactor);
 
-//        roofMap = new TmxMapLoader().load(Gdx.files.internal("img/tiled/world.tmx").path());
-//        roofRenderer = new OrthogonalTiledMapRenderer(roofMap, scaleFactor);
+        roofMap = new TmxMapLoader().load(Gdx.files.internal("img/tiled/world_lite_roof.tmx").path());
+        roofRenderer = new OrthogonalTiledMapRenderer(roofMap, scaleFactor);
 
         MapLayers mapLayers = map.getLayers();
 
@@ -228,6 +236,30 @@ public class DemoRoom extends AbstractRoom {
                 }
             }
         }
+
+        pickupLocations = new HashMap<>();
+        MapLayer objectsLayer = mapLayers.get("pickups");
+        MapObjects objects = objectsLayer.getObjects();
+        System.out.println("Objects in pickup locations: " + objects.getCount());
+        for (MapObject object : objects) {
+            EllipseMapObject circle = (EllipseMapObject) object;
+            Vector2 base = new Vector2(circle.getEllipse().x, circle.getEllipse().y);
+            base.scl(1/80f);
+            pickupLocations.put(object.getName(), base);
+//            createObjectFromName("mail", base.x, base.y);
+        }
+
+        dropoffLocations = new HashMap<>();
+        objectsLayer = mapLayers.get("dropoffs");
+        objects = objectsLayer.getObjects();
+        System.out.println("Objects in dropoff locations: " + objects.getCount());
+        for (MapObject object : objects) {
+            EllipseMapObject circle = (EllipseMapObject) object;
+            Vector2 base = new Vector2(circle.getEllipse().x, circle.getEllipse().y);
+            base.scl(1/80f);
+            dropoffLocations.put(object.getName(), base);
+//            createObjectFromName("mail", base.x, base.y);
+        }
     }
 
     private void createBuildingCollisionBox(String name, float x, float y, int widthTiles, int heightTiles) {
@@ -273,13 +305,12 @@ public class DemoRoom extends AbstractRoom {
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
-        fps.log();
-
+        //fps.log();
         renderer.setView(camera);
         renderer.render();
         super.draw(spriteBatch);
-//        roofRenderer.setView(camera);
-//        roofRenderer.render();
+        roofRenderer.setView(camera);
+        roofRenderer.render();
         stage.act(1 / 60f);
         stage.draw();
     }

@@ -72,9 +72,9 @@ public class ZoneUpdateSystem extends AbstractUpdatableSystem implements Contact
         boolean objectBIsPlayer = objectB != null &&
                 objectB.hasComponents(PlayerControlComponent.class, PhysicsComponent.class);
 
-        if (objectAIsZone && objectBIsPlayer) {
+        if (objectAIsZone && objectBIsPlayer && contact.getFixtureB().getShape() instanceof PolygonShape) {
             ongoingZoneToPlayerCollisions.put(contact.getFixtureA(), contact.getFixtureB());
-        } else if (objectAIsPlayer && objectBIsZone) {
+        } else if (objectAIsPlayer && objectBIsZone && contact.getFixtureA().getShape() instanceof PolygonShape) {
             ongoingZoneToPlayerCollisions.put(contact.getFixtureB(), contact.getFixtureA());
         }
     }

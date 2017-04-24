@@ -1,15 +1,12 @@
 package com.bitdecay.game.system;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.bitdecay.game.component.PersonComponent;
 import com.bitdecay.game.component.ZoneComponent;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractUpdatableSystem;
-import com.bitdecay.game.ui.HUD;
-import com.bitdecay.game.ui.Phone;
 import com.bitdecay.game.util.Tuple;
 import com.bitdecay.game.util.ZoneType;
 

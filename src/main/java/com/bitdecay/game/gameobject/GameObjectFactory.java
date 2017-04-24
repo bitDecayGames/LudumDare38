@@ -570,6 +570,7 @@ public class GameObjectFactory {
 
 
         MyGameObject BRtire = makeTireObject(backRightTire, backRightTireJoint, rearTireData, type, true, true);
+//        BRtire.addComponent(sharedFuelComponent);
         gobs.add(BRtire);
 
 
@@ -590,20 +591,9 @@ public class GameObjectFactory {
         RevoluteJoint backLeftTireJoint = (RevoluteJoint) phys.world.createJoint(backLeftTireJointDef);
 
         MyGameObject BLtire = makeTireObject(backLeftTire, backLeftTireJoint, rearTireData, type, true, false);
-
-        // we need the particle effect to be a separate object, BUILD IT
-        MyGameObject tireChaseSkidder = new MyGameObject();
-        ParticleFXComponent skidParticle = ParticleFactory.getSkidParticle();
-        tireChaseSkidder.addComponent(skidParticle);
-        tireChaseSkidder.addComponent(new ParticlePosition(0, 0));
-        tireChaseSkidder.addComponent(new PositionComponent(0, 0));
-        tireChaseSkidder.addComponent(new FollowOtherPositionComponent(BLtire.getFreshComponent(PositionComponent.class).get()));
-        tireChaseSkidder.addComponent(new SpecialDrawParticleComponent());
-
-        BLtire.addComponent(new EBrakeComponent(skidParticle));
+//        BLtire.addComponent(sharedFuelComponent);
 
         gobs.add(BLtire);
-        gobs.add(tireChaseSkidder);
     }
 
     private static Body makeTire(PhysicsSystem phys, float density, float width, float height) {
@@ -631,6 +621,10 @@ public class GameObjectFactory {
         tire.addComponent(tirePhysics);
         tire.addComponent(new TireFrictionComponent(tireData));
         if (rear && type == CarType.PLAYER) {
+            ParticleFXComponent skidParticle = ParticleFactory.getSkidParticle();
+            tire.addComponent(skidParticle);
+            tire.addComponent(new ParticlePosition(0, 0));
+            tire.addComponent(new EBrakeComponent(skidParticle));
             tire.addComponent(new PlayerTireComponent());
         } else {
             if (type == CarType.PLAYER) {

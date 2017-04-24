@@ -14,13 +14,19 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.bitdecay.game.gameobject.GameObjectFactory;
+import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.gameobject.StaticGameObjectFactory;
+import com.bitdecay.game.pathfinding.Node;
+import com.bitdecay.game.pathfinding.NodeComponent;
 import com.bitdecay.game.pathfinding.NodeSystem;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
 import com.bitdecay.game.ui.HUD;
 import com.bitdecay.game.util.CarType;
 import com.bitdecay.game.util.ContactDistributer;
+import com.bitdecay.game.util.ZoneType;
+
+import java.util.Arrays;
 
 /**
  * The demo room is just a super simple example of how to add systems and game objects to a room.
@@ -87,35 +93,35 @@ public class DemoRoom extends AbstractRoom {
         new RemovalSystem(this);
         new NodeSystem(this);
         GameObjectFactory.createCar(gobs, phys, new Vector2(), CarType.PLAYER, false);
-//        GameObjectFactory.createCarCass(gobs, phys.world,new Vector2(5,20),0);
+        GameObjectFactory.createCarCass(gobs, phys.world,new Vector2(5,20),0);
 
-//        gobs.add(GameObjectFactory.makePerson(phys,5,5));
-//        gobs.add(GameObjectFactory.makePerson(phys,15,5));
-//        gobs.add(GameObjectFactory.makePerson(phys,-5,5));
-//
-//        gobs.add(GameObjectFactory.createZone(10, 0, 6, 10, 0, ZoneType.BATHROOM));
-//        gobs.add(GameObjectFactory.createZone(20, 16, 6, 10, 0, ZoneType.FUEL));
-//        gobs.add(GameObjectFactory.createZone(-10, 0, 6, 10, 0, ZoneType.FOOD));
+        gobs.add(GameObjectFactory.makePerson(phys,5,5));
+        gobs.add(GameObjectFactory.makePerson(phys,15,5));
+        gobs.add(GameObjectFactory.makePerson(phys,-5,5));
 
-//        loadTileMapAndStartingObjects();
+        gobs.add(GameObjectFactory.createZone(10, 0, 6, 10, 0, ZoneType.BATHROOM));
+        gobs.add(GameObjectFactory.createZone(20, 16, 6, 10, 0, ZoneType.FUEL));
+        gobs.add(GameObjectFactory.createZone(-10, 0, 6, 10, 0, ZoneType.FOOD));
 
-//        Node a = new Node(new Vector2());
-//        Node b = new Node(new Vector2(4, 4));
-//        Node c = new Node(new Vector2(-3, 3));
-//        c.connectTo(b);
-//        Node d = new Node(new Vector2(6, 6));
-//        Node e = new Node(new Vector2(-6, 6));
-//        e.connectTo(d);
-//
-//        Node[] nodes = new Node[] {
-//            a, b, c, d, e
-//        };
-//
-//        Arrays.stream(nodes).forEach(node -> {
-//            MyGameObject temp = new MyGameObject();
-//            temp.addComponent(new NodeComponent(node));
-//            gobs.add(temp);
-//        });
+        loadTileMapAndStartingObjects();
+
+        Node a = new Node(new Vector2());
+        Node b = new Node(new Vector2(4, 4));
+        Node c = new Node(new Vector2(-3, 3));
+        c.connectTo(b);
+        Node d = new Node(new Vector2(6, 6));
+        Node e = new Node(new Vector2(-6, 6));
+        e.connectTo(d);
+
+        Node[] nodes = new Node[] {
+            a, b, c, d, e
+        };
+
+        Arrays.stream(nodes).forEach(node -> {
+            MyGameObject temp = new MyGameObject();
+            temp.addComponent(new NodeComponent(node));
+            gobs.add(temp);
+        });
 
         // this is required to be at the end here so that the systems have the latest gobs
         systemManager.cleanup();
@@ -204,8 +210,8 @@ public class DemoRoom extends AbstractRoom {
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
-//        renderer.setView(camera);
-//        renderer.render();
+        renderer.setView(camera);
+        renderer.render();
         super.draw(spriteBatch);
         stage.act(1/60f);
         stage.draw();

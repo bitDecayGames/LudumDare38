@@ -2,12 +2,11 @@ package com.bitdecay.game.component;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
  * Created by Monday on 4/22/2017.
  */
-public class ParticleFXComponent extends DrawableComponent {
+public class ParticleFXComponent extends AbstractComponent {
     public ParticleEffect effect;
     public boolean continuous;
 
@@ -22,10 +21,5 @@ public class ParticleFXComponent extends DrawableComponent {
         effect = new ParticleEffect();
         effect.load(effectFile, particleDir);
         effect.scaleEffect(.01f);
-    }
-
-    @Override
-    public TextureRegion image() {
-        return new TextureRegion();
     }
 }

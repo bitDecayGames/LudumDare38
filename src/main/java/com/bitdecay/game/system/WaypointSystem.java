@@ -3,6 +3,7 @@ package com.bitdecay.game.system;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.bitdecay.game.Launcher;
 import com.bitdecay.game.component.DrawableComponent;
 import com.bitdecay.game.component.PositionComponent;
 import com.bitdecay.game.component.WaypointComponent;
@@ -26,6 +27,8 @@ public class WaypointSystem extends AbstractDrawableSystem {
     private float originX_XL = size_XL * 0.5f;
     private float originY_XL = 0f;
 
+    private float viewPortWaypointMod = (float) Launcher.conf.getDouble("tuning.viewPortWaypointMod");
+
     public WaypointSystem(AbstractRoom room) {
         super(room);
     }
@@ -40,8 +43,8 @@ public class WaypointSystem extends AbstractDrawableSystem {
             if (HUD.instance().phone.waypoints.isWaypointOn(wp.zoneType) && wp.isQuestActive()) {
                 Vector2 camPos = VectorMath.toVector2(camera.position);
                 Vector2 camToPos = pos.toVector2().sub(camPos);
-                float modWidth = camera.viewportWidth * 0.9f;
-                float modHeight = camera.viewportHeight * 0.9f;
+                float modWidth = camera.viewportWidth * viewPortWaypointMod;
+                float modHeight = camera.viewportHeight * viewPortWaypointMod;
                 float halfWidth = modWidth / 2;
                 float halfHeight = modHeight / 2;
                 RectangleExt viewPort = new RectangleExt(-halfWidth + camPos.x, -halfHeight + camPos.y, modWidth, modHeight);

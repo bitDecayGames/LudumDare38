@@ -7,6 +7,7 @@ import com.bitdecay.game.gameobject.MyGameObject;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 public class Quest {
 
@@ -39,5 +40,9 @@ public class Quest {
 
     public TextureRegion getIcon(){
         return MyGame.ATLAS.findRegion(icon);
+    }
+
+    public Quest copy(BiConsumer<Quest, MyGameObject> onZoneTrigger, BiConsumer<Quest, MyGameObject> onCompletion){
+        return new Quest(personName, icon, reward, targetZones.stream().map(ObjectiveZone::copy).collect(Collectors.toList()), onZoneTrigger, onCompletion);
     }
 }

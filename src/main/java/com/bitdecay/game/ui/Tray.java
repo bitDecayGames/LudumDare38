@@ -55,7 +55,17 @@ public class Tray extends Group {
         log.info("Show tray");
         MoveToAction move = moveTo(getX(), Gdx.graphics.getHeight() * 1.01f);
         move.setDuration(0.25f);
-        addAction(move);
+        addAction(Actions.sequence(Actions.run(()-> {
+            if(taskCard.quest != null && taskCard.quest.currentZone().isPresent()) {
+                taskCard.quest.currentZone().ifPresent(zone -> {
+                    dialog.setPersonName(taskCard.quest.personName);
+                    dialog.setText(zone.flavorText);
+                });
+            } else {
+                dialog.setPersonName(null);
+                dialog.setText("");
+            }
+        }), move));
         isHidden = false;
     }
 

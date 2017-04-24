@@ -30,11 +30,13 @@ public class ConversationDialog extends Group {
 
     }
 
-    public void setName(String str) {
-        title.setText(str + " Says:");
+    public void setPersonName(String str) {
+        if (str != null) title.setText(str + " Says:");
+        else title.setText("");
     }
 
     public void setText(String str) {
-        text.setText(str);
+        if (str != null) text.setText(str);
+        else text.setText("");
     }
 }

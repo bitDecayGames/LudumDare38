@@ -528,6 +528,7 @@ public class GameObjectFactory {
 
         MyGameObject FLTire = makeTireObject(frontLeftTire, frontLeftJoint, frontTireData, type, false, false);
         FLTire.addComponent(sharedFuelComponent);
+        FLTire.addComponent(new PlayerTireComponent());
 
         gobs.add(FLTire);
 
@@ -550,6 +551,7 @@ public class GameObjectFactory {
 
         MyGameObject FRTire = makeTireObject(frontRightTire, frontRightJoint, frontTireData, type, false, true);
         FRTire.addComponent(sharedFuelComponent);
+        FRTire.addComponent(new PlayerTireComponent());
 
         gobs.add(FRTire);
 

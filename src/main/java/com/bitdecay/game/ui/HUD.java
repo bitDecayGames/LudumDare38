@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.bitdecay.game.MyGame;
-import com.bitdecay.game.util.Objective;
 
 public class HUD extends Group {
     private static HUD I;
@@ -16,7 +15,7 @@ public class HUD extends Group {
     public Phone phone;
     public Body body;
     public Fuel fuel;
-    public TaskCard taskCard;
+    public Tray tray;
 
     public HUD() {
         super();
@@ -43,10 +42,9 @@ public class HUD extends Group {
         fuel.setScale(0.60f);
         addActor(fuel);
 
-        taskCard = new TaskCard(new Objective());
-        taskCard.setPosition(screenSize.x * 0.2f, screenSize.y * 1.01f);
-        taskCard.setScale(0.7f);
-        addActor(taskCard);
+        tray = new Tray();
+        tray.setPosition(screenSize.x * 0.2f, screenSize.y * 1.01f);
+        addActor(tray);
 
         setBounds(0, -screenSize.y, screenSize.x, screenSize.y);
     }

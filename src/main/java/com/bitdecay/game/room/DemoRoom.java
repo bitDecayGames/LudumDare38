@@ -43,8 +43,8 @@ public class DemoRoom extends AbstractRoom {
     private Stage stage;
     TiledMap map;
     OrthogonalTiledMapRenderer renderer;
-    TiledMap roofMap;
-    OrthogonalTiledMapRenderer roofRenderer;
+//    TiledMap roofMap;
+//    OrthogonalTiledMapRenderer roofRenderer;
     NodeGraph graph;
 
     float scaleFactor = 1/40f;
@@ -86,7 +86,7 @@ public class DemoRoom extends AbstractRoom {
         new ParticleSystem(this);
 
         // various gauge things
-        new FuelGaugeSystem(this);
+        new FuelGaugeSystem(this);   
         new HungerGaugeSystem(this);
         new PoopGaugeSystem(this);
 
@@ -98,7 +98,7 @@ public class DemoRoom extends AbstractRoom {
         new BreakableObjectSystem(this);
         new RemovalSystem(this);
         new NodeSystem(this);
-        GameObjectFactory.createCar(gobs, phys, new Vector2(), CarType.PLAYER, false);
+        GameObjectFactory.createCar(gobs, phys, new Vector2(280, 0), CarType.PLAYER, false);
         GameObjectFactory.createCarCass(gobs, phys.world,new Vector2(5,20),0);
 
         gobs.add(GameObjectFactory.makePerson(phys,5,5));
@@ -138,11 +138,11 @@ public class DemoRoom extends AbstractRoom {
     }
 
     private void loadTileMapAndStartingObjects() {
-        map = new TmxMapLoader().load(Gdx.files.internal("img/tiled/town.tmx").path());
+        map = new TmxMapLoader().load(Gdx.files.internal("img/tiled/world.tmx").path());
         renderer = new OrthogonalTiledMapRenderer(map, scaleFactor);
 
-        roofMap = new TmxMapLoader().load(Gdx.files.internal("img/tiled/town_roof.tmx").path());
-        roofRenderer = new OrthogonalTiledMapRenderer(roofMap, scaleFactor);
+//        roofMap = new TmxMapLoader().load(Gdx.files.internal("img/tiled/world.tmx").path());
+//        roofRenderer = new OrthogonalTiledMapRenderer(roofMap, scaleFactor);
 
         MapLayers mapLayers = map.getLayers();
 
@@ -237,8 +237,8 @@ public class DemoRoom extends AbstractRoom {
         renderer.setView(camera);
         renderer.render();
         super.draw(spriteBatch);
-        roofRenderer.setView(camera);
-        roofRenderer.render();
+//        roofRenderer.setView(camera);
+//        roofRenderer.render();
         stage.act(1/60f);
         stage.draw();
     }

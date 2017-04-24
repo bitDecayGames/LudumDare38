@@ -36,7 +36,7 @@ public class RespawnGameOverSystem extends AbstractUpdatableSystem {
                 createPlayerCar(nextLife);
                 playerCars.removeValue(nextLife, true);
             } else {
-                System.out.println("NO MORE BREH");
+                log.info("NO MORE BREH");
             }
         }
     }
@@ -51,6 +51,7 @@ public class RespawnGameOverSystem extends AbstractUpdatableSystem {
         car.addComponent(new HungerComponent(100, 0.5f));
         car.addComponent(new PoopooComponent(100, 0.5f));
         car.addComponent(new MoneyComponent(100));
+        car.addComponent(new PlayerBodyComponent());
 
         PhysicsComponent p = car.getComponent(PhysicsComponent.class).get();
         for (JointEdge jointEdge : p.body.getJointList()) {

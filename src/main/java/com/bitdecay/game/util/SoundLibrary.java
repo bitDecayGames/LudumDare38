@@ -71,6 +71,7 @@ public class SoundLibrary {
 
             return sound;
         } catch (Exception e){
+            log.error( e.getMessage());
             throw new RuntimeException("Could not get sound: " + name, e);
         }
     }

@@ -48,8 +48,8 @@ public class RespawnGameOverSystem extends AbstractUpdatableSystem {
         // Add camera and other stats
         car.addComponent(new CameraFollowComponent());
         car.addComponent(new PlayerControlComponent());
-        car.addComponent(new HungerComponent(3, 0.5f));
-        car.addComponent(new PoopooComponent(100, 0.5f));
+        car.addComponent(new HungerComponent(40, 0.5f));
+        car.addComponent(new PoopooComponent(60, 0.5f));
         car.addComponent(new MoneyComponent(100));
         car.addComponent(new PlayerBodyComponent());
 

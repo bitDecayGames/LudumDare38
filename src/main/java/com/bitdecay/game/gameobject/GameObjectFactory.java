@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.bitdecay.game.Launcher;
 import com.bitdecay.game.ai.AIControlComponent;
 import com.bitdecay.game.component.*;
+import com.bitdecay.game.component.money.MoneyDiffComponent;
 import com.bitdecay.game.physics.FrictionDataFactory;
 import com.bitdecay.game.physics.TireFrictionData;
 import com.bitdecay.game.system.PhysicsSystem;
@@ -314,7 +315,8 @@ public class GameObjectFactory {
     }
 
     private static void addStaticUtilityZone(MyGameObject zone, Consumer<MyGameObject> modifyGameObj) {
-        ZoneComponent zComp = new ZoneComponent(10.0f, (gameObj) -> {
+        ZoneComponent zComp = new ZoneComponent((gameObj) -> {
+            gameObj.addComponent(new MoneyDiffComponent(-10f));
             zone.getComponent(ZoneComponent.class).get().active = false;
             zone.addComponent(new TimerComponent(5, () -> {
                 zone.getComponent(ZoneComponent.class).get().active = true;
@@ -328,8 +330,8 @@ public class GameObjectFactory {
         zone.addComponent(zComp);
     }
 
-    private static void addDynamicObjectiveZone(float cost, MyGameObject zone, Consumer<MyGameObject> modifyGameObj){
-        ZoneComponent zComp = new ZoneComponent(cost, (gameObj) -> {
+    private static void addDynamicObjectiveZone(MyGameObject zone, Consumer<MyGameObject> modifyGameObj){
+        ZoneComponent zComp = new ZoneComponent((gameObj) -> {
             zone.getComponent(ZoneComponent.class).get().active = false;
             zone.addComponent(new RemoveNowComponent());
             modifyGameObj.accept(gameObj);
@@ -427,7 +429,7 @@ public class GameObjectFactory {
             case REPAIR:
                 break;
             case OBJECTIVE:
-                addDynamicObjectiveZone(0, zone, modifyGameObj);
+                addDynamicObjectiveZone(zone, modifyGameObj);
                 break;
             default:
                 break;

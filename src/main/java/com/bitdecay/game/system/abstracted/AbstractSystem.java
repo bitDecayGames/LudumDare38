@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractSystem implements IRefreshable {
 
-    protected static Logger log;
+    protected Logger log;
 
     protected final AbstractRoom room;
     protected final List<MyGameObject> gobs = new ArrayList<>();

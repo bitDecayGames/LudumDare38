@@ -461,7 +461,7 @@ public class GameObjectFactory {
 
         switch (type) {
             case PLAYER:
-                health = 10;
+                health = 100;
                 imageName = "player/taxi/taxi";
                 // Add camera and other stats
                 car.addComponent(new CameraFollowComponent());
@@ -572,8 +572,23 @@ public class GameObjectFactory {
 
 
         MyGameObject BRtire = makeTireObject(backRightTire, backRightTireJoint, rearTireData, type, true, true);
-//        BRtire.addComponent(sharedFuelComponent);
+        MyGameObject BRSkidChaser = new MyGameObject();
+        ParticleFXComponent BRskidParticle = ParticleFactory.getSkidParticle();
+        BRskidParticle.requestStart = false;
+        BRSkidChaser.addComponent(BRskidParticle);
+        BRSkidChaser.addComponent(new PositionComponent(0, 0));
+        BRSkidChaser.addComponent(new ParticlePosition(0, 0));
+        BRSkidChaser.addComponent(new RotationComponent(0));
+        BRSkidChaser.addComponent(new FollowOtherPositionComponent(BRtire.getFreshComponent(PositionComponent.class).get()));
+        BRSkidChaser.addComponent(new DrawInDrawSystemComponent());
+        BRSkidChaser.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.person")));
+        BRSkidChaser.addComponent(new SizeComponent(0, 0)); // this is just here to get the drawsystem to see this object
+
+
+        BRtire.addComponent(new EBrakeComponent(BRskidParticle));
+
         gobs.add(BRtire);
+        gobs.add(BRSkidChaser);
 
 
         // /////////////////////////////////
@@ -595,7 +610,22 @@ public class GameObjectFactory {
         MyGameObject BLtire = makeTireObject(backLeftTire, backLeftTireJoint, rearTireData, type, true, false);
 //        BLtire.addComponent(sharedFuelComponent);
 
+        MyGameObject BLSkidChaser = new MyGameObject();
+        ParticleFXComponent BLskidParticle = ParticleFactory.getSkidParticle();
+        BLskidParticle.requestStart = false;
+        BLSkidChaser.addComponent(BLskidParticle);
+        BLSkidChaser.addComponent(new PositionComponent(0, 0));
+        BLSkidChaser.addComponent(new ParticlePosition(0, 0));
+        BLSkidChaser.addComponent(new RotationComponent(0));
+        BLSkidChaser.addComponent(new FollowOtherPositionComponent(BLtire.getFreshComponent(PositionComponent.class).get()));
+        BLSkidChaser.addComponent(new DrawInDrawSystemComponent());
+        BLSkidChaser.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.person")));
+        BLSkidChaser.addComponent(new SizeComponent(0, 0)); // this is just here to get the drawsystem to see this object
+
+        BLtire.addComponent(new EBrakeComponent(BLskidParticle));
+
         gobs.add(BLtire);
+        gobs.add(BLSkidChaser);
     }
 
     private static Body makeTire(PhysicsSystem phys, float density, float width, float height) {
@@ -623,10 +653,10 @@ public class GameObjectFactory {
         tire.addComponent(tirePhysics);
         tire.addComponent(new TireFrictionComponent(tireData));
         if (rear && type == CarType.PLAYER) {
-            ParticleFXComponent skidParticle = ParticleFactory.getSkidParticle();
-            tire.addComponent(skidParticle);
-            tire.addComponent(new ParticlePosition(0, 0));
-            tire.addComponent(new EBrakeComponent(skidParticle));
+//            ParticleFXComponent skidParticle = ParticleFactory.getSkidParticle();
+//            tire.addComponent(skidParticle);
+//            tire.addComponent(new ParticlePosition(0, 0));
+//            tire.addComponent(new EBrakeComponent(skidParticle));
             tire.addComponent(new PlayerTireComponent());
         } else {
             if (type == CarType.PLAYER) {

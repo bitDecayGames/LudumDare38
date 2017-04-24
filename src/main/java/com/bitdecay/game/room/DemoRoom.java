@@ -16,10 +16,12 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.bitdecay.game.ai.AIControlSystem;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.gameobject.StaticGameObjectFactory;
 import com.bitdecay.game.pathfinding.*;
+import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
 import com.bitdecay.game.ui.HUD;
@@ -43,7 +45,7 @@ public class DemoRoom extends AbstractRoom {
     private Stage stage;
     TiledMap map;
     OrthogonalTiledMapRenderer renderer;
-//    TiledMap roofMap;
+    //    TiledMap roofMap;
 //    OrthogonalTiledMapRenderer roofRenderer;
     NodeGraph graph;
 
@@ -55,6 +57,12 @@ public class DemoRoom extends AbstractRoom {
         super(gameScreen);
 
         createStage();
+
+        // Graph/Nodes
+        graph = new NodeGraph();
+//        graph.removeNode(graph.getNodes().get(22));
+//        graph.removeNode(graph.getNodes().get(23));
+//        graph.removeNode(graph.getNodes().get(24));
 
         // systems must be added before game objects
         phys = new PhysicsSystem(this);
@@ -86,7 +94,7 @@ public class DemoRoom extends AbstractRoom {
         new ParticleSystem(this);
 
         // various gauge things
-        new FuelGaugeSystem(this);   
+        new FuelGaugeSystem(this);
         new HungerGaugeSystem(this);
         new PoopGaugeSystem(this);
 
@@ -99,6 +107,7 @@ public class DemoRoom extends AbstractRoom {
         new RemovalSystem(this);
         new NodeSystem(this);
         GameObjectFactory.createCar(gobs, phys, new Vector2(280, 0), CarType.PLAYER, false);
+        new AIControlSystem(this, graph);
         GameObjectFactory.createCarCass(gobs, phys.world,new Vector2(5,20),0);
 
         gobs.add(GameObjectFactory.makePerson(phys,5,5));
@@ -111,22 +120,7 @@ public class DemoRoom extends AbstractRoom {
 
         loadTileMapAndStartingObjects();
 
-        // Graph/Nodes
-        graph = new NodeGraph(10, 5);
-        graph.removeNode(graph.getNodes().get(22));
-
-        DefaultGraphPath<Node> graphPath = new DefaultGraphPath<>();
-        ManhattanHeuristic manhattanHeuristic = new ManhattanHeuristic();
-
-        IndexedAStarPathFinder<Node> pathFinder = new IndexedAStarPathFinder<>(graph);
-        pathFinder.searchNodePath(graph.getNodes().get(0), graph.getNodes().get(48), manhattanHeuristic, graphPath);
-
-        Iterator<Node> foundNodes = graphPath.iterator();
-        while (foundNodes.hasNext()) {
-            Node n = foundNodes.next();
-            n.type = NodeType.ROAD;
-        }
-
+        // Add debug graph layer
         Arrays.stream(graph.getNodes().toArray()).forEach(node -> {
             MyGameObject temp = new MyGameObject();
             temp.addComponent(new NodeComponent(node));
@@ -145,6 +139,26 @@ public class DemoRoom extends AbstractRoom {
 //        roofRenderer = new OrthogonalTiledMapRenderer(roofMap, scaleFactor);
 
         MapLayers mapLayers = map.getLayers();
+
+        // Background to graph nodes.
+        TiledMapTileLayer backgroundLayer = (TiledMapTileLayer) mapLayers.get("Background");
+
+        float graphScale = 2.05f;
+        Vector2 offset = (new Vector2(1, 1)).scl(0.35f);
+        graph.populate(backgroundLayer.getWidth(), backgroundLayer.getHeight(), graphScale, offset);
+
+        int nodeIdx = backgroundLayer.getHeight() * backgroundLayer.getWidth() - 1;
+        for (int y = backgroundLayer.getHeight() - 1; y >= 0; y--) {
+            for (int x = backgroundLayer.getWidth() - 1; x >= 0; x--) {
+                TiledMapTileLayer.Cell cell = backgroundLayer.getCell(x, y);
+                if (cell == null) {
+                    graph.removeNode(nodeIdx);
+                }
+                nodeIdx--;
+            }
+        }
+
+        graph.syncIndicies();
 
         TiledMapTileLayer collidablesLayer = (TiledMapTileLayer) mapLayers.get("Collidables");
 

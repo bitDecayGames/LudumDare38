@@ -11,12 +11,17 @@ public class ObjectiveZone {
     public ObjectiveZone(String name, Vector2 position, String flavorText){
         this.name = name;
         this.position = position;
-        this.flavorText = flavorText;
+        if ("".equalsIgnoreCase(flavorText)) this.flavorText = null;
+        else this.flavorText = flavorText;
     }
 
     public ObjectiveZone(String name, Vector2 position){
         this.name = name;
         this.position = position;
-        this.flavorText = "";
+        this.flavorText = null;
+    }
+
+    public ObjectiveZone copy(){
+        return new ObjectiveZone(name, position.cpy(), flavorText);
     }
 }

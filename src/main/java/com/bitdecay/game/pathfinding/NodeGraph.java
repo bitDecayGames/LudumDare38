@@ -57,7 +57,24 @@ public class NodeGraph implements IndexedGraph<Node> {
     }
 
     public Node removeNode(Node node) {
-        return nodes.removeIndex(node.getIndex());
+        int removeIdx = node.getIndex();
+
+        // Remove the node.
+        Node removedNode = nodes.removeIndex(removeIdx);
+
+        // Remove all its connections to other nodes.
+        removedNode.disconnectFromAllNodes();
+
+        // Shift the indexes of all nodes behind it. Needed for indexed pathfinding.
+        shiftIndexesAfter(removeIdx);
+
+        return removedNode;
+    }
+
+    private void shiftIndexesAfter(int removeIdx) {
+        for (int i = removeIdx; i < nodes.size; i++) {
+            nodes.get(i).setIndex(i);
+        }
     }
 
     @Override

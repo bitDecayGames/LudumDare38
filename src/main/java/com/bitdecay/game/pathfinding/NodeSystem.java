@@ -37,9 +37,14 @@ public class NodeSystem extends AbstractDrawableSystem {
             Node node = nodeComp.node;
             Vector2 nodePos = node.position;
 
-            // Node
             renderer.begin(ShapeRenderer.ShapeType.Filled);
-            renderer.setColor(Color.FOREST);
+            Color color = Color.FOREST;
+            switch (node.type) {
+                case ROAD:
+                    color = Color.BLUE;
+                    break;
+            }
+            renderer.setColor(color);
             renderer.point(nodePos.x, nodePos.y, 0);
             renderer.end();
 

@@ -58,6 +58,7 @@ public class DemoRoom extends AbstractRoom {
         ContactDistributer contactDistrib = new ContactDistributer();
         phys.world.setContactListener(contactDistrib);
         new InitializationSystem(this);
+        new FollowPositionSystem(this);
         new TireSteeringSystem(this);
         new DriveTireSystem(this);
         new TireFrictionSystem(this);
@@ -79,7 +80,6 @@ public class DemoRoom extends AbstractRoom {
         new DeathSystem(this);
 
         new ParticlePositionSystem(this);
-
         new ParticleSystem(this);
 
         // various gauge things

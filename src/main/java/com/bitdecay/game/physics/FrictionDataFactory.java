@@ -8,7 +8,7 @@ public class FrictionDataFactory {
         TireFrictionData streetData = new TireFrictionData();
         streetData.maxLateralForceWhileInTraction = 8;
         streetData.maxLateralForceWhileWheelsLocked = .5f;
-        streetData.maxVelocityForLockedTiresToExperienceLateralFriction = 8;
+        streetData.driftingLateralForceScalar = .05f;
         return streetData;
     }
 
@@ -16,7 +16,6 @@ public class FrictionDataFactory {
         TireFrictionData grassFriction = new TireFrictionData();
         grassFriction.maxLateralForceWhileInTraction = 2;
         grassFriction.maxLateralForceWhileWheelsLocked = .2f;
-        grassFriction.maxVelocityForLockedTiresToExperienceLateralFriction = 0;
         return grassFriction;
     }
 

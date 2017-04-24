@@ -13,6 +13,9 @@ public class ParticleFXComponent extends AbstractComponent {
     public boolean started;
     public float timePassed;
 
+    public boolean requestStart = true;
+    public boolean requestStop;
+
     public ParticleFXComponent(boolean continuous, FileHandle effectFile, FileHandle particleDir) {
         this.continuous = continuous;
         effect = new ParticleEffect();

@@ -11,14 +11,13 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.bitdecay.game.ai.AIControlSystem;
-import com.bitdecay.game.component.*;
-import com.bitdecay.game.component.money.MoneyComponent;
+import com.bitdecay.game.component.PhysicsComponent;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.gameobject.StaticGameObjectFactory;
@@ -126,7 +125,8 @@ public class DemoRoom extends AbstractRoom {
         carBody = car4.getFreshComponent(PhysicsComponent.class).get().body;
         carBody.setTransform(carBody.getPosition(), -MathUtils.PI/2);
 
-        createPlayerCar(car2);
+        new RespawnGameOverSystem(this, Array.with(car1, car2, car3, car4));
+
 
         GameObjectFactory.createCarCass(gobs, phys.world, new Vector2(5, 20), 0);
 
@@ -149,28 +149,6 @@ public class DemoRoom extends AbstractRoom {
 
         // this is required to be at the end here so that the systems have the latest gobs
         systemManager.cleanup();
-    }
-
-    private void createPlayerCar(MyGameObject car) {
-        float maxSpeed = 30;
-        float acceleration = 10;
-
-        // Add camera and other stats
-        car.addComponent(new CameraFollowComponent());
-        car.addComponent(new PlayerControlComponent());
-        car.addComponent(new HungerComponent(100, 0.5f));
-        car.addComponent(new PoopooComponent(100, 0.5f));
-        car.addComponent(new MoneyComponent(100));
-
-        PhysicsComponent p = car.getFreshComponent(PhysicsComponent.class).get();
-        for (JointEdge jointEdge : p.body.getJointList()) {
-            MyGameObject tire = (MyGameObject) jointEdge.other.getUserData();
-            if (tire.hasFreshComponent(RevoluteJointComponent.class)) {
-                tire.addComponent(new PlayerControlComponent());
-                tire.addComponent(new DriveTireComponent(maxSpeed, acceleration));
-                tire.addComponent(new SteerableComponent(MathUtils.PI / 6));
-            }
-        }
     }
 
     private void loadTileMapAndStartingObjects() {

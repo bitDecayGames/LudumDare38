@@ -459,7 +459,7 @@ public class GameObjectFactory {
 
         switch (type) {
             case TAXI:
-                health = 100;
+                health = 30;
                 imageName = "player/taxi/taxi";
                 break;
             case COP:

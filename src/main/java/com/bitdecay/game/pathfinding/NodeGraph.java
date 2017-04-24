@@ -56,6 +56,10 @@ public class NodeGraph implements IndexedGraph<Node> {
         return nodes;
     }
 
+    public Node removeNode(Node node) {
+        return nodes.removeIndex(node.getIndex());
+    }
+
     @Override
     public Array<Connection<Node>> getConnections(Node node) {
         return node.connections;

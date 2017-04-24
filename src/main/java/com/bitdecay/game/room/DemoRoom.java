@@ -16,10 +16,12 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.bitdecay.game.ai.AIControlSystem;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.gameobject.StaticGameObjectFactory;
 import com.bitdecay.game.pathfinding.*;
+import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
 import com.bitdecay.game.ui.HUD;
@@ -43,8 +45,8 @@ public class DemoRoom extends AbstractRoom {
     private Stage stage;
     TiledMap map;
     OrthogonalTiledMapRenderer renderer;
-    TiledMap roofMap;
-    OrthogonalTiledMapRenderer roofRenderer;
+    //    TiledMap roofMap;
+//    OrthogonalTiledMapRenderer roofRenderer;
     NodeGraph graph;
 
     float scaleFactor = 1/40f;
@@ -56,11 +58,18 @@ public class DemoRoom extends AbstractRoom {
 
         createStage();
 
+        // Graph/Nodes
+        graph = new NodeGraph();
+//        graph.removeNode(graph.getNodes().get(22));
+//        graph.removeNode(graph.getNodes().get(23));
+//        graph.removeNode(graph.getNodes().get(24));
+
         // systems must be added before game objects
         phys = new PhysicsSystem(this);
         ContactDistributer contactDistrib = new ContactDistributer();
         phys.world.setContactListener(contactDistrib);
         new InitializationSystem(this);
+        new InvincibleSystem(this);
         new FollowPositionSystem(this);
         new TireSteeringSystem(this);
         new DriveTireSystem(this);
@@ -98,7 +107,8 @@ public class DemoRoom extends AbstractRoom {
         new BreakableObjectSystem(this);
         new RemovalSystem(this);
         new NodeSystem(this);
-        GameObjectFactory.createCar(gobs, phys, new Vector2(), CarType.PLAYER, false);
+        GameObjectFactory.createCar(gobs, phys, new Vector2(280, 0), CarType.PLAYER, false);
+        new AIControlSystem(this, graph);
         GameObjectFactory.createCarCass(gobs, phys.world,new Vector2(5,20),0);
 
         gobs.add(GameObjectFactory.makePerson(phys,5,5));
@@ -111,22 +121,7 @@ public class DemoRoom extends AbstractRoom {
 
         loadTileMapAndStartingObjects();
 
-        // Graph/Nodes
-        graph = new NodeGraph(10, 5);
-        graph.removeNode(graph.getNodes().get(22));
-
-        DefaultGraphPath<Node> graphPath = new DefaultGraphPath<>();
-        ManhattanHeuristic manhattanHeuristic = new ManhattanHeuristic();
-
-        IndexedAStarPathFinder<Node> pathFinder = new IndexedAStarPathFinder<>(graph);
-        pathFinder.searchNodePath(graph.getNodes().get(0), graph.getNodes().get(48), manhattanHeuristic, graphPath);
-
-        Iterator<Node> foundNodes = graphPath.iterator();
-        while (foundNodes.hasNext()) {
-            Node n = foundNodes.next();
-            n.type = NodeType.ROAD;
-        }
-
+        // Add debug graph layer
         Arrays.stream(graph.getNodes().toArray()).forEach(node -> {
             MyGameObject temp = new MyGameObject();
             temp.addComponent(new NodeComponent(node));
@@ -138,13 +133,33 @@ public class DemoRoom extends AbstractRoom {
     }
 
     private void loadTileMapAndStartingObjects() {
-        map = new TmxMapLoader().load(Gdx.files.internal("img/tiled/town.tmx").path());
+        map = new TmxMapLoader().load(Gdx.files.internal("img/tiled/world.tmx").path());
         renderer = new OrthogonalTiledMapRenderer(map, scaleFactor);
 
-        roofMap = new TmxMapLoader().load(Gdx.files.internal("img/tiled/town_roof.tmx").path());
-        roofRenderer = new OrthogonalTiledMapRenderer(roofMap, scaleFactor);
+//        roofMap = new TmxMapLoader().load(Gdx.files.internal("img/tiled/world.tmx").path());
+//        roofRenderer = new OrthogonalTiledMapRenderer(roofMap, scaleFactor);
 
         MapLayers mapLayers = map.getLayers();
+
+        // Background to graph nodes.
+        TiledMapTileLayer backgroundLayer = (TiledMapTileLayer) mapLayers.get("Background");
+
+        float graphScale = 2.05f;
+        Vector2 offset = (new Vector2(1, 1)).scl(0.35f);
+        graph.populate(backgroundLayer.getWidth(), backgroundLayer.getHeight(), graphScale, offset);
+
+        int nodeIdx = backgroundLayer.getHeight() * backgroundLayer.getWidth() - 1;
+        for (int y = backgroundLayer.getHeight() - 1; y >= 0; y--) {
+            for (int x = backgroundLayer.getWidth() - 1; x >= 0; x--) {
+                TiledMapTileLayer.Cell cell = backgroundLayer.getCell(x, y);
+                if (cell == null) {
+                    graph.removeNode(nodeIdx);
+                }
+                nodeIdx--;
+            }
+        }
+
+        graph.syncIndicies();
 
         TiledMapTileLayer collidablesLayer = (TiledMapTileLayer) mapLayers.get("Collidables");
 
@@ -237,8 +252,8 @@ public class DemoRoom extends AbstractRoom {
         renderer.setView(camera);
         renderer.render();
         super.draw(spriteBatch);
-        roofRenderer.setView(camera);
-        roofRenderer.render();
+//        roofRenderer.setView(camera);
+//        roofRenderer.render();
         stage.act(1/60f);
         stage.draw();
     }

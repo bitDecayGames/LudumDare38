@@ -3,6 +3,8 @@ package com.bitdecay.game.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -46,6 +48,13 @@ public class Phone extends Group {
 
         float scale = screenSize.y / phone.getHeight() - 1;
         scaleBy(scale);
+
+        addListener(new InputListener() {
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                event.stop();
+                return true;
+            }
+        });
     }
 
     public void moveUp(){

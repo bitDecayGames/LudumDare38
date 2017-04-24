@@ -8,14 +8,16 @@ import com.badlogic.gdx.utils.Array;
 public class NodeGraph implements IndexedGraph<Node> {
     private Array<Node> nodes;
 
-    public NodeGraph(int width, int height) {
+    public NodeGraph() {
         nodes = new Array<>();
+    }
 
+    public void populate(int width, int height, float graphScale, Vector2 offset) {
         // Create nodes.
         int nodeIdx = 0;
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                Node n = new Node(new Vector2(x * 2, y * 2), nodeIdx);
+                Node n = new Node(new Vector2(x * graphScale + offset.x, y * graphScale + offset.y), nodeIdx);
                 nodes.add(n);
                 nodeIdx++;
             }
@@ -46,6 +48,12 @@ public class NodeGraph implements IndexedGraph<Node> {
         }
     }
 
+    public void syncIndicies() {
+        for (int i = 0; i < nodes.size; i++) {
+            nodes.get(i).setIndex(i);
+        }
+    }
+
     private void connectIndexedNodes(int currentIdx, int targetIdx) {
         Node currentNode = nodes.get(currentIdx);
         Node targetNode = nodes.get(targetIdx);
@@ -56,25 +64,14 @@ public class NodeGraph implements IndexedGraph<Node> {
         return nodes;
     }
 
-    public Node removeNode(Node node) {
-        int removeIdx = node.getIndex();
-
+    public Node removeNode(int index) {
         // Remove the node.
-        Node removedNode = nodes.removeIndex(removeIdx);
+        Node removedNode = nodes.removeIndex(index);
 
         // Remove all its connections to other nodes.
         removedNode.disconnectFromAllNodes();
 
-        // Shift the indexes of all nodes behind it. Needed for indexed pathfinding.
-        shiftIndexesAfter(removeIdx);
-
         return removedNode;
-    }
-
-    private void shiftIndexesAfter(int removeIdx) {
-        for (int i = removeIdx; i < nodes.size; i++) {
-            nodes.get(i).setIndex(i);
-        }
     }
 
     @Override

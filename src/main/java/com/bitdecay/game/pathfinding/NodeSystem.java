@@ -43,18 +43,21 @@ public class NodeSystem extends AbstractDrawableSystem {
                 case ROAD:
                     color = Color.BLUE;
                     break;
+                case SIDEWALK:
+                    color = Color.BROWN;
+                    break;
             }
             renderer.setColor(color);
             renderer.point(nodePos.x, nodePos.y, 0);
             renderer.end();
 
             // Connections
-            renderer.setColor(Color.FIREBRICK);
-            node.connections.forEach(connection -> {
-                renderer.begin(ShapeRenderer.ShapeType.Line);
-                renderer.line(connection.getFromNode().position, connection.getToNode().position);
-                renderer.end();
-            });
+//            renderer.setColor(Color.FIREBRICK);
+//            node.connections.forEach(connection -> {
+//                renderer.begin(ShapeRenderer.ShapeType.Line);
+//                renderer.line(connection.getFromNode().position, connection.getToNode().position);
+//                renderer.end();
+//            });
         }));
     }
 }

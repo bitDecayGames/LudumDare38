@@ -6,14 +6,14 @@ package com.bitdecay.game.physics;
 public class TireFrictionData {
     public float maxLateralForceWhileInTraction;
     public float maxLateralForceWhileWheelsLocked;
-    public float maxVelocityForLockedTiresToExperienceLateralFriction;
     public float weightOnTire;
+    public float driftingLateralForceScalar;
 
     public TireFrictionData copy() {
         TireFrictionData newData = new TireFrictionData();
         newData.maxLateralForceWhileInTraction = this.maxLateralForceWhileInTraction;
         newData.maxLateralForceWhileWheelsLocked = this.maxLateralForceWhileWheelsLocked;
-        newData.maxVelocityForLockedTiresToExperienceLateralFriction = this.maxVelocityForLockedTiresToExperienceLateralFriction;
+        newData.driftingLateralForceScalar = this.driftingLateralForceScalar;
         newData.weightOnTire = this.weightOnTire;
         return newData;
     }

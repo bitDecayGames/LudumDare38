@@ -41,16 +41,16 @@ public class TireFrictionSystem extends AbstractForEachUpdatableSystem {
                 data = friction.data;
             }
 
-            updateFriction(phys, friction.tireLocked, data);
+            updateFriction(gob, phys, friction.tireLocked, data);
         }));
     }
 
-    private void updateFriction(PhysicsComponent phys, boolean tiresLocked, TireFrictionData data) {
-        updateRollingFriction(phys, tiresLocked, data);
-        updateLateralFriction(phys, tiresLocked, data);
+    private void updateFriction(MyGameObject gob, PhysicsComponent phys, boolean tiresLocked, TireFrictionData data) {
+        updateRollingFriction(gob, phys, tiresLocked, data);
+        updateLateralFriction(gob, phys, tiresLocked, data);
     }
 
-    private void updateRollingFriction(PhysicsComponent phys, boolean tiresLocked, TireFrictionData data) {
+    private void updateRollingFriction(MyGameObject gob, PhysicsComponent phys, boolean tiresLocked, TireFrictionData data) {
         Vector2 rollingVelocity = getRollingVelocity(phys);
         float mass = phys.body.getMass() + data.weightOnTire;
         Vector2 neededImpulse = rollingVelocity.scl(-mass);
@@ -66,21 +66,13 @@ public class TireFrictionSystem extends AbstractForEachUpdatableSystem {
         phys.body.applyLinearImpulse(neededImpulse, phys.body.getWorldCenter(), true);
     }
 
-    private void updateLateralFriction(PhysicsComponent phys, boolean tireLocked, TireFrictionData data) {
+    private void updateLateralFriction(MyGameObject gob, PhysicsComponent phys, boolean tireLocked, TireFrictionData data) {
         Vector2 lateralVelocity = getLateralVelocity(phys);
         float mass = phys.body.getMass() + data.weightOnTire;
         Vector2 neededImpulse = lateralVelocity.scl(-mass);
 
         if (tireLocked) {
-            boolean travellingBackwards = isTravellingBackwards(phys);
-            if (!travellingBackwards && phys.body.getLinearVelocity().len() > data.maxVelocityForLockedTiresToExperienceLateralFriction) {
-                neededImpulse.set(0, 0);
-            } else {
-                // let the tires slide around if the tires are locked up
-                if (neededImpulse.len() > data.maxLateralForceWhileWheelsLocked) {
-                    neededImpulse.nor().scl(data.maxLateralForceWhileWheelsLocked);
-                }
-            }
+            neededImpulse.scl(data.driftingLateralForceScalar);
         } else if (neededImpulse.len() > data.maxLateralForceWhileInTraction) {
             neededImpulse.nor().scl(data.maxLateralForceWhileInTraction);
         }
@@ -103,8 +95,6 @@ public class TireFrictionSystem extends AbstractForEachUpdatableSystem {
         while (aimedAngle < 0) {
             aimedAngle += 360;
         }
-//        System.out.println("Travel angle: " + travelAngle);
-//        System.out.println("Aimed angle: " + aimedAngle);
 
         float difference = travelAngle - aimedAngle;
         if (difference > 180) {
@@ -112,8 +102,8 @@ public class TireFrictionSystem extends AbstractForEachUpdatableSystem {
         } else if (difference < -180) {
             difference += 360;
         }
-        if (Math.abs(difference) > 175) {
-            // we are pointed within 5 degrees of backwards
+        if (Math.abs(difference) > 170) {
+            // we are pointed within 10 degrees of backwards
 //            System.out.println("YOU BACKWARDS, HO");
             return true;
         } else {

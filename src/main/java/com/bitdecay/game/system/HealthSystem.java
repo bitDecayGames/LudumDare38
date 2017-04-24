@@ -67,17 +67,20 @@ public class HealthSystem extends AbstractSystem implements ContactListener {
 
                 drawable.color.set(grey, grey, grey, 1);
             });
-            InvincibleComponent i = new InvincibleComponent(attacked.getComponent(DrawableComponent.class).map((d)->d.color.cpy()).orElse(Color.WHITE.cpy()));
-            attacked.addComponent(i);
-            attacked.addComponent(new TimerComponent(2, ()->{
+            if(!attacked.hasComponent(InvincibleComponent.class) && !attacked.hasFreshComponent(InvincibleComponent.class)){
+                InvincibleComponent i = new InvincibleComponent(attacked.getComponent(DrawableComponent.class).map((d)->d.color.cpy()).orElse(Color.WHITE.cpy()));
+                attacked.addComponent(i);
+                attacked.addComponent(new TimerComponent(2, ()->{
 
-                attacked.forEachComponentDo(InvincibleComponent.class, grace -> attacked.forEachComponentDo(DrawableComponent.class, draw -> {
+                    attacked.forEachComponentDo(InvincibleComponent.class, grace -> attacked.forEachComponentDo(DrawableComponent.class, draw -> {
 
-                    draw.color = grace.origColor.cpy();
+                        draw.color = grace.origColor.cpy();
+                    }));
+                    attacked.removeComponentInstance(i);
+                    attacked.removeComponent(TimerComponent.class);
                 }));
-                attacked.removeComponentInstance(i);
-                attacked.removeComponent(TimerComponent.class);
-            }));
+            }
+
         }));
 
 

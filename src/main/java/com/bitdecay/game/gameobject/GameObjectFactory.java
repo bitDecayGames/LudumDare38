@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.bitdecay.game.Launcher;
+import com.bitdecay.game.ai.AIControlComponent;
 import com.bitdecay.game.component.*;
 import com.bitdecay.game.component.money.MoneyComponent;
 import com.bitdecay.game.physics.FrictionDataFactory;
@@ -246,6 +247,7 @@ public class GameObjectFactory {
         obj.addComponent(new BreakableObjectComponent("person/flyForward", 30, 1f, 1.5f, ParticleFactory.ParticleChoice.BLOOD));
         obj.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.person")));
         obj.addComponent(new PersonComponent());
+        obj.addComponent(new AIControlComponent());
 
         return obj;
     }

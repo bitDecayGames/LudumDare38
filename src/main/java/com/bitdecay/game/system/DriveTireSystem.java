@@ -3,6 +3,7 @@ package com.bitdecay.game.system;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.bitdecay.game.ai.AIControlComponent;
 import com.bitdecay.game.component.DriveTireComponent;
 import com.bitdecay.game.component.FuelComponent;
 import com.bitdecay.game.component.PhysicsComponent;
@@ -38,6 +39,7 @@ public class DriveTireSystem extends AbstractForEachUpdatableSystem {
             if (!drive.hasPower) {
                 return;
             }
+
             float degrees = MathUtils.radiansToDegrees * phys.body.getAngle();
             Vector2 pos = phys.body.getPosition().cpy();
             Vector2 normal = VectorMath.rotatePointByDegreesAroundZero(0, 1, degrees);
@@ -48,13 +50,25 @@ public class DriveTireSystem extends AbstractForEachUpdatableSystem {
             neededForce *= drive.acceleration;
             Vector2 tirePowerVector = normal.scl(neededForce);
 
-            if (InputHelper.isKeyPressed(Input.Keys.UP, Input.Keys.W) || InputHelper.isButtonPressed(Xbox360Pad.A, Xbox360Pad.RT, Xbox360Pad.UP)) {
+            AIControlComponent aiComp = AIControlComponent.get(gob);
+
+            if ((playerUp() && aiComp == null) || (aiComp != null && aiComp.up())) {
                 phys.body.applyForce(tirePowerVector, back, true);
                 fuel.currentFuel-= fuel.fuelBurnRate * delta;
             }
 
-            if (InputHelper.isKeyPressed(Input.Keys.DOWN, Input.Keys.S) || InputHelper.isButtonPressed(Xbox360Pad.B, Xbox360Pad.LT, Xbox360Pad.DOWN)) phys.body.applyForce(tirePowerVector.cpy().scl(-1), back, true);
+            if ((playerDown() && aiComp == null) || (aiComp != null && aiComp.down())) {
+                phys.body.applyForce(tirePowerVector.cpy().scl(-1), back, true);
+            }
         })));
+    }
+
+    private boolean playerUp() {
+        return InputHelper.isKeyPressed(Input.Keys.UP, Input.Keys.W) || InputHelper.isButtonPressed(Xbox360Pad.A, Xbox360Pad.RT, Xbox360Pad.UP);
+    }
+
+    private boolean playerDown() {
+        return InputHelper.isKeyPressed(Input.Keys.DOWN, Input.Keys.S) || InputHelper.isButtonPressed(Xbox360Pad.B, Xbox360Pad.LT, Xbox360Pad.DOWN);
     }
 
     private Vector2 getRollingVelocity(PhysicsComponent phys) {

@@ -126,7 +126,7 @@ public class GameObjectFactory {
         toilet.addComponent(new RotationComponent(0));
         toilet.addComponent(new StaticImageComponent("collidables/toilet"));
         toilet.addComponent(new SizeComponent(1.9f, 1.8f));
-        toilet.addComponent(new BreakableObjectComponent("collidables/toilet_flying", 1, 1.6f, 2.9f, ParticleFactory.ParticleChoice.POOP));
+        toilet.addComponent(new BreakableObjectComponent("collidables/toilet_flying", 1, 1.6f, 2.9f, ParticleFactory.ParticleChoice.POOP,"Portapotty"));
 
         return toilet;
     }

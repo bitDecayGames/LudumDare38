@@ -6,6 +6,7 @@ import com.bitdecay.game.component.PersonComponent;
 import com.bitdecay.game.component.RemoveNowComponent;
 import com.bitdecay.game.component.WaypointComponent;
 import com.bitdecay.game.component.ZoneComponent;
+import com.bitdecay.game.component.money.MoneyDiffComponent;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
@@ -106,6 +107,7 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
                 } else q.onCompletion.accept(q, o);
             }, (q, o) -> {
                 log.info("End of quest: {}", q.personName);
+                o.addComponent(new MoneyDiffComponent(q.reward));
                 HUD.instance().phone.tasks.removeQuest(q);
             });
             log.info("Got quest: {}", quest);

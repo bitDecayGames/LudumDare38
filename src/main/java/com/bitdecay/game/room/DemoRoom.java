@@ -228,6 +228,14 @@ public class DemoRoom extends AbstractRoom {
                 }
             }
         }
+
+//        Map<String, Vector2> locations = new HashMap<String, Vector2>();
+//        TiledMapTileLayer objectsLayer = (TiledMapTileLayer) mapLayers.get("locations");
+//        MapObjects objects = objectsLayer.getObjects();
+//        for (MapObject object : objects) {
+////            object.getProperties().
+//        }
+
     }
 
     private void createBuildingCollisionBox(String name, float x, float y, int widthTiles, int heightTiles) {

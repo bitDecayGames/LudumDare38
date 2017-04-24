@@ -43,6 +43,9 @@ public class NodeSystem extends AbstractDrawableSystem {
                 case ROAD:
                     color = Color.BLUE;
                     break;
+                case SIDEWALK:
+                    color = Color.BROWN;
+                    break;
             }
             renderer.setColor(color);
             renderer.point(nodePos.x, nodePos.y, 0);

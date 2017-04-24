@@ -21,11 +21,11 @@ public class DeathSystem extends AbstractForEachUpdatableSystem {
     @Override
     protected void forEach(float delta, MyGameObject gob) {
         gob.forEach(HealthComponent.class, health -> {
-            if(health.currentHealth <= 0){
+            if(health.isDead()){
                gob.addComponent(new RemoveNowComponent());
                 for (JointEdge joint:gob.getComponent(PhysicsComponent.class).get().body.getJointList()) {
                     ((MyGameObject) joint.other.getUserData()).addComponent(new RemoveNowComponent());
-                };
+                }
 
                 PhysicsComponent phys = gob.getComponent(PhysicsComponent.class).get();
                 GameObjectFactory.createCarCass(room.getGameObjects(),
@@ -40,7 +40,7 @@ public class DeathSystem extends AbstractForEachUpdatableSystem {
                 for (JointEdge joint:gob.getComponent(PhysicsComponent.class).get().body.getJointList()) {
                     ((MyGameObject) joint.other.getUserData()).removeComponent(DriveTireComponent.class);
                     ((MyGameObject) joint.other.getUserData()).removeComponent(SteerableComponent.class);
-                };
+                }
             }
         });
         gob.forEach(HungerComponent.class, hunger -> {
@@ -49,7 +49,7 @@ public class DeathSystem extends AbstractForEachUpdatableSystem {
                 for (JointEdge joint:gob.getComponent(PhysicsComponent.class).get().body.getJointList()) {
                     ((MyGameObject) joint.other.getUserData()).removeComponent(DriveTireComponent.class);
                     ((MyGameObject) joint.other.getUserData()).removeComponent(SteerableComponent.class);
-                };
+                }
             }
         });
         gob.forEach(FuelComponent.class, fuel ->{
@@ -58,7 +58,7 @@ public class DeathSystem extends AbstractForEachUpdatableSystem {
                     if(phys.body.getLinearVelocity().len() <= 0.1f){
                         for (JointEdge joint:phys.body.getJointList()) {
                             ((MyGameObject) joint.other.getUserData()).addComponent(new RemoveNowComponent());
-                        };
+                        }
                     }
                 });
             }

@@ -2,6 +2,7 @@ package com.bitdecay.game.room;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayer;
@@ -33,6 +34,7 @@ import com.bitdecay.game.system.*;
 import com.bitdecay.game.ui.HUD;
 import com.bitdecay.game.util.CarType;
 import com.bitdecay.game.util.ContactDistributer;
+import com.bitdecay.game.util.InputHelper;
 import com.bitdecay.game.util.ZoneType;
 
 import java.util.ArrayList;
@@ -313,6 +315,10 @@ public class DemoRoom extends AbstractRoom {
         roofRenderer.render();
         stage.act(1 / 60f);
         stage.draw();
+
+        if (InputHelper.isKeyJustPressed(Input.Keys.TAB)) {
+            HUD.instance().phone.toggle();
+        }
     }
 
     private void createStage() {

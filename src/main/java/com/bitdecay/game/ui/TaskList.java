@@ -11,6 +11,7 @@ import com.bitdecay.game.util.Quest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class TaskList extends Table {
     private float padding = Gdx.graphics.getHeight() * 0.03f;
@@ -42,5 +43,28 @@ public class TaskList extends Table {
         TaskCard task = new TaskCard(quest);
         btn.addActor(task);
         return btn;
+    }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        updateStartedQuests(delta);
+    }
+
+    public void updateStartedQuests(float delta){
+        quests.keySet().forEach(q -> {
+            if (q.started) q.currentZone().ifPresent(z -> {
+                z.update(delta);
+                if (z.isOutOfTime()){
+                    q.failed = true;
+                }
+            });
+        });
+    }
+
+    public void removeFailedQuests(){
+        quests.keySet().stream().collect(Collectors.toList()).forEach(q -> {
+            if (q.failed) removeQuest(q);
+        });
     }
 }

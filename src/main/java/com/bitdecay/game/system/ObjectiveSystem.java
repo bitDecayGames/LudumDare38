@@ -3,6 +3,7 @@ package com.bitdecay.game.system;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.Launcher;
 import com.bitdecay.game.component.PersonComponent;
+import com.bitdecay.game.component.RemoveNowComponent;
 import com.bitdecay.game.component.WaypointComponent;
 import com.bitdecay.game.component.ZoneComponent;
 import com.bitdecay.game.gameobject.GameObjectFactory;
@@ -51,7 +52,8 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
                 String name = zoneConf.getString("name");
                 Vector2 position = new Vector2((float) zoneConf.getDouble("position.x"), (float) zoneConf.getDouble("position.x"));
                 String flavorText = zoneConf.getString("flavorText");
-                return new ObjectiveZone(name, position, flavorText);
+                float timer = (float) zoneConf.getDouble("timer");
+                return new ObjectiveZone(name, position, flavorText, timer);
             }).collect(Collectors.toList());
             return new Quest(personName, icon, reward, zones, null, null);
         }).collect(Collectors.toList()));
@@ -59,18 +61,25 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
 
     @Override
     public void update(float delta){
-        gobs.forEach(gob -> gob.forEach(PersonComponent.class, person -> peopleInTheWorld++));
+        peopleInTheWorld = (int) gobs.stream().filter(gob -> gob.hasComponent(PersonComponent.class)).count();
 
         if(currentObjectives < MAXOBJECTIVES && peopleInTheWorld >= 3){
             for(; currentObjectives < MAXOBJECTIVES; currentObjectives ++){
                 createObjective();
             }
         }
+
+        gobs.forEach(gob -> gob.getComponent(WaypointComponent.class).ifPresent(w -> {
+            if (w.quest != null && w.quest.failed){
+                gob.addComponent(new RemoveNowComponent());
+            }
+        }));
+        HUD.instance().phone.tasks.removeFailedQuests();
     }
 
     @Override
     protected boolean validateGob(MyGameObject gob) {
-        return (gob.hasComponent(PersonComponent.class) || gob.hasComponent(ZoneComponent.class));
+        return gob.hasComponent(PersonComponent.class) || gob.hasComponent(ZoneComponent.class);
     }
 
     private void createObjective(){
@@ -103,7 +112,10 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
             quests.remove(questIndex);
             log.info("Remaining Quests: {}", quests);
 
-            MyGameObject humanZone = GameObjectFactory.createZone(targetHooman, 10000, 10000, 5, 5, 0, ZoneType.OBJECTIVE, (gameObj) -> quest.onZoneTrigger.accept(quest, gameObj));
+            MyGameObject humanZone = GameObjectFactory.createZone(targetHooman, 10000, 10000, 5, 5, 0, ZoneType.OBJECTIVE, (gameObj) -> {
+                quest.started = true;
+                quest.onZoneTrigger.accept(quest, gameObj);
+            });
             humanZone.getFreshComponent(WaypointComponent.class).ifPresent(wp -> {
                 wp.quest = quest;
                 log.info("Set quest to zone!");

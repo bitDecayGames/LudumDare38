@@ -2,17 +2,13 @@ package com.bitdecay.game.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
 import com.bitdecay.game.MyGame;
 import com.bitdecay.game.trait.IUpdate;
 import com.bitdecay.game.util.Quest;
@@ -24,6 +20,7 @@ public class TaskCard extends ImageButton implements IUpdate {
     private Image icon;
     private Label name;
     private Label location;
+    private Label timer;
     private Money reward;
     public Quest quest;
 
@@ -71,6 +68,11 @@ public class TaskCard extends ImageButton implements IUpdate {
         location.setFontScale(2f);
         location.setPosition(Gdx.graphics.getWidth() * 0.11f, Gdx.graphics.getHeight() * 0.11f);
         addActor(location);
+        timer = new Label(Float.toString(quest.currentZone().map(z -> z.timer).orElse(0f)), new Label.LabelStyle(MyGame.FONT, Color.WHITE));
+        timer.setAlignment(Align.bottomLeft);
+        timer.setFontScale(2f);
+        timer.setPosition(Gdx.graphics.getWidth() * 0.11f, Gdx.graphics.getHeight() * 0.04f);
+        addActor(timer);
         reward = new Money(3f);
         reward.align(Align.right);
         reward.setPosition(Gdx.graphics.getWidth() * 0.28f, Gdx.graphics.getHeight() * 0.04f);
@@ -90,6 +92,7 @@ public class TaskCard extends ImageButton implements IUpdate {
             icon.setDrawable(new TextureRegionDrawable(quest.getIcon()));
             name.setText(quest.personName);
             location.setText(quest.currentZone().map(z -> z.name).orElse(""));
+            timer.setText(Float.toString(quest.currentZone().map(z -> z.timer).orElse(0f)));
             reward.setMoney(quest.reward);
         }
     }

@@ -20,6 +20,7 @@ public class TrayCard extends ImageButton implements IUpdate {
     private Image icon;
     private Label name;
     private Label location;
+    private Label timer;
     private Money reward;
     public Quest quest;
 
@@ -58,6 +59,11 @@ public class TrayCard extends ImageButton implements IUpdate {
         location.setFontScale(2f);
         location.setPosition(Gdx.graphics.getWidth() * 0.11f, Gdx.graphics.getHeight() * 0.145f);
         addActor(location);
+        timer = new Label(Float.toString(quest.currentZone().map(z -> z.timer).orElse(0f)), new Label.LabelStyle(MyGame.FONT, Color.WHITE));
+        timer.setAlignment(Align.bottomLeft);
+        timer.setFontScale(2f);
+        timer.setPosition(Gdx.graphics.getWidth() * 0.11f, Gdx.graphics.getHeight() * 0.04f);
+        addActor(timer);
         reward = new Money(3f);
         reward.align(Align.right);
         reward.setPosition(Gdx.graphics.getWidth() * 0.28f, Gdx.graphics.getHeight() * 0.04f);
@@ -77,6 +83,7 @@ public class TrayCard extends ImageButton implements IUpdate {
             icon.setDrawable(new TextureRegionDrawable(quest.getIcon()));
             name.setText(quest.personName);
             location.setText(quest.currentZone().map(z -> z.name).orElse(""));
+            timer.setText(Float.toString(quest.currentZone().map(z -> z.timer).orElse(0f)));
             reward.setMoney(quest.reward);
         }
     }

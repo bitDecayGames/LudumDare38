@@ -1,6 +1,7 @@
 package com.bitdecay.game.system;
 
 import com.bitdecay.game.component.CameraFollowComponent;
+import com.bitdecay.game.component.PhysicsComponent;
 import com.bitdecay.game.component.PositionComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
@@ -22,6 +23,10 @@ public class CameraUpdateSystem extends AbstractForEachUpdatableSystem {
     @Override
     protected void forEach(float delta, MyGameObject gob) {
         gob.forEach(PositionComponent.class, pos -> room.camera.addFollowPoint(pos.toVector2()));
+        gob.forEach(PhysicsComponent.class, phys -> {
+            float vel = Math.max(Math.min(phys.body.getLinearVelocity().cpy().len() * 0.1f, 3), 1);
+            room.camera.targetZoom = vel;
+        } );
     }
 
 }

@@ -17,6 +17,8 @@ public class HUD extends Group {
     public Fuel fuel;
     public Tray tray;
 
+    public TaskCard selectedTask = null;
+
     public HUD() {
         super();
         I = this;

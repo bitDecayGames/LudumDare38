@@ -36,8 +36,9 @@ public abstract class AbstractRoom implements IUpdate, IDraw, IHasScreenSize, IC
     public AbstractRoom(GameScreen gameScreen){
         this.gameScreen = gameScreen;
 
-        camera.maxZoom = (float) Launcher.conf.getDouble("resolution.camera.maxZoom");
-        camera.minZoom = (float) Launcher.conf.getDouble("resolution.camera.minZoom");
+//        camera.maxZoom = (float) Launcher.conf.getDouble("resolution.camera.maxZoom");
+//        camera.minZoom = (float) Launcher.conf.getDouble("resolution.camera.minZoom");
+        camera.zoom = 2;
         camera.snapSpeed = (float) Launcher.conf.getDouble("resolution.camera.snapSpeed");
         camera.buffer = 100;
     }

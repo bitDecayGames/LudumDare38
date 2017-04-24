@@ -246,7 +246,7 @@ public class DemoRoom extends AbstractRoom {
             Vector2 base = new Vector2(circle.getEllipse().x, circle.getEllipse().y);
             base.scl(1/80f);
             pickupLocations.put(object.getName(), base);
-            createObjectFromName("mail", base.x, base.y);
+//            createObjectFromName("mail", base.x, base.y);
         }
 
         dropoffLocations = new HashMap<>();
@@ -258,7 +258,7 @@ public class DemoRoom extends AbstractRoom {
             Vector2 base = new Vector2(circle.getEllipse().x, circle.getEllipse().y);
             base.scl(1/80f);
             dropoffLocations.put(object.getName(), base);
-            createObjectFromName("mail", base.x, base.y);
+//            createObjectFromName("mail", base.x, base.y);
         }
     }
 

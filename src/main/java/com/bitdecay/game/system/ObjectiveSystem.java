@@ -57,10 +57,12 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
             float reward = (float) questConf.getDouble("reward");
             List<ObjectiveZone> zones = questConf.getConfigList("targetZones").stream().map(zoneConf -> {
                 String name = zoneConf.getString("name");
-                Vector2 position = room.pickupLocations.get(zoneConf.getString("position"));
+                Vector2 position = room.dropoffLocations.get(zoneConf.getString("position"));
                 if (position == null) {
                     System.out.println("NOTHING FOUND FOR " + zoneConf.getString("position"));
+                    position = new Vector2();
                 }
+                position = position.cpy().scl(2);
                 String flavorText = zoneConf.getString("flavorText");
                 float timer = (float) zoneConf.getDouble("timer");
                 return new ObjectiveZone(name, position, flavorText, timer);
@@ -109,6 +111,9 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
 
             int questIndex = randomizer.nextInt(questMap.size());
 
+            MyGameObject customerObject = questMap.get(questMap.keySet().toArray()[questIndex]);
+            Quest referenceQuest = (Quest) questMap.keySet().toArray()[questIndex];
+
             Quest quest =((Quest) questMap.keySet().toArray()[questIndex]).copy((q, o) -> {
                 if (q.currentZone().isPresent()) {
                     ObjectiveZone curZone = q.currentZone().get();
@@ -120,6 +125,7 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
                     nextZone.getFreshComponent(WaypointComponent.class).ifPresent(wp -> wp.quest = q);
                     log.info("Add new zone");
                     room.addGob(nextZone);
+                    room.getGameObjects().remove(customerObject);
                 } else q.onCompletion.accept(q, o);
             }, (q, o) -> {
                 log.info("End of quest: {}", q.personName);
@@ -127,10 +133,10 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
                 HUD.instance().phone.tasks.removeQuest(q);
             });
             log.info("Got quest: {}", quest);
-            quests.remove(questIndex);
+            questMap.remove(referenceQuest);
             log.info("Remaining Quests: {}", quests);
 
-            MyGameObject humanZone = GameObjectFactory.createZone(questMap.get(quest), 10000, 10000, 5, 5, 0, ZoneType.OBJECTIVE, (gameObj) -> {
+            MyGameObject humanZone = GameObjectFactory.createZone(customerObject, 10000, 10000, 5, 5, 0, ZoneType.OBJECTIVE, (gameObj) -> {
                 quest.started = true;
                 System.out.println(quest);
                 System.out.println(gameObj);
@@ -143,7 +149,7 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
             room.addGob(humanZone);
             HUD.instance().phone.tasks.addQuest(quest);
 
-            objectives.add(new Tuple<>(questMap.get(quest), quest));
+            objectives.add(new Tuple<>(customerObject, quest));
         }
     }
 }

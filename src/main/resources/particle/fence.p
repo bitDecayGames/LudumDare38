@@ -67,7 +67,7 @@ timeline0: 0.0
 lowMin: 0.0
 lowMax: 0.0
 highMin: 32.0
-highMax: 32.0
+highMax: 48.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -157,7 +157,7 @@ additive: false
 behind: false
 premultipliedAlpha: false
 - Image Path -
-/I:/Eclipse/github/LudumDare38/src/main/resources/img/packable/main/particles/standTire.png
+/I:/Eclipse/github/LudumDare38/src/main/resources/img/packable/main/particles/fence.png
 
 
 Debris
@@ -228,8 +228,8 @@ timeline0: 0.0
 - Scale - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 16.0
-highMax: 32.0
+highMin: 8.0
+highMax: 16.0
 relative: false
 scalingCount: 1
 scaling0: 1.0

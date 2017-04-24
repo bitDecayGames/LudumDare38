@@ -16,6 +16,7 @@ public class ParticleFXComponent extends DrawableComponent {
     public static ParticleEmitter.ScaledNumericValue zeroEmission = new ParticleEmitter.ScaledNumericValue();
 
     public ParticleEffect effect;
+    public String effectName;
     public boolean continuous;
 
     public boolean started;
@@ -24,19 +25,26 @@ public class ParticleFXComponent extends DrawableComponent {
     public boolean requestStart = true;
     public boolean requestStop;
 
-    public Map<ParticleEmitter, ParticleEmitter.ScaledNumericValue> saved = new HashMap<>();
+    public static Map<String, Map<ParticleEmitter, ParticleEmitter.ScaledNumericValue>> saved = new HashMap<>();
 
     public ParticleFXComponent(boolean continuous, FileHandle effectFile, FileHandle particleDir) {
         this.continuous = continuous;
+        this.effectName = effectFile.name();
         effect = new ParticleEffect();
         effect.load(effectFile, particleDir);
         effect.scaleEffect(.01f);
 
+        if (!saved.containsKey(effectName)) {
+            saved.put(effectName, new HashMap<>(effect.getEmitters().size));
+        }
+
+        Map<ParticleEmitter, ParticleEmitter.ScaledNumericValue> emitterSaves = saved.get(effectName);
+
         for (ParticleEmitter particleEmitter : effect.getEmitters()) {
-            if (!saved.containsKey(particleEmitter)) {
-                saved.put(particleEmitter, new ParticleEmitter.ScaledNumericValue());
+            if (!emitterSaves.containsKey(particleEmitter)) {
+                emitterSaves.put(particleEmitter, new ParticleEmitter.ScaledNumericValue());
             }
-            ParticleEmitter.ScaledNumericValue scaledNumericValue = saved.get(particleEmitter);
+            ParticleEmitter.ScaledNumericValue scaledNumericValue = emitterSaves.get(particleEmitter);
             scaledNumericValue.setLow(particleEmitter.getEmission().getLowMin(), particleEmitter.getEmission().getLowMax());
             scaledNumericValue.setHigh(particleEmitter.getEmission().getHighMin(), particleEmitter.getEmission().getHighMax());
         }

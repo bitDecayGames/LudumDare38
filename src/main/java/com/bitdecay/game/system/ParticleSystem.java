@@ -39,7 +39,7 @@ public class ParticleSystem extends AbstractDrawableSystem {
                     fx.started = true;
                     if (fx.continuous) {
                         for (ParticleEmitter emitter : fx.effect.getEmitters()) {
-                            ParticleEmitter.ScaledNumericValue saved = fx.saved.get(emitter);
+                            ParticleEmitter.ScaledNumericValue saved = fx.saved.get(fx.effectName).get(emitter);
                             emitter.getEmission().setLow(saved.getLowMin(), saved.getLowMax());
                             emitter.getEmission().setHigh(saved.getHighMin(), saved.getHighMax());
                         }

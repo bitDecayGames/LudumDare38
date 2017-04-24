@@ -107,7 +107,7 @@ public class DemoRoom extends AbstractRoom {
         new BreakableObjectSystem(this);
         new RemovalSystem(this);
         new NodeSystem(this);
-        GameObjectFactory.createCar(gobs, phys, new Vector2(280, 0), CarType.PLAYER, false);
+        GameObjectFactory.createCar(gobs, phys, new Vector2(140, 0), CarType.PLAYER, false);
         new AIControlSystem(this, graph);
         GameObjectFactory.createCarCass(gobs, phys.world,new Vector2(5,20),0);
 
@@ -133,7 +133,7 @@ public class DemoRoom extends AbstractRoom {
     }
 
     private void loadTileMapAndStartingObjects() {
-        map = new TmxMapLoader().load(Gdx.files.internal("img/tiled/world.tmx").path());
+        map = new TmxMapLoader().load(Gdx.files.internal("img/tiled/world_lite.tmx").path());
         renderer = new OrthogonalTiledMapRenderer(map, scaleFactor);
 
 //        roofMap = new TmxMapLoader().load(Gdx.files.internal("img/tiled/world.tmx").path());

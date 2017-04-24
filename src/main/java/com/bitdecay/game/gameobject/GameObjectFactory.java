@@ -219,12 +219,12 @@ public class GameObjectFactory {
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(x, y);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.linearDamping = .5f;
-        bodyDef.angularDamping = 3;
+        bodyDef.linearDamping = 5f;
+        bodyDef.angularDamping = 100;
         Body body = phys.world.createBody(bodyDef);
 
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(.5f, .5f);
+        CircleShape shape = new CircleShape();
+        shape.setRadius(.5f);
 
         body.createFixture(shape, 35f);
 

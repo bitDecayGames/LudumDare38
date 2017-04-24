@@ -34,8 +34,6 @@ public class ParticleSystem extends AbstractDrawableSystem {
             gob.forEachComponentDo(ParticleFXComponent.class, fx -> gob.forEachComponentDo(ParticlePosition.class, pos -> {
                 fx.effect.setPosition(pos.x, pos.y);
                 if (fx.requestStart) {
-                    System.out.println("Starting particle");
-                    System.out.println("Continuous: " + fx.continuous);
                     fx.requestStart = false;
                     fx.effect.start();
                     fx.started = true;

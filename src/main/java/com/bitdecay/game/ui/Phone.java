@@ -30,7 +30,7 @@ public class Phone extends Group {
         tasks.setPosition(Gdx.graphics.getWidth() * 0.17f, Gdx.graphics.getHeight() * 0.6f);
         addActor(tasks);
 
-        money = new Money();
+        money = new Money(3);
         money.setPosition(Gdx.graphics.getWidth() * 0.17f, Gdx.graphics.getHeight() * 0.95f);
         addActor(money);
 

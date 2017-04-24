@@ -11,10 +11,10 @@ public class Money extends Table {
 
     private Label text;
 
-    public Money() {
+    public Money(float fontScale) {
         add(new ImageButton(new TextureRegionDrawable(MyGame.ATLAS.findRegion("uiStuff/btc-512"))));
-        text = new Label("", new Label.LabelStyle(MyGame.FONT, Color.BLACK));
-        text.setFontScale(3.0f);
+        text = new Label("100.0", new Label.LabelStyle(MyGame.FONT, Color.WHITE));
+        text.setFontScale(fontScale);
         add(text).row();
 
     }

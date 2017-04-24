@@ -114,11 +114,11 @@ public class ParticleFactory {
     }
 
     public static ParticleFXComponent getFenceParticle() {
-        return getParticleFX(false, "src/main/resources/particle/fence.p", "src/main/resources/img/packable/main/particle/");
+        return getParticleFX(false, "src/main/resources/particle/fence.p", "src/main/resources/img/packable/main/particles/");
     }
 
     public static ParticleFXComponent getHeadstoneParticle() {
-        return getParticleFX(false, "src/main/resources/particle/headstone.p", "src/main/resources/img/packable/main/particle/");
+        return getParticleFX(false, "src/main/resources/particle/headstone.p", "src/main/resources/img/packable/main/particles/");
     }
 
     public static ParticleFXComponent getParticleFX(boolean continuous, String particleFile, String particleDir) {

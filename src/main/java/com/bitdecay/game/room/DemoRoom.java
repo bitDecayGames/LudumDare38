@@ -128,9 +128,6 @@ public class DemoRoom extends AbstractRoom {
         carBody = car4.getFreshComponent(PhysicsComponent.class).get().body;
         carBody.setTransform(carBody.getPosition(), -MathUtils.PI/2);
 
-        gobs.add(GameObjectFactory.makeHeadstone(phys, 46, 85));
-
-
         new RespawnGameOverSystem(this, Array.with(car1, car2, car3, car4));
 
 

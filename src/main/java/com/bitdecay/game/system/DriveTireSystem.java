@@ -59,6 +59,7 @@ public class DriveTireSystem extends AbstractForEachUpdatableSystem {
 
             if ((playerDown() && aiComp == null) || (aiComp != null && aiComp.down())) {
                 phys.body.applyForce(tirePowerVector.cpy().scl(-1), back, true);
+                fuel.currentFuel-= fuel.fuelBurnRate * delta;
             }
         })));
     }

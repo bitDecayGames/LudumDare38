@@ -1,14 +1,19 @@
 package com.bitdecay.game.room;
 
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.pfa.DefaultGraphPath;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -25,6 +30,7 @@ import com.bitdecay.game.system.*;
 import com.bitdecay.game.ui.HUD;
 import com.bitdecay.game.util.CarType;
 import com.bitdecay.game.util.ContactDistributer;
+import com.bitdecay.game.util.Tuple;
 import com.bitdecay.game.util.ZoneType;
 
 import java.util.Arrays;
@@ -35,7 +41,7 @@ import java.util.Iterator;
  */
 public class DemoRoom extends AbstractRoom {
 
-    public static int TILE_SIZE = 80;
+    public ArrayList<Vector2> spawnPoints;
 
     PhysicsSystem phys = null;
 
@@ -102,9 +108,9 @@ public class DemoRoom extends AbstractRoom {
         gobs.add(GameObjectFactory.makePerson(phys,15,5));
         gobs.add(GameObjectFactory.makePerson(phys,-5,5));
 
-        gobs.add(GameObjectFactory.createZone(10, 0, 6, 10, 0, ZoneType.BATHROOM));
-        gobs.add(GameObjectFactory.createZone(20, 16, 6, 10, 0, ZoneType.FUEL));
-        gobs.add(GameObjectFactory.createZone(-10, 0, 6, 10, 0, ZoneType.FOOD));
+        gobs.add(GameObjectFactory.createZone(10, 0, 6, 10, 0, ZoneType.BATHROOM, null));
+        gobs.add(GameObjectFactory.createZone(20, 16, 6, 10, 0, ZoneType.FUEL, null));
+        gobs.add(GameObjectFactory.createZone(-10, 0, 6, 10, 0, ZoneType.FOOD, null));
 
         loadTileMapAndStartingObjects();
 
@@ -135,6 +141,7 @@ public class DemoRoom extends AbstractRoom {
 
     private void loadTileMapAndStartingObjects() {
         map = new TmxMapLoader().load(Gdx.files.internal("img/tiled/town.tmx").path());
+        renderer = new OrthogonalTiledMapRenderer(map, scaleFactor);
 
         MapLayers mapLayers = map.getLayers();
 
@@ -171,7 +178,17 @@ public class DemoRoom extends AbstractRoom {
             }
         }
 
-        renderer = new OrthogonalTiledMapRenderer(map, scaleFactor);
+        spawnPoints = new ArrayList<>();
+        TiledMapTileLayer spawnpointsLayer = (TiledMapTileLayer) mapLayers.get("Spawn");
+
+        for (int x = 0; x < spawnpointsLayer.getWidth(); x++) {
+            for (int y = 0; y < spawnpointsLayer.getHeight(); y++) {
+                TiledMapTileLayer.Cell cell = spawnpointsLayer.getCell(x, y);
+                if (cell != null) {
+                    spawnPoints.add(new Vector2(x,y));
+                }
+            }
+        }
     }
 
     private void createBuildingCollisionBox(String name, float x, float y, int widthTiles, int heightTiles){

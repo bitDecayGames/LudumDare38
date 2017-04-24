@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.bitdecay.game.MyGame;
+import com.bitdecay.game.util.Objective;
 
 public class TaskList extends Table {
     private float padding = Gdx.graphics.getHeight() * 0.03f;
@@ -19,7 +20,7 @@ public class TaskList extends Table {
     }
 
     private ImageButton makeButton(){
-        Drawable onImage = new TextureRegionDrawable(MyGame.ATLAS.findRegion("uiStuff/missions/pokey"));
+        Drawable onImage = new TextureRegionDrawable(MyGame.ATLAS.findRegion("uiStuff/missions/selected"));
         Drawable offImage = new TextureRegionDrawable(MyGame.ATLAS.findRegion("uiStuff/missions/selected"));
         ImageButton btn = new ImageButton(offImage, onImage, onImage);
         btn.addListener(new InputListener() {
@@ -28,6 +29,8 @@ public class TaskList extends Table {
                 return true;
             }
         });
+
+        btn.addActor(new TaskCard(new Objective()));
         return btn;
     }
 }

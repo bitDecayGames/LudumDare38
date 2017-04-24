@@ -1,11 +1,15 @@
 package com.bitdecay.game.system;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.bitdecay.game.component.PersonComponent;
 import com.bitdecay.game.component.ZoneComponent;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractUpdatableSystem;
+import com.bitdecay.game.ui.HUD;
+import com.bitdecay.game.ui.Phone;
 import com.bitdecay.game.util.Tuple;
 import com.bitdecay.game.util.ZoneType;
 
@@ -19,8 +23,18 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
     private int currentObjectives = 0;
     private int peopleInTheWorld = 0;
 
+    private Vector2 zone1 = new Vector2(5, 30);
+    private Vector2 zone2 = new Vector2(15, 30);
+    private Vector2 zone3 = new Vector2(-5, 30);
+
+    private List<Vector2> zoneCoordsList = new ArrayList<>();
+
     public ObjectiveSystem(AbstractRoom room) {
         super(room);
+//        HUD.instance().phone.tasks = objectives;
+        zoneCoordsList.add(zone1);
+        zoneCoordsList.add(zone2);
+        zoneCoordsList.add(zone3);
     }
 
     @Override
@@ -48,12 +62,12 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
               !currentHoomans.contains(gob)).collect(Collectors.toList());
         MyGameObject targetHooman = hoomanGobs.get(randomizer.nextInt(hoomanGobs.size()));
 
-        List<MyGameObject> zoneGobs = gobs.stream().filter(gob -> gob.hasComponent(ZoneComponent.class) &&
-                !gob.getComponent(ZoneComponent.class).get().strict &&
-                !currentTargetZones.contains(gob)).collect(Collectors.toList());
-        MyGameObject targetZone = null;//zoneGobs.get(randomizer.nextInt(zoneGobs.size()));
+        Vector2 targetZoneCoords = zoneCoordsList.get(randomizer.nextInt(zoneCoordsList.size()));
+        MyGameObject targetZone = GameObjectFactory.createZone(targetZoneCoords.x, targetZoneCoords.y, 15, 15, 0, ZoneType.OBJECTIVE, (gameObj) -> {
 
-        room.addGob(GameObjectFactory.createZone(targetHooman, 10000, 10000, 5, 5, 0, ZoneType.OBJECTIVE, (lah) -> {}));
+        });
+
+        room.addGob(GameObjectFactory.createZone(targetHooman, 10000, 10000, 5, 5, 0, ZoneType.OBJECTIVE, (gameObj) -> room.addGob(targetZone)));
 
         objectives.add(new Tuple<>(targetHooman, targetZone));
     }

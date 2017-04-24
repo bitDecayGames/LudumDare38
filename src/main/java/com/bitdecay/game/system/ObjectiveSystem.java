@@ -10,6 +10,7 @@ import com.bitdecay.game.component.money.MoneyDiffComponent;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.DemoRoom;
+import com.bitdecay.game.screen.MainMenuScreen;
 import com.bitdecay.game.system.abstracted.AbstractUpdatableSystem;
 import com.bitdecay.game.ui.HUD;
 import com.bitdecay.game.util.ObjectiveZone;
@@ -78,12 +79,16 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
 
     @Override
     public void update(float delta){
-        peopleInTheWorld = people.size();
+        peopleInTheWorld = questMap.size();
 
         if(currentObjectives < MAXOBJECTIVES && peopleInTheWorld >= 3){
             for(; currentObjectives < MAXOBJECTIVES; currentObjectives ++){
                 createObjective();
             }
+        }
+
+        if (currentObjectives <= 0) {
+            room.gameScreen.setScreen(new MainMenuScreen(room.gameScreen.game));
         }
 
         gobs.forEach(gob -> gob.getComponent(WaypointComponent.class).ifPresent(w -> {

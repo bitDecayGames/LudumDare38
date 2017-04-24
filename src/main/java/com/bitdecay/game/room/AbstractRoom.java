@@ -25,7 +25,7 @@ import java.util.List;
 public abstract class AbstractRoom implements IUpdate, IDraw, IHasScreenSize, ICanSetScreen, IDisposable {
     protected Logger log = LogManager.getLogger(this.getClass());
 
-    protected final GameScreen gameScreen;
+    public final GameScreen gameScreen;
     public final SystemManager systemManager = new SystemManager();
     protected final MyGameObjects gobs = new MyGameObjects(systemManager);
     protected final List<ICleanup> cleanupables = Arrays.asList(systemManager, gobs);

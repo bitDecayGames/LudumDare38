@@ -22,7 +22,6 @@ import com.bitdecay.game.component.PhysicsComponent;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.gameobject.StaticGameObjectFactory;
-import com.bitdecay.game.pathfinding.NodeComponent;
 import com.bitdecay.game.pathfinding.NodeGraph;
 import com.bitdecay.game.pathfinding.NodeSystem;
 import com.bitdecay.game.screen.GameScreen;
@@ -33,7 +32,6 @@ import com.bitdecay.game.util.ContactDistributer;
 import com.bitdecay.game.util.ZoneType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * The demo room is just a super simple example of how to add systems and game objects to a room.
@@ -143,11 +141,11 @@ public class DemoRoom extends AbstractRoom {
         loadTileMapAndStartingObjects();
 
         // Add debug graph layer
-        Arrays.stream(graph.getNodes().toArray()).forEach(node -> {
-            MyGameObject temp = new MyGameObject();
-            temp.addComponent(new NodeComponent(node));
-            gobs.add(temp);
-        });
+//        Arrays.stream(graph.getNodes().toArray()).forEach(node -> {
+//            MyGameObject temp = new MyGameObject();
+//            temp.addComponent(new NodeComponent(node));
+//            gobs.add(temp);
+//        });
 
         // this is required to be at the end here so that the systems have the latest gobs
         systemManager.cleanup();

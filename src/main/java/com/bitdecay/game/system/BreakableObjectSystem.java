@@ -10,6 +10,7 @@ import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.gameobject.ParticleFactory;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractForEachUpdatableSystem;
+import com.bitdecay.game.util.SoundLibrary;
 
 /**
  * Created by Monday on 4/22/2017.
@@ -53,6 +54,10 @@ public class BreakableObjectSystem extends AbstractForEachUpdatableSystem implem
                         }
                         // TODO figure out how to get these to feel 'good'
                         phys.body.setTransform(phys.body.getPosition(), angle);
+
+                        if(breaker.soundName != null){
+                            SoundLibrary.playSound(breaker.soundName);
+                        }
                     }
                 });
             });

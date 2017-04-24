@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.bitdecay.game.ai.AIControlSystem;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.gameobject.StaticGameObjectFactory;
@@ -52,6 +53,14 @@ public class DemoRoom extends AbstractRoom {
         super(gameScreen);
 
         createStage();
+
+        // Graph/Nodes
+        int graphWidth = 20;
+        int graphHeigth = 20;
+        graph = new NodeGraph(graphWidth, graphHeigth);
+//        graph.removeNode(graph.getNodes().get(22));
+//        graph.removeNode(graph.getNodes().get(23));
+//        graph.removeNode(graph.getNodes().get(24));
 
         // systems must be added before game objects
         phys = new PhysicsSystem(this);
@@ -95,6 +104,8 @@ public class DemoRoom extends AbstractRoom {
         new BreakableObjectSystem(this);
         new RemovalSystem(this);
         new NodeSystem(this);
+        new AIControlSystem(this, graph);
+
         GameObjectFactory.createCar(gobs, phys, new Vector2(), CarType.PLAYER, false);
         GameObjectFactory.createCarCass(gobs, phys.world,new Vector2(5,20),0);
 
@@ -108,22 +119,7 @@ public class DemoRoom extends AbstractRoom {
 
         loadTileMapAndStartingObjects();
 
-        // Graph/Nodes
-        graph = new NodeGraph(10, 5);
-        graph.removeNode(graph.getNodes().get(22));
-
-        DefaultGraphPath<Node> graphPath = new DefaultGraphPath<>();
-        ManhattanHeuristic manhattanHeuristic = new ManhattanHeuristic();
-
-        IndexedAStarPathFinder<Node> pathFinder = new IndexedAStarPathFinder<>(graph);
-        pathFinder.searchNodePath(graph.getNodes().get(0), graph.getNodes().get(48), manhattanHeuristic, graphPath);
-
-        Iterator<Node> foundNodes = graphPath.iterator();
-        while (foundNodes.hasNext()) {
-            Node n = foundNodes.next();
-            n.type = NodeType.ROAD;
-        }
-
+        // Add debug graph layer
         Arrays.stream(graph.getNodes().toArray()).forEach(node -> {
             MyGameObject temp = new MyGameObject();
             temp.addComponent(new NodeComponent(node));

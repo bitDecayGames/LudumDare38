@@ -19,8 +19,8 @@ public class FuelGaugeSystem extends AbstractForEachUpdatableSystem {
     @Override
     protected boolean validateGob(MyGameObject gob) {
         return gob.hasComponents(
-                FuelComponent.class,
-                PlayerTireComponent.class
+            FuelComponent.class,
+            PlayerTireComponent.class
         );
     }
 

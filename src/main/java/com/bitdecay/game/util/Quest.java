@@ -18,6 +18,8 @@ public class Quest {
     public BiConsumer<Quest, MyGameObject> onZoneTrigger = null;
     public BiConsumer<Quest, MyGameObject> onCompletion = null;
     public boolean isActive = false;
+    public boolean started = false;
+    public boolean failed = false;
 
     public Quest(String personName, String icon, float reward, List<ObjectiveZone> targetZones, BiConsumer<Quest, MyGameObject> onZoneTrigger, BiConsumer<Quest, MyGameObject> onCompletion){
         this.personName = personName;
@@ -44,5 +46,10 @@ public class Quest {
 
     public Quest copy(BiConsumer<Quest, MyGameObject> onZoneTrigger, BiConsumer<Quest, MyGameObject> onCompletion){
         return new Quest(personName, icon, reward, targetZones.stream().map(ObjectiveZone::copy).collect(Collectors.toList()), onZoneTrigger, onCompletion);
+    }
+
+    @Override
+    public String toString() {
+        return "Quest(" + personName + ")";
     }
 }

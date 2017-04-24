@@ -6,19 +6,19 @@ import com.bitdecay.game.util.RunMode;
 import com.bitdecay.game.util.TexturePackerUtils;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * The launcher now reads the program args as well as the lastModified files to determine whether or not to run the texture packer.
  */
 public class Launcher {
 
-    private static final Logger log = Logger.getLogger(Launcher.class);
+    private static final Logger log = LogManager.getLogger(Launcher.class);
     public static Config conf = ConfigFactory.load("conf/application.conf");
 
     public static void main(String[] args) {
-        BasicConfigurator.configure();
+        //BasicConfigurator.configure(); // TODO: configure log4j?
 
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = Launcher.conf.getInt("resolution.default.width");
@@ -31,7 +31,7 @@ public class Launcher {
             // check for command line arguments
             if (arg(args, "dev")) runMode = RunMode.DEV;
         }
-        log.info("Run Mode: " + runMode);
+        log.info("Run Mode: {}", runMode);
         if (runMode == RunMode.DEV) TexturePackerUtils.pack();
 
         new LwjglApplication(new MyGame(runMode), config);

@@ -2,8 +2,8 @@ package com.bitdecay.game.system;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.bitdecay.game.component.PhysicsComponent;
-import com.bitdecay.game.component.PlayerControlComponent;
+import com.bitdecay.game.Launcher;
+import com.bitdecay.game.component.PlayerBodyComponent;
 import com.bitdecay.game.component.ZoneComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
@@ -17,6 +17,7 @@ import java.util.Optional;
 public class ZoneUpdateSystem extends AbstractUpdatableSystem implements ContactListener{
 
     Map<Fixture, Fixture> ongoingZoneToPlayerCollisions = new HashMap<>();
+    private float minZoneTriggerVelocity = (float) Launcher.conf.getDouble("tuning.minZoneTriggerVelocity");
 
     public ZoneUpdateSystem(AbstractRoom room, ContactDistributer contactDistrib) {
         super(room);
@@ -34,15 +35,15 @@ public class ZoneUpdateSystem extends AbstractUpdatableSystem implements Contact
             MyGameObject player = (MyGameObject) playerBody.getUserData();
 
             Optional<ZoneComponent> zoneOpt = ((MyGameObject) zoneBody.getUserData()).getComponent(ZoneComponent.class);
-            if(checkPlayerStoppedInZone(playerFixture, zoneFixture, zoneOpt.map(z -> z.strict).orElse(true))){
-                if(playerBody.getLinearVelocity().len() < .1){
+            if(checkIfPlayerInZone(playerFixture, zoneFixture, zoneOpt.map(z -> z.strict).orElse(true))){
+                if(playerBody.getLinearVelocity().len() < minZoneTriggerVelocity){
                     zoneOpt.ifPresent(theZone -> {
                         if(theZone.active) {
                             theZone.execute(player);
-                        }
-                        if(theZone.canDeactivate){
-                            theZone.active = false;
-
+                            if(theZone.canDeactivate){
+                                log.info("Deactivate zone");
+                                theZone.active = false;
+                            }
                         }
                     });
                 }
@@ -59,27 +60,24 @@ public class ZoneUpdateSystem extends AbstractUpdatableSystem implements Contact
     public void beginContact(Contact contact) {
         MyGameObject objectA = (MyGameObject) contact.getFixtureA().getBody().getUserData();
         MyGameObject objectB = (MyGameObject) contact.getFixtureB().getBody().getUserData();
+//        if (objectA != null && objectB != null) log.info("Begin contact: A({}) -> B({})", objectA.name(), objectB.name());
 
-        boolean objectAIsZone = objectA != null &&
-                objectA.hasComponents(ZoneComponent.class, PhysicsComponent.class) &&
-                objectA.getComponent(ZoneComponent.class).get().active;
-        boolean objectBIsZone = objectB != null &&
-                objectB.hasComponents(ZoneComponent.class, PhysicsComponent.class) &&
-                objectB.getComponent(ZoneComponent.class).get().active;
+        boolean objectAIsZone = objectA != null && objectA.getComponent(ZoneComponent.class).map(z -> z.active).orElse(false);
+        boolean objectBIsZone = objectB != null && objectB.getComponent(ZoneComponent.class).map(z -> z.active).orElse(false);
 
-        boolean objectAIsPlayer = objectA != null &&
-                objectA.hasComponents(PlayerControlComponent.class, PhysicsComponent.class);
-        boolean objectBIsPlayer = objectB != null &&
-                objectB.hasComponents(PlayerControlComponent.class, PhysicsComponent.class);
+        boolean objectAIsPlayer = objectA != null && objectA.hasComponents(PlayerBodyComponent.class);
+        boolean objectBIsPlayer = objectB != null && objectB.hasComponents(PlayerBodyComponent.class);
 
         if (objectAIsZone && objectBIsPlayer && contact.getFixtureB().getShape() instanceof PolygonShape) {
+//            log.info("Add to map: A({}) -> B({}) total: {}", objectA.name(), objectB.name(), ongoingZoneToPlayerCollisions.size());
             ongoingZoneToPlayerCollisions.put(contact.getFixtureA(), contact.getFixtureB());
         } else if (objectAIsPlayer && objectBIsZone && contact.getFixtureA().getShape() instanceof PolygonShape) {
+//            log.info("Add to map: A({}) -> B({}) total: {}", objectA.name(), objectB.name(), ongoingZoneToPlayerCollisions.size());
             ongoingZoneToPlayerCollisions.put(contact.getFixtureB(), contact.getFixtureA());
         }
     }
 
-    public boolean checkPlayerStoppedInZone(Fixture playerFixture, Fixture zoneFixture, boolean strict) {
+    public boolean checkIfPlayerInZone(Fixture playerFixture, Fixture zoneFixture, boolean strict) {
         if(strict) {
             PolygonShape playerPoly = (PolygonShape) playerFixture.getShape();
 
@@ -112,11 +110,13 @@ public class ZoneUpdateSystem extends AbstractUpdatableSystem implements Contact
         MyGameObject objectA = (MyGameObject) contact.getFixtureA().getBody().getUserData();
         MyGameObject objectB = (MyGameObject) contact.getFixtureB().getBody().getUserData();
 
-        boolean objectAIsZone = objectA != null && objectA.hasComponents(ZoneComponent.class, PhysicsComponent.class);
-        boolean objectBIsZone = objectB != null && objectB.hasComponents(ZoneComponent.class, PhysicsComponent.class);
+//        if (objectA != null && objectB != null) log.info("End contact: A({}) -> B({})", objectA.name(), objectB.name());
 
-        boolean objectAIsPlayer = objectA != null && objectA.hasComponents(PlayerControlComponent.class, PhysicsComponent.class);
-        boolean objectBIsPlayer = objectB != null && objectB.hasComponents(PlayerControlComponent.class, PhysicsComponent.class);
+        boolean objectAIsZone = objectA != null && objectA.hasComponents(ZoneComponent.class);
+        boolean objectBIsZone = objectB != null && objectB.hasComponents(ZoneComponent.class);
+
+        boolean objectAIsPlayer = objectA != null && objectA.hasComponents(PlayerBodyComponent.class);
+        boolean objectBIsPlayer = objectB != null && objectB.hasComponents(PlayerBodyComponent.class);
 
         if (objectAIsZone && objectBIsPlayer) {
             ongoingZoneToPlayerCollisions.remove(contact.getFixtureA());

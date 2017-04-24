@@ -9,11 +9,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.bitdecay.game.MyGame;
 import com.bitdecay.game.util.ZoneType;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class WaypointList extends Table {
+
+    protected Logger log = LogManager.getLogger(this.getClass());
+
     private float padding = Gdx.graphics.getWidth() * 0.01f;
 
     private Map<ZoneType, ImageButton> btnData = new HashMap<>();
@@ -26,8 +31,8 @@ public class WaypointList extends Table {
     }
 
     public boolean isWaypointOn(ZoneType zoneType){
-        if (btnData.containsKey(zoneType)) btnData.get(zoneType).isChecked();
-        return false;
+        if (btnData.containsKey(zoneType)) return btnData.get(zoneType).isChecked();
+        else return zoneType == ZoneType.OBJECTIVE;
     }
 
     private ImageButton makeButton(String name, ZoneType zoneType){
@@ -40,6 +45,7 @@ public class WaypointList extends Table {
                 return true;
             }
         });
+        btn.toggle();
         btnData.put(zoneType, btn);
         return btn;
     }

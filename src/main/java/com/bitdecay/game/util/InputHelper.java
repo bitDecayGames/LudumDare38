@@ -3,7 +3,8 @@ package com.bitdecay.game.util;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Collection;
 
@@ -11,7 +12,7 @@ import java.util.Collection;
  * Helps to allow for multi-key checks on JustPressed and Pressed.
  */
 public final class InputHelper {
-    private static Logger log = Logger.getLogger("InputHelper");
+    private static Logger log = LogManager.getLogger(InputHelper.class);
     private InputHelper(){}
 
     public static boolean isKeyJustPressed(int... keyboardKeys){

@@ -1,13 +1,15 @@
 package com.bitdecay.game.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Highscore{
-    private static final Logger log = Logger.getLogger(Highscore.class);
+
+    protected static Logger log = LogManager.getLogger(Highscore.class);
     private static final SimpleDateFormat dt = new SimpleDateFormat("h:mm M/d");
 
     public String name;
@@ -31,7 +33,7 @@ public class Highscore{
     }
 
     public static Highscore buildFromJson(JsonNode json){
-        log.info("Build highscore from json: " + json);
+        log.info("Build highscore from json: {}", json);
         String name = json.has("name") ? json.get("name").asText() : "";
         int score = json.has("score") ? json.get("score").asInt() : 0;
         long time = json.has("time") ? json.get("time").asLong() : 0;

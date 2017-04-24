@@ -20,6 +20,7 @@ public class GameObjectFactory {
     public static MyGameObject makeTrashBin(PhysicsSystem phys, float x, float y) {
 
         MyGameObject trashBin = new MyGameObject();
+        trashBin.addComponent(new NameComponent("TrashBin"));
 
         BodyDef trashBinBodyDef = new BodyDef();
         trashBinBodyDef.position.set(x, y);
@@ -47,6 +48,7 @@ public class GameObjectFactory {
 
     public static MyGameObject makeDumpster(PhysicsSystem phys, float x, float y) {
         MyGameObject dumpster = new MyGameObject();
+        dumpster.addComponent(new NameComponent("Dumpster"));
 
         BodyDef dumpsterBodyDef = new BodyDef();
         dumpsterBodyDef.position.set(x, y);
@@ -75,6 +77,7 @@ public class GameObjectFactory {
 
     public static MyGameObject makeCart(PhysicsSystem phys, float x, float y) {
         MyGameObject cart = new MyGameObject();
+        cart.addComponent(new NameComponent("Cart"));
 
         BodyDef cartBodyDef = new BodyDef();
         cartBodyDef.position.set(x, y);
@@ -102,6 +105,7 @@ public class GameObjectFactory {
 
     public static MyGameObject makeToilet(PhysicsSystem phys, float x, float y) {
         MyGameObject toilet = new MyGameObject();
+        toilet.addComponent(new NameComponent("Toilet"));
 
         BodyDef toiletBodyDef = new BodyDef();
         toiletBodyDef.position.set(x, y);
@@ -128,8 +132,8 @@ public class GameObjectFactory {
     }
 
     public static MyGameObject makeTrashBag(PhysicsSystem phys, float x, float y) {
-
         MyGameObject trashBag = new MyGameObject();
+        trashBag.addComponent(new NameComponent("TrashBag"));
 
         BodyDef trashBagBodyDef = new BodyDef();
         trashBagBodyDef.position.set(x, y);
@@ -158,6 +162,7 @@ public class GameObjectFactory {
 
     public static MyGameObject makeFirehydrant(PhysicsSystem phys, float x, float y) {
         MyGameObject hydrant = new MyGameObject();
+        hydrant.addComponent(new NameComponent("Hydrant"));
 
         BodyDef hydrantBodyDef = new BodyDef();
         hydrantBodyDef.position.set(x, y);
@@ -186,6 +191,7 @@ public class GameObjectFactory {
 
     public static MyGameObject makeMailbox(PhysicsSystem phys, float x, float y) {
         MyGameObject mailbox = new MyGameObject();
+        mailbox.addComponent(new NameComponent("Mailbox"));
 
         BodyDef mailboxBodyDef = new BodyDef();
         mailboxBodyDef.position.set(x, y);
@@ -213,6 +219,7 @@ public class GameObjectFactory {
 
     public static MyGameObject makePerson(PhysicsSystem phys, float x, float y) {
         MyGameObject obj = new MyGameObject();
+        obj.addComponent(new NameComponent("Person"));
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(x, y);
@@ -252,6 +259,7 @@ public class GameObjectFactory {
 
     public static MyGameObject makeGrassKnoll(PhysicsSystem phys, float x, float y) {
         MyGameObject field = new MyGameObject();
+        field.addComponent(new NameComponent("Grass"));
 
         BodyDef fieldBodyDef = new BodyDef();
         fieldBodyDef.position.set(x, y);
@@ -309,6 +317,7 @@ public class GameObjectFactory {
     }
     public static MyGameObject createZone(MyGameObject followTarget, float x, float y, float width, float length, float rotation, ZoneType zoneType, Consumer<MyGameObject> modifyGameObj){
         MyGameObject zone = new MyGameObject();
+        zone.addComponent(new NameComponent("Zone<" + zoneType + ">"));
 
         BodyDef zoneBodyDef = new BodyDef();
         zoneBodyDef.type = BodyDef.BodyType.StaticBody;
@@ -445,6 +454,7 @@ public class GameObjectFactory {
 
         // create car entity
         MyGameObject car = new MyGameObject();
+        car.addComponent(new NameComponent("Car<" + type + ">"));
         car.addComponent(new PositionComponent(0, 0));
         PhysicsComponent carPhysics = new PhysicsComponent(carBody);
         car.addComponent(carPhysics);
@@ -640,6 +650,7 @@ public class GameObjectFactory {
 
     private static MyGameObject makeTireObject(Body body, RevoluteJoint joint, TireFrictionData tireData, CarType type, boolean rear, boolean right) {
         MyGameObject tire = new MyGameObject();
+        tire.addComponent(new NameComponent("Tire"));
         PhysicsComponent tirePhysics = new PhysicsComponent(body);
         tirePhysics.body.setUserData(tire);
         tire.addComponent(tirePhysics);

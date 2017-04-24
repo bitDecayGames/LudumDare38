@@ -3,7 +3,8 @@ package com.bitdecay.game.system.abstracted;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.trait.IRefreshable;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,13 +15,12 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractSystem implements IRefreshable {
 
-    protected Logger log;
+    protected Logger log = LogManager.getLogger(this.getClass());
 
     protected final AbstractRoom room;
     protected final List<MyGameObject> gobs = new ArrayList<>();
 
     public AbstractSystem(AbstractRoom room){
-        log = Logger.getLogger(this.getClass());
         this.room = room;
         this.room.systemManager.addSystem(this);
     }

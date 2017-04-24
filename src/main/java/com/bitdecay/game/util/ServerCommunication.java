@@ -2,7 +2,8 @@ package com.bitdecay.game.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -18,13 +19,13 @@ public class ServerCommunication {
         return i;
     }
 
-    private Logger log = Logger.getLogger(ServerCommunication.class);
+    protected Logger log = LogManager.getLogger(this.getClass());
     private final String baseUrl = "http://bytebreakstudios.com:8080";
     private Client client = ClientBuilder.newClient();
     private final static String auth = "e1103cee83aee47220fc82e30c37143a";
 
     public void sendHighscore(Highscore highscore){
-        log.info("Sending highscore: " + highscore);
+        log.info("Sending highscore: {}", highscore);
         try {
             client.target(baseUrl + "/score").request().header("Authorization", auth).post(Entity.entity(highscore.toString(), "application/json"));
         } catch (Exception e){
@@ -39,9 +40,9 @@ public class ServerCommunication {
         ObjectMapper mapper = new ObjectMapper();
         try {
             JsonNode json = mapper.readTree(result).get("scores");
-            log.info("Got highscore json: " + json);
+            log.info("Got highscore json: {}", json);
             json.forEach(score -> highscores.add(Highscore.buildFromJson(score)));
-            log.info("Got highscores: " + highscores);
+            log.info("Got highscores: {}", highscores);
             return highscores;
         } catch (Exception e) {
             log.error("Failed to get highscores: ", e);

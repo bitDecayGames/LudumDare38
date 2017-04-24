@@ -1,16 +1,30 @@
 package com.bitdecay.game.component;
 
 import com.bitdecay.game.trait.IUpdate;
+import com.bitdecay.game.util.Quest;
 import com.bitdecay.game.util.ZoneType;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Use this component to mark an object on or off screen with a little indicator
  */
 public class WaypointComponent extends AbstractComponent implements IUpdate {
+
+    protected Logger log = LogManager.getLogger(this.getClass());
+
     public AnimatedImageComponent animated = null;
     public StaticImageComponent staticImage = null;
     public ZoneType zoneType = null;
     public boolean rotates = false;
+    public Quest quest = null;
+
+    public WaypointComponent(Quest quest){
+        this.quest = quest;
+        animated = new AnimatedImageComponent("uiStuff/arrow", 0.1f);
+        staticImage = new StaticImageComponent("uiStuff/arrow/0");
+        rotates = true;
+    }
 
     public WaypointComponent(ZoneType zoneType){
         this.zoneType = zoneType;
@@ -43,6 +57,10 @@ public class WaypointComponent extends AbstractComponent implements IUpdate {
                 rotates = true;
                 break;
         }
+    }
+
+    public boolean isQuestActive(){
+        return quest == null || quest.isActive;
     }
 
     @Override

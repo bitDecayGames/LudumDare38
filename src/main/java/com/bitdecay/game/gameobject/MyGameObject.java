@@ -1,6 +1,7 @@
 package com.bitdecay.game.gameobject;
 
 import com.bitdecay.game.component.AbstractComponent;
+import com.bitdecay.game.component.NameComponent;
 import com.bitdecay.game.trait.ICleanup;
 
 import java.lang.reflect.Constructor;
@@ -114,5 +115,9 @@ public class MyGameObject implements ICleanup {
     @Override
     public String toString(){
         return components.toString();
+    }
+
+    public String name() {
+        return getComponent(NameComponent.class).map(NameComponent::toString).orElse("unknown");
     }
 }

@@ -45,7 +45,6 @@ public class TireFrictionModifierSystem extends AbstractUpdatableSystem implemen
             ModifiedSteeringComponent modifiedSteeringComp = new ModifiedSteeringComponent(objectB.getComponent(TireFrictionModifierComponent.class).get().modifiedFriction);
             objectA.addComponent(modifiedSteeringComp);
         }
-//        System.out.println("exiting: objectA is a tire");
     }
 
     @Override

@@ -6,14 +6,15 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.bitdecay.game.util.Quest;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Optional;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
 
 public class Tray extends Group {
-    private Logger log = Logger.getLogger(Tray.class);
+    protected Logger log = LogManager.getLogger(this.getClass());
 
     public TrayCard taskCard;
     public ConversationDialog dialog;

@@ -81,7 +81,8 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
               !currentHoomans.contains(gob)).collect(Collectors.toList());
         MyGameObject targetHooman = hoomanGobs.get(randomizer.nextInt(hoomanGobs.size()));
 
-        Quest quest = quests.get(randomizer.nextInt(quests.size())).copy((q, o) -> {
+        int questIndex = randomizer.nextInt(quests.size());
+        Quest quest = quests.get(questIndex).copy((q, o) -> {
             if (q.currentZone().isPresent()) {
                 ObjectiveZone curZone = q.currentZone().get();
                 MyGameObject nextZone = GameObjectFactory.createZone(curZone.position.x, curZone.position.y, 15, 15, 0, ZoneType.OBJECTIVE, (obj) -> {
@@ -97,6 +98,9 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
             log.info("End of quest: " + q.personName);
             HUD.instance().phone.tasks.removeQuest(q);
         });
+        log.info("Got quest: " + quest);
+        quests.remove(questIndex);
+        log.info("Remaining Quests: " + quests);
 
         MyGameObject humanZone = GameObjectFactory.createZone(targetHooman, 10000, 10000, 5, 5, 0, ZoneType.OBJECTIVE, (gameObj) -> quest.onZoneTrigger.accept(quest, gameObj));
         humanZone.getFreshComponent(WaypointComponent.class).ifPresent(wp -> {

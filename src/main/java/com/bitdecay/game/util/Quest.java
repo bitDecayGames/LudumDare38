@@ -45,4 +45,9 @@ public class Quest {
     public Quest copy(BiConsumer<Quest, MyGameObject> onZoneTrigger, BiConsumer<Quest, MyGameObject> onCompletion){
         return new Quest(personName, icon, reward, targetZones.stream().map(ObjectiveZone::copy).collect(Collectors.toList()), onZoneTrigger, onCompletion);
     }
+
+    @Override
+    public String toString() {
+        return "Quest(" + personName + ")";
+    }
 }

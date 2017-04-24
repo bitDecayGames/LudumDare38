@@ -2,13 +2,17 @@ package com.bitdecay.game.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.bitdecay.game.MyGame;
 import com.bitdecay.game.trait.IUpdate;
 import com.bitdecay.game.util.Quest;
@@ -25,7 +29,7 @@ public class TaskCard extends ImageButton implements IUpdate {
 
     public TaskCard(){
         super(new TextureRegionDrawable(MyGame.ATLAS.findRegion("uiStuff/missions/selected")));
-        init(defaultQuest);
+        init(defaultQuest, this);
     }
 
     public TaskCard(Quest quest) {
@@ -33,13 +37,22 @@ public class TaskCard extends ImageButton implements IUpdate {
             new TextureRegionDrawable(MyGame.ATLAS.findRegion("uiStuff/missions/unselected")),
             new TextureRegionDrawable(MyGame.ATLAS.findRegion("uiStuff/missions/selected")),
             new TextureRegionDrawable(MyGame.ATLAS.findRegion("uiStuff/missions/selected")));
-        init(quest);
+        init(quest, this);
     }
 
-    private void init(Quest quest){
+    private void init(Quest quest, TaskCard thisCard){
         this.quest = quest;
         addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                if(HUD.instance().selectedTask != null && HUD.instance().selectedTask != thisCard) {
+                    HUD.instance().selectedTask.toggle();
+                    HUD.instance().selectedTask.quest.isActive = false;
+                    HUD.instance().selectedTask = thisCard;
+                } else if (HUD.instance().selectedTask != null && HUD.instance().selectedTask == thisCard){
+                    HUD.instance().selectedTask = null;
+                } else {
+                    HUD.instance().selectedTask = thisCard;
+                }
                 quest.isActive = !quest.isActive;
                 event.stop();
                 return true;

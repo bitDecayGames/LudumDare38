@@ -39,7 +39,8 @@ public class TaskList extends Table {
 
     private ImageButton listItem(Quest quest){
         ImageButton btn = new ImageButton(new TextureRegionDrawable(MyGame.ATLAS.findRegion("uiStuff/missions/unselected")));
-        btn.addActor(new TaskCard(quest));
+        TaskCard task = new TaskCard(quest);
+        btn.addActor(task);
         return btn;
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="120" height="100" tilewidth="80" tileheight="80" nextobjectid="621">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="120" height="100" tilewidth="80" tileheight="80" nextobjectid="633">
  <tileset firstgid="1" name="street_sidewalk_anew" tilewidth="80" tileheight="80" tilecount="28" columns="7">
   <image source="street_sidewalk_anew.png" width="560" height="320"/>
  </tileset>
@@ -585,7 +585,7 @@
 0,1,1,1,1,1,1,1,1,1,1,1,2,17,2,11,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,15,65,0,0,0,126,0,1,1,124,76,77,77,65,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,17,2,11,2,15,1,1,1,1,1,1,1,1,1,1,1,1,1,17,2,2,12,12,12,12,2,2,15,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,76,77,0,0,0,0,
 0,1,1,64,65,1,1,1,1,1,1,1,2,17,2,2,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,2,2,2,0,0,0,0,0,138,0,0,0,136,137,138,76,77,65,65,2,2,2,2,2,2,2,2,2,2,2,2,2,2,17,2,11,2,15,1,1,1,1,1,1,1,1,1,1,1,1,1,17,2,2,2,2,2,2,11,64,65,65,65,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,64,65,0,0,0,
 0,1,1,76,77,65,1,1,1,1,1,1,2,17,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,1,1,0,0,0,0,0,0,0,124,76,77,77,65,76,76,2,2,2,2,2,2,2,2,2,2,2,17,2,11,2,15,1,1,1,1,1,1,1,1,1,1,1,1,1,9,9,9,9,9,64,65,11,76,77,77,77,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,76,77,0,0,0,
-0,0,0,124,64,65,1,1,1,1,1,1,2,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,8,64,0,77,0,0,0,0,0,0,0,0,0,0,136,137,138,76,77,65,65,65,0,0,2,2,2,2,23,23,23,23,24,2,11,2,15,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,64,65,11,124,125,126,1,1,64,65,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,0,0,
+0,0,0,124,64,65,1,1,1,1,1,1,2,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,8,64,0,77,0,0,0,0,0,0,0,0,0,0,136,137,138,76,77,65,65,65,2,2,2,2,2,2,23,23,23,23,24,2,11,2,15,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,64,65,11,124,125,126,1,1,64,65,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,0,0,
 0,0,0,136,76,77,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,76,0,126,0,0,0,0,0,0,0,0,0,0,0,0,0,124,76,77,77,77,2,2,2,2,2,2,17,2,2,2,2,2,11,2,15,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,64,65,114,136,137,138,1,1,76,77,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,0,
 0,0,0,0,1,1,64,65,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,64,65,65,1,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,136,137,138,76,77,65,2,2,2,2,2,17,2,2,12,12,12,2,2,15,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,64,65,126,0,0,0,0,0,124,1,1,1,1,1,1,1,1,15,17,1,1,1,1,1,1,1,0,
 0,0,0,0,1,1,76,77,65,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,64,65,65,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,124,76,77,2,2,2,2,2,17,2,11,2,2,2,2,2,15,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,64,65,64,65,138,0,0,0,0,0,136,64,65,1,1,1,1,1,1,15,17,1,1,1,1,1,1,1,0,
@@ -601,46 +601,61 @@
 </data>
  </layer>
  <objectgroup name="pickups">
-  <object id="507" name="cemetery" x="8669" y="7351" width="96.5" height="96.5">
+  <object id="507" name="cemetery" x="8699" y="6951" width="96.5" height="96.5">
    <ellipse/>
   </object>
-  <object id="508" name="bar" x="6023" y="5485.5" width="117" height="117">
+  <object id="508" name="bar" x="6567" y="5241.5" width="117" height="117">
    <ellipse/>
   </object>
-  <object id="509" name="gunStore" x="7759" y="4890.5" width="150" height="150">
+  <object id="509" name="gunStore" x="7683" y="4806.5" width="150" height="150">
    <ellipse/>
   </object>
-  <object id="510" name="chinese" x="2804" y="6041.5" width="176" height="176">
+  <object id="510" name="chinese" x="2181.33" y="6001.5" width="176" height="176">
    <ellipse/>
   </object>
-  <object id="511" name="grocery" x="3538.67" y="4424.5" width="170" height="170">
+  <object id="511" name="grocery" x="3490.67" y="4176.5" width="170" height="170">
    <ellipse/>
   </object>
-  <object id="512" name="coffee" x="5515" y="1937.5" width="75.5" height="75.5">
+  <object id="512" name="coffee" x="5533.18" y="1837.5" width="75.5" height="75.5">
    <ellipse/>
   </object>
-  <object id="513" name="pizza" type="pickup" x="6106.67" y="3103.17" width="124" height="124">
+  <object id="513" name="pizza" type="pickup" x="6003.64" y="3109.23" width="124" height="124">
    <ellipse/>
   </object>
-  <object id="514" name="auto" x="4781" y="6028.5" width="159" height="159">
+  <object id="514" name="auto" x="4691.67" y="5993.83" width="159" height="159">
    <ellipse/>
   </object>
-  <object id="515" name="taxi" x="1815" y="5047.5" width="159" height="159">
+  <object id="515" name="taxi" x="1839" y="4882.17" width="159" height="159">
    <ellipse/>
   </object>
-  <object id="516" name="stripClub" x="9026" y="3206.5" width="167" height="167">
+  <object id="516" name="stripClub" x="9036" y="2220.5" width="167" height="167">
    <ellipse/>
   </object>
-  <object id="517" name="park" x="5998" y="6020.5" width="178" height="178">
+  <object id="517" name="park" x="5914" y="5913.83" width="178" height="178">
    <ellipse/>
   </object>
-  <object id="518" name="bank" x="3964" y="584.5" width="105" height="105">
+  <object id="518" name="bank" x="3972" y="656.5" width="105" height="105">
    <ellipse/>
   </object>
-  <object id="519" name="burger" x="2270" y="990.5" width="88" height="82.6667">
+  <object id="519" name="burger" x="2274" y="973.167" width="88" height="82.6667">
    <ellipse/>
   </object>
-  <object id="520" name="games" x="1853" y="5537.5" width="164" height="164">
+  <object id="520" name="games" x="1833" y="5440.17" width="164" height="164">
+   <ellipse/>
+  </object>
+  <object id="621" name="mail" x="2975.76" y="2818.18" width="127.273" height="127.273">
+   <ellipse/>
+  </object>
+  <object id="626" name="dump" x="6568" y="1056" width="152" height="152">
+   <ellipse/>
+  </object>
+  <object id="628" name="noname" x="4184" y="2816" width="160" height="160">
+   <ellipse/>
+  </object>
+  <object id="630" name="end" x="1840" y="7320" width="168" height="168">
+   <ellipse/>
+  </object>
+  <object id="631" name="bricks" x="1504" y="3128" width="128" height="128">
    <ellipse/>
   </object>
  </objectgroup>
@@ -648,7 +663,7 @@
   <object id="607" name="chinese" x="2579.5" y="6070.83" width="142.667" height="142.667">
    <ellipse/>
   </object>
-  <object id="608" name="burger" x="1922.17" y="704.167" width="149.333" height="149.333">
+  <object id="608" name="burger" x="2274.17" y="484.167" width="149.333" height="149.333">
    <ellipse/>
   </object>
   <object id="609" name="pizza" x="6457.5" y="3281.5" width="119" height="119">
@@ -663,7 +678,7 @@
   <object id="612" name="games" x="1661.5" y="5679.5" width="166" height="166">
    <ellipse/>
   </object>
-  <object id="613" name="bank" x="4118.5" y="388.5" width="151" height="151">
+  <object id="613" name="bank" x="4118.5" y="408.5" width="151" height="151">
    <ellipse/>
   </object>
   <object id="614" name="auto" x="4972.23" y="6515.8" width="206.061" height="206.061">
@@ -681,10 +696,25 @@
   <object id="618" name="grocery" x="3827.5" y="4164.17" width="208" height="208">
    <ellipse/>
   </object>
-  <object id="619" name="gunStore" x="7771.5" y="5038.83" width="152" height="152">
+  <object id="619" name="gunStore" x="7763.5" y="4970.83" width="152" height="152">
    <ellipse/>
   </object>
-  <object id="620" name="taxi" x="1467.5" y="4956.17" width="165.333" height="165.333">
+  <object id="620" name="taxi" x="1419.5" y="5008.17" width="165.333" height="165.333">
+   <ellipse/>
+  </object>
+  <object id="623" name="mail" x="2420" y="2368" width="104" height="104">
+   <ellipse/>
+  </object>
+  <object id="625" name="dump" x="6880" y="1032" width="208" height="184">
+   <ellipse/>
+  </object>
+  <object id="627" name="end" x="2208" y="7320" width="160" height="160">
+   <ellipse/>
+  </object>
+  <object id="629" name="noname" x="3872" y="2664" width="152" height="152">
+   <ellipse/>
+  </object>
+  <object id="632" name="bricks" x="1392" y="3416" width="136" height="136">
    <ellipse/>
   </object>
  </objectgroup>

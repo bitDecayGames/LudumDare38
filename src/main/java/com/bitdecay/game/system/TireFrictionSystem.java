@@ -104,7 +104,6 @@ public class TireFrictionSystem extends AbstractForEachUpdatableSystem {
         }
         if (Math.abs(difference) > 170) {
             // we are pointed within 10 degrees of backwards
-//            System.out.println("YOU BACKWARDS, HO");
             return true;
         } else {
             return false;

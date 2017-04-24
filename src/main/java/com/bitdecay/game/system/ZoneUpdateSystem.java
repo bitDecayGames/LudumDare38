@@ -60,7 +60,7 @@ public class ZoneUpdateSystem extends AbstractUpdatableSystem implements Contact
     public void beginContact(Contact contact) {
         MyGameObject objectA = (MyGameObject) contact.getFixtureA().getBody().getUserData();
         MyGameObject objectB = (MyGameObject) contact.getFixtureB().getBody().getUserData();
-//        if (objectA != null && objectB != null) log.info("Begin contact: A(" + objectA.name() + ") -> B(" + objectB.name() + ")");
+//        if (objectA != null && objectB != null) log.info("Begin contact: A({}) -> B({})", objectA.name(), objectB.name());
 
         boolean objectAIsZone = objectA != null && objectA.getComponent(ZoneComponent.class).map(z -> z.active).orElse(false);
         boolean objectBIsZone = objectB != null && objectB.getComponent(ZoneComponent.class).map(z -> z.active).orElse(false);
@@ -69,10 +69,10 @@ public class ZoneUpdateSystem extends AbstractUpdatableSystem implements Contact
         boolean objectBIsPlayer = objectB != null && objectB.hasComponents(PlayerBodyComponent.class);
 
         if (objectAIsZone && objectBIsPlayer && contact.getFixtureB().getShape() instanceof PolygonShape) {
-//            log.info("Add to +map: A(" + objectA.name() + ") -> B(" + objectB.name() + ") " + ongoingZoneToPlayerCollisions.size());
+//            log.info("Add to map: A({}) -> B({}) total: {}", objectA.name(), objectB.name(), ongoingZoneToPlayerCollisions.size());
             ongoingZoneToPlayerCollisions.put(contact.getFixtureA(), contact.getFixtureB());
         } else if (objectAIsPlayer && objectBIsZone && contact.getFixtureA().getShape() instanceof PolygonShape) {
-//            log.info("Add to +map: A(" + objectA.name() + ") -> B(" + objectB.name() + ") " + ongoingZoneToPlayerCollisions.size());
+//            log.info("Add to map: A({}) -> B({}) total: {}", objectA.name(), objectB.name(), ongoingZoneToPlayerCollisions.size());
             ongoingZoneToPlayerCollisions.put(contact.getFixtureB(), contact.getFixtureA());
         }
     }
@@ -110,7 +110,7 @@ public class ZoneUpdateSystem extends AbstractUpdatableSystem implements Contact
         MyGameObject objectA = (MyGameObject) contact.getFixtureA().getBody().getUserData();
         MyGameObject objectB = (MyGameObject) contact.getFixtureB().getBody().getUserData();
 
-//        if (objectA != null && objectB != null) log.info("End contact: A(" + objectA.name() + ") -> B(" + objectB.name() + ")");
+//        if (objectA != null && objectB != null) log.info("End contact: A({}) -> B({})", objectA.name(), objectB.name());
 
         boolean objectAIsZone = objectA != null && objectA.hasComponents(ZoneComponent.class);
         boolean objectBIsZone = objectB != null && objectB.hasComponents(ZoneComponent.class);

@@ -33,7 +33,7 @@ public class Highscore{
     }
 
     public static Highscore buildFromJson(JsonNode json){
-        log.info("Build highscore from json: " + json);
+        log.info("Build highscore from json: {}", json);
         String name = json.has("name") ? json.get("name").asText() : "";
         int score = json.has("score") ? json.get("score").asInt() : 0;
         long time = json.has("time") ? json.get("time").asLong() : 0;

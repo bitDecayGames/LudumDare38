@@ -25,7 +25,7 @@ public class ServerCommunication {
     private final static String auth = "e1103cee83aee47220fc82e30c37143a";
 
     public void sendHighscore(Highscore highscore){
-        log.info("Sending highscore: " + highscore);
+        log.info("Sending highscore: {}", highscore);
         try {
             client.target(baseUrl + "/score").request().header("Authorization", auth).post(Entity.entity(highscore.toString(), "application/json"));
         } catch (Exception e){
@@ -40,9 +40,9 @@ public class ServerCommunication {
         ObjectMapper mapper = new ObjectMapper();
         try {
             JsonNode json = mapper.readTree(result).get("scores");
-            log.info("Got highscore json: " + json);
+            log.info("Got highscore json: {}", json);
             json.forEach(score -> highscores.add(Highscore.buildFromJson(score)));
-            log.info("Got highscores: " + highscores);
+            log.info("Got highscores: {}", highscores);
             return highscores;
         } catch (Exception e) {
             log.error("Failed to get highscores: ", e);

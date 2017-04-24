@@ -31,7 +31,7 @@ public class Launcher {
             // check for command line arguments
             if (arg(args, "dev")) runMode = RunMode.DEV;
         }
-        log.info("Run Mode: " + runMode);
+        log.info("Run Mode: {}", runMode);
         if (runMode == RunMode.DEV) TexturePackerUtils.pack();
 
         new LwjglApplication(new MyGame(runMode), config);

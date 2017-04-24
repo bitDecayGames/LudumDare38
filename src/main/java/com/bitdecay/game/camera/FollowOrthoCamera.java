@@ -12,8 +12,8 @@ import java.util.List;
  * The FollowOrthoCamera will try and follow a list of points.  As the points spread out, the camera will zoom out.  As they get closer together, the camera will zoom in.  You have to give the camera a new list of points to follow every update step.
  */
 public class FollowOrthoCamera extends OrthographicCamera {
-    public float maxZoom = 0.05f;
-    public float minZoom = 0.1f;
+//    public float maxZoom = 0.05f;
+//    public float minZoom = 0.1f;
     public float buffer = 10;
     public float snapSpeed = 0.05f;
     public boolean limitWindow = false;
@@ -25,7 +25,7 @@ public class FollowOrthoCamera extends OrthographicCamera {
 
     private List<Vector2> pointsToFollow = new ArrayList<>();
 
-    private float targetZoom = 0.1f;
+    public float targetZoom = zoom;
     private Vector2 targetPosition = new Vector2(0, 0);
 
     private RectangleExt window;
@@ -82,8 +82,8 @@ public class FollowOrthoCamera extends OrthographicCamera {
                 window.width = maxH * heightRatio;
                 window.setOriginAtCenter();
             }
-            targetZoom = window.width / originalWidth;
-            //
+//            targetZoom = window.width / originalWidth;
+
             goToTargets();
             pointsToFollow = new ArrayList<>();
         }
@@ -95,6 +95,7 @@ public class FollowOrthoCamera extends OrthographicCamera {
                 shake = false;
             }
         }
+        zoom += (targetZoom - zoom) * 0.01f;
     }
 
     public void shake(float duration){
@@ -128,8 +129,8 @@ public class FollowOrthoCamera extends OrthographicCamera {
         float transX = (targetPosition.x - position.x) * snapSpeed;
         float transY = (targetPosition.y - position.y) * snapSpeed;
         translate(transX, transY);
-        float transZoom = ((targetZoom < maxZoom ? maxZoom : (targetZoom > minZoom ? minZoom : targetZoom)) - zoom) * snapSpeed;
-        zoom += transZoom;
+//        float transZoom = ((targetZoom < maxZoom ? maxZoom : (targetZoom > minZoom ? minZoom : targetZoom)) - zoom) * snapSpeed;
+//        zoom += transZoom;
     }
 
     private void getWorldMaxWindow(){

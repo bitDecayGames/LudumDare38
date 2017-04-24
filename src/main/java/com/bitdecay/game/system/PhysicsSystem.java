@@ -1,7 +1,6 @@
 package com.bitdecay.game.system;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.bitdecay.game.component.PhysicsComponent;
@@ -22,13 +21,14 @@ public class PhysicsSystem extends AbstractUpdatableSystem {
     }
 
     public World world;
-    public Box2DDebugRenderer debug = null;
+    private boolean DEBUG = false;
+    public Box2DDebugRenderer debugger = null;
 
     public PhysicsSystem(AbstractRoom room) {
         super(room);
         I = this;
         world = new World(Vector2.Zero, false);
-        debug = new Box2DDebugRenderer();
+        debugger = new Box2DDebugRenderer();
     }
 
     @Override
@@ -43,6 +43,6 @@ public class PhysicsSystem extends AbstractUpdatableSystem {
             gob.forEachComponentDo(PositionComponent.class, pos -> pos.set(phy.body.getPosition()));
             gob.forEachComponentDo(RotationComponent.class, rot -> rot.set(phy.body.getAngle()));
         }));
-        if (debug != null) debug.render(world, room.camera.combined);
+        if (debugger != null && DEBUG) debugger.render(world, room.camera.combined);
     }
 }

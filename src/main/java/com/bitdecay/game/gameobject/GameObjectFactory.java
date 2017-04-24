@@ -577,6 +577,10 @@ public class GameObjectFactory {
         BRSkidChaser.addComponent(new ParticlePosition(0, 0));
         BRSkidChaser.addComponent(new RotationComponent(0));
         BRSkidChaser.addComponent(new FollowOtherPositionComponent(BRtire.getFreshComponent(PositionComponent.class).get()));
+        BRSkidChaser.addComponent(new SpecialDrawParticleComponent());
+        BRSkidChaser.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.person")));
+        BRSkidChaser.addComponent(new SizeComponent(0, 0)); // this is just here to get the drawsystem to see this object
+
 
         BRtire.addComponent(new EBrakeComponent(BRskidParticle));
 
@@ -610,6 +614,9 @@ public class GameObjectFactory {
         BLSkidChaser.addComponent(new ParticlePosition(0, 0));
         BLSkidChaser.addComponent(new RotationComponent(0));
         BLSkidChaser.addComponent(new FollowOtherPositionComponent(BLtire.getFreshComponent(PositionComponent.class).get()));
+        BLSkidChaser.addComponent(new SpecialDrawParticleComponent());
+        BLSkidChaser.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.person")));
+        BLSkidChaser.addComponent(new SizeComponent(0, 0)); // this is just here to get the drawsystem to see this object
 
         BLtire.addComponent(new EBrakeComponent(BLskidParticle));
 

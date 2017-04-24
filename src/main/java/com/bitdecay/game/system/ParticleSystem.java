@@ -57,7 +57,6 @@ public class ParticleSystem extends AbstractDrawableSystem {
                 }
                 float delta = Gdx.graphics.getDeltaTime();
                 fx.effect.update(delta);
-                fx.effect.draw(spriteBatch);
                 fx.timePassed += delta;
                 if (fx.effect.isComplete()) {
                     if (fx.continuous) {

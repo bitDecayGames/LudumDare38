@@ -10,6 +10,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -110,10 +111,20 @@ public class DemoRoom extends AbstractRoom {
         new NodeSystem(this);
         new AIControlSystem(this, graph);
 
-        MyGameObject car1 = GameObjectFactory.createCar(gobs, phys, new Vector2(140, 0), CarType.TAXI, false);
-        MyGameObject car2 = GameObjectFactory.createCar(gobs, phys, new Vector2(142.5f, 0), CarType.TAXI, false);
-        MyGameObject car3 = GameObjectFactory.createCar(gobs, phys, new Vector2(145, 0), CarType.TAXI, false);
-        MyGameObject car4 = GameObjectFactory.createCar(gobs, phys, new Vector2(147.5f, 0), CarType.TAXI, false);
+        Body carBody;
+
+        MyGameObject car1 = GameObjectFactory.createCar(gobs, phys, new Vector2(43, 87.5f), CarType.TAXI, false);
+        carBody = car1.getFreshComponent(PhysicsComponent.class).get().body;
+        carBody.setTransform(carBody.getPosition(), -MathUtils.PI/2);
+        MyGameObject car2 = GameObjectFactory.createCar(gobs, phys, new Vector2(43, 85), CarType.TAXI, false);
+        carBody = car2.getFreshComponent(PhysicsComponent.class).get().body;
+        carBody.setTransform(carBody.getPosition(), -MathUtils.PI/2);
+        MyGameObject car3 = GameObjectFactory.createCar(gobs, phys, new Vector2(43, 82.5f), CarType.TAXI, false);
+        carBody = car3.getFreshComponent(PhysicsComponent.class).get().body;
+        carBody.setTransform(carBody.getPosition(), -MathUtils.PI/2);
+        MyGameObject car4 = GameObjectFactory.createCar(gobs, phys, new Vector2(43, 80), CarType.TAXI, false);
+        carBody = car4.getFreshComponent(PhysicsComponent.class).get().body;
+        carBody.setTransform(carBody.getPosition(), -MathUtils.PI/2);
 
         createPlayerCar(car2);
 

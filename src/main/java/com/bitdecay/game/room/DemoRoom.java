@@ -58,9 +58,7 @@ public class DemoRoom extends AbstractRoom {
         createStage();
 
         // Graph/Nodes
-        int graphWidth = 20;
-        int graphHeigth = 20;
-        graph = new NodeGraph(graphWidth, graphHeigth);
+        graph = new NodeGraph();
 //        graph.removeNode(graph.getNodes().get(22));
 //        graph.removeNode(graph.getNodes().get(23));
 //        graph.removeNode(graph.getNodes().get(24));
@@ -141,6 +139,26 @@ public class DemoRoom extends AbstractRoom {
         roofRenderer = new OrthogonalTiledMapRenderer(roofMap, scaleFactor);
 
         MapLayers mapLayers = map.getLayers();
+
+        // Background to graph nodes.
+        TiledMapTileLayer backgroundLayer = (TiledMapTileLayer) mapLayers.get("Background");
+
+        float graphScale = 2.05f;
+        Vector2 offset = (new Vector2(1, 1)).scl(0.35f);
+        graph.populate(backgroundLayer.getWidth(), backgroundLayer.getHeight(), graphScale, offset);
+
+        int nodeIdx = backgroundLayer.getHeight() * backgroundLayer.getWidth() - 1;
+        for (int y = backgroundLayer.getHeight() - 1; y >= 0; y--) {
+            for (int x = backgroundLayer.getWidth() - 1; x >= 0; x--) {
+                TiledMapTileLayer.Cell cell = backgroundLayer.getCell(x, y);
+                if (cell == null) {
+                    graph.removeNode(nodeIdx);
+                }
+                nodeIdx--;
+            }
+        }
+
+        graph.syncIndicies();
 
         TiledMapTileLayer collidablesLayer = (TiledMapTileLayer) mapLayers.get("Collidables");
 

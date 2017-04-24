@@ -461,7 +461,7 @@ public class GameObjectFactory {
 
         switch (type) {
             case PLAYER:
-                health = 10;
+                health = 100;
                 imageName = "player/taxi/taxi";
                 // Add camera and other stats
                 car.addComponent(new CameraFollowComponent());

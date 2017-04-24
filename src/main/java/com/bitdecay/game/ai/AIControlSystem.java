@@ -31,7 +31,7 @@ public class AIControlSystem extends AbstractUpdatableSystem {
                 gob.forEachComponentDo(PhysicsComponent.class, physComp -> {
                     // Generate paths and nodes.
                     if (aiComp.currentPath == null) {
-                        aiComp.setPath(createRandomPath());
+                        aiComp.setPath(createRandomPath(aiComp.currentNode));
                     }
 
                     if (aiComp.currentNode == null) {
@@ -47,9 +47,14 @@ public class AIControlSystem extends AbstractUpdatableSystem {
 
                         Vector2 diff = targetPos.sub(currentPos);
 
-                        if (diff.len() < 0.5f) {
+                        if (diff.len() < 1f) {
+                            if (!aiComp.currentPath.hasNext()) {
+                                aiComp.setPath(createRandomPath(aiComp.currentNode));
+                            }
                             aiComp.currentNode = null;
                         } else {
+                            // TODO Better facing.
+//                            physComp.body.setTransform(physComp.body.getPosition(), diff.angle() - 90);
                             physComp.body.applyLinearImpulse(diff, physComp.body.getWorldCenter(), true);
                         }
                     }
@@ -58,14 +63,14 @@ public class AIControlSystem extends AbstractUpdatableSystem {
         });
     }
 
-    private DefaultGraphPath<Node> createRandomPath() {
+    private DefaultGraphPath<Node> createRandomPath(Node startNode) {
         DefaultGraphPath<Node> graphPath = new DefaultGraphPath<>();
         ManhattanHeuristic manhattanHeuristic = new ManhattanHeuristic();
 
         IndexedAStarPathFinder<Node> pathFinder = new IndexedAStarPathFinder<>(graph);
         Array<Node> nodes = graph.getNodes();
-        Node start = nodes.get(MathUtils.random(0, nodes.size));
-        Node end = nodes.get(MathUtils.random(0, nodes.size));
+        Node start = startNode != null ? startNode : nodes.get(MathUtils.random(0, nodes.size - 1));
+        Node end = nodes.get(MathUtils.random(0, nodes.size - 1));
         pathFinder.searchNodePath(start, end, manhattanHeuristic, graphPath);
 
         graphPath.iterator().forEachRemaining(node -> node.type = NodeType.SIDEWALK);

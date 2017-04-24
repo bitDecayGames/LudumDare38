@@ -1,5 +1,6 @@
 package com.bitdecay.game.system;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.badlogic.gdx.utils.Array;
@@ -8,6 +9,7 @@ import com.bitdecay.game.component.money.MoneyComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractUpdatableSystem;
+import com.bitdecay.game.ui.HUD;
 
 /**
  * Created by Monday on 4/24/2017.
@@ -36,7 +38,9 @@ public class RespawnGameOverSystem extends AbstractUpdatableSystem {
                 createPlayerCar(nextLife);
                 playerCars.removeValue(nextLife, true);
             } else {
-                log.info("NO MORE BREH");
+                HUD.instance().gameOver.setVisible(true);
+                Gdx.input.setInputProcessor(null);
+
             }
         }
     }

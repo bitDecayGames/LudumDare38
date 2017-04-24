@@ -152,7 +152,7 @@ public class DemoRoom extends AbstractRoom {
     }
 
     private void loadTileMapAndStartingObjects() {
-        map = new TmxMapLoader().load(Gdx.files.internal("img/tiled/world_lite.tmx").path());
+        map = new TmxMapLoader().load(Gdx.files.internal("img/tiled/world_lite_2.tmx").path());
         renderer = new OrthogonalTiledMapRenderer(map, scaleFactor);
 
         roofMap = new TmxMapLoader().load(Gdx.files.internal("img/tiled/world_lite_roof.tmx").path());

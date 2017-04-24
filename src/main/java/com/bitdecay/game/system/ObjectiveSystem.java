@@ -65,22 +65,23 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
         MyGameObject targetHooman = hoomanGobs.get(randomizer.nextInt(hoomanGobs.size()));
 
         List<ObjectiveZone> zones = new ArrayList<>();
-        zones.add(new ObjectiveZone("Get the framboolie", new Vector2(5, 30)));
+        zones.add(new ObjectiveZone("Get the framboolie\nsuck my dick", new Vector2(5, 30)));
         zones.add(new ObjectiveZone("DONT FORGET RAGAGOON!", new Vector2(-5, 30)));
-        zones.add(new ObjectiveZone("DONT FORGET RAGAGOON!", new Vector2(0, 40)));
-        Quest quest = new Quest("", "uiStuff/missions/pokey", 1000, zones, (q, o) -> {
+        zones.add(new ObjectiveZone("DONT FORGET ZARDOS!", new Vector2(0, 40)));
+        Quest quest = new Quest("Strombolio", "uiStuff/missions/pokey", 1000, zones, (q, o) -> {
             q.removeCurrentZone();
             if (q.currentZone().isPresent()) {
-                Vector2 curZonePos = q.currentZone().map(z -> z.position.cpy()).orElse(new Vector2(0, 0));
-                room.addGob(GameObjectFactory.createZone(curZonePos.x, curZonePos.y, 15, 15, 0, ZoneType.OBJECTIVE, (obj) -> q.onZoneTrigger.accept(q, obj)));
+                ObjectiveZone curZone = q.currentZone().get();
+
+                room.addGob(GameObjectFactory.createZone(curZone.position.x, curZone.position.y, 15, 15, 0, ZoneType.OBJECTIVE, (obj) -> q.onZoneTrigger.accept(q, obj)));
                 log.info("Add new zone");
             } else q.onCompletion.accept(q, o);
         }, (q, o) -> {
             log.info("MIKE NO LONGER HATES IT WHEN THIS IS IN CODE.");
             HUD.instance().phone.tasks.removeQuest(q);
         });
-
-        MyGameObject targetZone = GameObjectFactory.createZone(quest.targetZones.get(0).position.x, quest.targetZones.get(0).position.y, 15, 15, 0, ZoneType.OBJECTIVE, (gameObj) ->quest.onZoneTrigger.accept(quest, gameObj));
+        Vector2 curZonePos = quest.currentZone().map(z -> z.position.cpy()).orElse(new Vector2(0, 0));
+        MyGameObject targetZone = GameObjectFactory.createZone(curZonePos.x, curZonePos.y, 15, 15, 0, ZoneType.OBJECTIVE, (gameObj) -> quest.onZoneTrigger.accept(quest, gameObj));
 
         room.addGob(GameObjectFactory.createZone(targetHooman, 10000, 10000, 5, 5, 0, ZoneType.OBJECTIVE, (gameObj) -> room.addGob(targetZone)));
         HUD.instance().phone.tasks.addQuest(quest);

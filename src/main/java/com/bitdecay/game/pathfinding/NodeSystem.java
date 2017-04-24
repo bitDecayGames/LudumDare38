@@ -52,12 +52,12 @@ public class NodeSystem extends AbstractDrawableSystem {
             renderer.end();
 
             // Connections
-            renderer.setColor(Color.FIREBRICK);
-            node.connections.forEach(connection -> {
-                renderer.begin(ShapeRenderer.ShapeType.Line);
-                renderer.line(connection.getFromNode().position, connection.getToNode().position);
-                renderer.end();
-            });
+//            renderer.setColor(Color.FIREBRICK);
+//            node.connections.forEach(connection -> {
+//                renderer.begin(ShapeRenderer.ShapeType.Line);
+//                renderer.line(connection.getFromNode().position, connection.getToNode().position);
+//                renderer.end();
+//            });
         }));
     }
 }

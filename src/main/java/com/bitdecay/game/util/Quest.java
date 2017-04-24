@@ -1,5 +1,7 @@
 package com.bitdecay.game.util;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.bitdecay.game.MyGame;
 import com.bitdecay.game.gameobject.MyGameObject;
 
 import java.util.List;
@@ -14,6 +16,7 @@ public class Quest {
     public List<ObjectiveZone> targetZones = null;
     public BiConsumer<Quest, MyGameObject> onZoneTrigger = null;
     public BiConsumer<Quest, MyGameObject> onCompletion = null;
+    public boolean isActive = false;
 
     public Quest(String personName, String icon, float reward, List<ObjectiveZone> targetZones, BiConsumer<Quest, MyGameObject> onZoneTrigger, BiConsumer<Quest, MyGameObject> onCompletion){
         this.personName = personName;
@@ -32,5 +35,9 @@ public class Quest {
     public Optional<ObjectiveZone> currentZone(){
         if (targetZones != null && targetZones.size() > 0) return Optional.of(targetZones.get(0));
         return Optional.empty();
+    }
+
+    public TextureRegion getIcon(){
+        return MyGame.ATLAS.findRegion(icon);
     }
 }

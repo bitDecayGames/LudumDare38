@@ -5,10 +5,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.util.RectangleExt;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -98,17 +95,7 @@ public class FollowOrthoCamera extends OrthographicCamera {
                 shake = false;
             }
         }
-//        zoom += (targetZoom - zoom) * 0.01f;
-
-        DecimalFormat df = new DecimalFormat("#");
-        df.setRoundingMode(RoundingMode.CEILING);
-        for (Number n : Arrays.asList(12, 123.12345, 0.23, 0.1, 2341234.212431324)) {
-            Double d = n.doubleValue();
-            System.out.println(df.format(d));
-        }
-
-        position.set(Float.parseFloat(df.format(position.x)), Float.parseFloat(df.format(position.y)), Float.parseFloat(df.format(position.z)));
-
+        zoom += (targetZoom - zoom) * 0.01f;
     }
 
     public void shake(float duration){

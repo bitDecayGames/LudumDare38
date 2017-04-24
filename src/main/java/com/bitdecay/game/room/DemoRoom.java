@@ -45,8 +45,8 @@ public class DemoRoom extends AbstractRoom {
     private Stage stage;
     TiledMap map;
     OrthogonalTiledMapRenderer renderer;
-    //    TiledMap roofMap;
-//    OrthogonalTiledMapRenderer roofRenderer;
+    TiledMap roofMap;
+    OrthogonalTiledMapRenderer roofRenderer;
     NodeGraph graph;
 
     float scaleFactor = 1 / 40f;
@@ -155,8 +155,8 @@ public class DemoRoom extends AbstractRoom {
         map = new TmxMapLoader().load(Gdx.files.internal("img/tiled/world_lite.tmx").path());
         renderer = new OrthogonalTiledMapRenderer(map, scaleFactor);
 
-//        roofMap = new TmxMapLoader().load(Gdx.files.internal("img/tiled/world.tmx").path());
-//        roofRenderer = new OrthogonalTiledMapRenderer(roofMap, scaleFactor);
+        roofMap = new TmxMapLoader().load(Gdx.files.internal("img/tiled/world_lite_roof.tmx").path());
+        roofRenderer = new OrthogonalTiledMapRenderer(roofMap, scaleFactor);
 
         MapLayers mapLayers = map.getLayers();
 
@@ -274,12 +274,11 @@ public class DemoRoom extends AbstractRoom {
     @Override
     public void draw(SpriteBatch spriteBatch) {
         fps.log();
-
         renderer.setView(camera);
         renderer.render();
         super.draw(spriteBatch);
-//        roofRenderer.setView(camera);
-//        roofRenderer.render();
+        roofRenderer.setView(camera);
+        roofRenderer.render();
         stage.act(1 / 60f);
         stage.draw();
     }

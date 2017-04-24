@@ -8,6 +8,7 @@ import com.bitdecay.game.component.PlayerControlComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractSystem;
+import com.bitdecay.game.util.ContactDistributer;
 import com.bitdecay.game.util.SoundLibrary;
 
 /**
@@ -15,27 +16,33 @@ import com.bitdecay.game.util.SoundLibrary;
  */
 public class PlayerControlSoundSystem extends AbstractSystem implements ContactListener {
 
-    public PlayerControlSoundSystem(AbstractRoom room){
+    public PlayerControlSoundSystem(AbstractRoom room, ContactDistributer contactDistrib){
         super(room);
+        contactDistrib.listeners.add(this);
     }
 
     @Override
     public void beginContact(Contact contact) {
         MyGameObject objectA = (MyGameObject) contact.getFixtureA().getBody().getUserData();
         MyGameObject objectB = (MyGameObject) contact.getFixtureB().getBody().getUserData();
-        MyGameObject player;
+        MyGameObject player = null;
         log.info("inside begin contact");
-        if(objectA.hasComponent(PlayerControlComponent.class)){
-            player = objectA;
-            log.info("found player");
-        }else{
-            player = objectB;
-            log.info("found player");
-        }
-        PlayerControlComponent playerComp = player.getComponent(PlayerControlComponent.class).get();
-        if(playerComp.sound!=null){
-            log.info("playing player sound");
-            SoundLibrary.playSound(playerComp.sound);
+
+        PlayerControlComponent playerComp = null;
+        if(objectA != null && objectB != null) {
+            if (objectA.hasComponent(PlayerControlComponent.class)) {
+                player = objectA;
+                log.info("found player");
+                playerComp = player.getComponent(PlayerControlComponent.class).get();
+            } else if (objectB.hasComponent(PlayerControlComponent.class)) {
+                player = objectB;
+                log.info("found player");
+                playerComp = player.getComponent(PlayerControlComponent.class).get();
+            }
+            if (player != null && playerComp != null && playerComp.sound != null) {
+                log.info("playing player sound");
+                SoundLibrary.playSound(playerComp.sound);
+            }
         }
     }
 

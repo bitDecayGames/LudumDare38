@@ -2,8 +2,10 @@ package com.bitdecay.game.room;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapObject;
@@ -21,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.bitdecay.game.MyGame;
 import com.bitdecay.game.ai.AIControlSystem;
 import com.bitdecay.game.component.PhysicsComponent;
 import com.bitdecay.game.gameobject.GameObjectFactory;
@@ -31,9 +34,7 @@ import com.bitdecay.game.pathfinding.NodeSystem;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.system.*;
 import com.bitdecay.game.ui.HUD;
-import com.bitdecay.game.util.CarType;
-import com.bitdecay.game.util.ContactDistributer;
-import com.bitdecay.game.util.ZoneType;
+import com.bitdecay.game.util.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,8 +65,14 @@ public class DemoRoom extends AbstractRoom {
     public Map<String, Vector2> pickupLocations;
     public Map<String, Vector2> dropoffLocations;
 
+    SpriteBatch staticSpriteBatch;
+    TextureRegion background;
+
     public DemoRoom(GameScreen gameScreen) {
         super(gameScreen);
+
+        staticSpriteBatch = new SpriteBatch();
+        background = MyGame.ATLAS.findRegion("background");
 
         createStage();
 
@@ -85,7 +92,7 @@ public class DemoRoom extends AbstractRoom {
         new TireSteeringSystem(this);
         new DriveTireSystem(this);
         new TireFrictionSystem(this);
-        new PlayerControlSoundSystem(this);
+        new PlayerControlSoundSystem(this,contactDistrib);
         new EBrakeSystem(this);
         new TimerSystem(this);
         new SimpleUpdateSystem(this);
@@ -138,7 +145,7 @@ public class DemoRoom extends AbstractRoom {
 
         GameObjectFactory.createCarCass(gobs, phys.world, new Vector2(5, 20), 0);
 
-        for (int x = -3; x < 3; x++) for (int y = -3; y < 3; y++) gobs.add(GameObjectFactory.makePerson(phys, x * 5 + 100, y * 5 + 100, false));
+//        for (int x = -3; x < 3; x++) for (int y = -3; y < 3; y++) gobs.add(GameObjectFactory.makePerson(phys, x * 5 + 100, y * 5 + 100, false));
 
         gobs.add(GameObjectFactory.createZone(10, 0, 6, 10, 0, ZoneType.BATHROOM, null));
         gobs.add(GameObjectFactory.createZone(20, 16, 6, 10, 0, ZoneType.FUEL, null));
@@ -161,7 +168,7 @@ public class DemoRoom extends AbstractRoom {
     }
 
     private void loadTileMapAndStartingObjects() {
-        map = new TmxMapLoader().load(Gdx.files.internal("img/tiled/world_lite.tmx").path());
+        map = new TmxMapLoader().load(Gdx.files.internal("img/tiled/world_lite_2.tmx").path());
         renderer = new OrthogonalTiledMapRenderer(map, scaleFactor);
 
         roofMap = new TmxMapLoader().load(Gdx.files.internal("img/tiled/world_lite_roof.tmx").path());
@@ -306,6 +313,10 @@ public class DemoRoom extends AbstractRoom {
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
+        staticSpriteBatch.begin();
+        staticSpriteBatch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        staticSpriteBatch.end();
+
         //fps.log();
         renderer.setView(camera);
         renderer.render();
@@ -314,11 +325,16 @@ public class DemoRoom extends AbstractRoom {
         roofRenderer.render();
         stage.act(1 / 60f);
         stage.draw();
+
+        if (InputHelper.isKeyJustPressed(Input.Keys.TAB) || InputHelper.isButtonJustPressed(Xbox360Pad.START)) {
+            HUD.instance().phone.toggle();
+        }
     }
 
     private void createStage() {
         this.stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
+        SoundLibrary.playMusic("BackgroundMusic");
 
         new HUD();
         stage.addActor(HUD.instance());

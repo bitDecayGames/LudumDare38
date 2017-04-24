@@ -10,6 +10,7 @@ import com.bitdecay.game.room.DemoRoom;
 import com.bitdecay.game.trait.ICanSetRoom;
 import com.bitdecay.game.trait.ICanSetScreen;
 import com.bitdecay.game.trait.IHasScreenSize;
+import com.bitdecay.game.util.InputHelper;
 import com.bitdecay.game.util.SoundLibrary;
 
 /**
@@ -43,6 +44,7 @@ public class GameScreen implements Screen, IHasScreenSize, ICanSetScreen, ICanSe
             // Sync HUD and game objects
         }
 
+        InputHelper.update(delta);
     }
 
     @Override

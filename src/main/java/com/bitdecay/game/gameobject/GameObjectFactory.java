@@ -570,8 +570,18 @@ public class GameObjectFactory {
 
 
         MyGameObject BRtire = makeTireObject(backRightTire, backRightTireJoint, rearTireData, type, true, true);
-//        BRtire.addComponent(sharedFuelComponent);
+        MyGameObject BRSkidChaser = new MyGameObject();
+        ParticleFXComponent BRskidParticle = ParticleFactory.getSkidParticle();
+        BRSkidChaser.addComponent(BRskidParticle);
+        BRSkidChaser.addComponent(new PositionComponent(0, 0));
+        BRSkidChaser.addComponent(new ParticlePosition(0, 0));
+        BRSkidChaser.addComponent(new RotationComponent(0));
+        BRSkidChaser.addComponent(new FollowOtherPositionComponent(BRtire.getFreshComponent(PositionComponent.class).get()));
+
+        BRtire.addComponent(new EBrakeComponent(BRskidParticle));
+
         gobs.add(BRtire);
+        gobs.add(BRSkidChaser);
 
 
         // /////////////////////////////////
@@ -593,7 +603,18 @@ public class GameObjectFactory {
         MyGameObject BLtire = makeTireObject(backLeftTire, backLeftTireJoint, rearTireData, type, true, false);
 //        BLtire.addComponent(sharedFuelComponent);
 
+        MyGameObject BLSkidChaser = new MyGameObject();
+        ParticleFXComponent BLskidParticle = ParticleFactory.getSkidParticle();
+        BLSkidChaser.addComponent(BLskidParticle);
+        BLSkidChaser.addComponent(new PositionComponent(0, 0));
+        BLSkidChaser.addComponent(new ParticlePosition(0, 0));
+        BLSkidChaser.addComponent(new RotationComponent(0));
+        BLSkidChaser.addComponent(new FollowOtherPositionComponent(BLtire.getFreshComponent(PositionComponent.class).get()));
+
+        BLtire.addComponent(new EBrakeComponent(BLskidParticle));
+
         gobs.add(BLtire);
+        gobs.add(BLSkidChaser);
     }
 
     private static Body makeTire(PhysicsSystem phys, float density, float width, float height) {
@@ -621,10 +642,10 @@ public class GameObjectFactory {
         tire.addComponent(tirePhysics);
         tire.addComponent(new TireFrictionComponent(tireData));
         if (rear && type == CarType.PLAYER) {
-            ParticleFXComponent skidParticle = ParticleFactory.getSkidParticle();
-            tire.addComponent(skidParticle);
-            tire.addComponent(new ParticlePosition(0, 0));
-            tire.addComponent(new EBrakeComponent(skidParticle));
+//            ParticleFXComponent skidParticle = ParticleFactory.getSkidParticle();
+//            tire.addComponent(skidParticle);
+//            tire.addComponent(new ParticlePosition(0, 0));
+//            tire.addComponent(new EBrakeComponent(skidParticle));
             tire.addComponent(new PlayerTireComponent());
         } else {
             if (type == CarType.PLAYER) {

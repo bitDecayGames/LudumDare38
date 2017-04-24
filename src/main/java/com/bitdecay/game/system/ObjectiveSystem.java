@@ -131,6 +131,7 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
                 log.info("End of quest: {}", q.personName);
                 o.addComponent(new MoneyDiffComponent(q.reward));
                 HUD.instance().phone.tasks.removeQuest(q);
+                currentObjectives--;
             });
             log.info("Got quest: {}", quest);
             questMap.remove(referenceQuest);

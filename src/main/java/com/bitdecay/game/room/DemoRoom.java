@@ -137,7 +137,7 @@ public class DemoRoom extends AbstractRoom {
 
         GameObjectFactory.createCarCass(gobs, phys.world, new Vector2(5, 20), 0);
 
-        for (int x = -3; x < 3; x++) for (int y = -3; y < 3; y++) gobs.add(GameObjectFactory.makePerson(phys, x * 5 + 100, y * 5 + 100, false));
+//        for (int x = -3; x < 3; x++) for (int y = -3; y < 3; y++) gobs.add(GameObjectFactory.makePerson(phys, x * 5 + 100, y * 5 + 100, false));
 
         gobs.add(GameObjectFactory.createZone(10, 0, 6, 10, 0, ZoneType.BATHROOM, null));
         gobs.add(GameObjectFactory.createZone(20, 16, 6, 10, 0, ZoneType.FUEL, null));
@@ -246,7 +246,7 @@ public class DemoRoom extends AbstractRoom {
             Vector2 base = new Vector2(circle.getEllipse().x, circle.getEllipse().y);
             base.scl(1/80f);
             pickupLocations.put(object.getName(), base);
-//            createObjectFromName("mail", base.x, base.y);
+            createObjectFromName("mail", base.x, base.y);
         }
 
         dropoffLocations = new HashMap<>();
@@ -258,7 +258,7 @@ public class DemoRoom extends AbstractRoom {
             Vector2 base = new Vector2(circle.getEllipse().x, circle.getEllipse().y);
             base.scl(1/80f);
             dropoffLocations.put(object.getName(), base);
-//            createObjectFromName("mail", base.x, base.y);
+            createObjectFromName("mail", base.x, base.y);
         }
     }
 

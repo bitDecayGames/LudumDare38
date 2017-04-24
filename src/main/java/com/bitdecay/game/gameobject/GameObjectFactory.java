@@ -157,7 +157,7 @@ public class GameObjectFactory {
         toilet.addComponent(new RotationComponent(0));
         toilet.addComponent(new StaticImageComponent("collidables/toilet"));
         toilet.addComponent(new SizeComponent(1.9f, 1.8f));
-        toilet.addComponent(new BreakableObjectComponent("collidables/toilet_flying", 1, 1.6f, 2.9f, ParticleFactory.ParticleChoice.POOP,"Portapotty"));
+        toilet.addComponent(new BreakableObjectComponent("collidables/toilet_flying", 1, 1.6f, 2.9f, ParticleFactory.ParticleChoice.POOP, "Portapotty"));
 
         return toilet;
     }
@@ -249,6 +249,9 @@ public class GameObjectFactory {
     }
 
     public static MyGameObject makePerson(PhysicsSystem phys, float x, float y, boolean stationary) {
+
+        System.out.println("Creating a person at " + x + ", " + y);
+
         MyGameObject obj = new MyGameObject();
         obj.addComponent(new NameComponent("Person"));
 
@@ -278,14 +281,14 @@ public class GameObjectFactory {
         obj.addComponent(new VelocityBasedAnimationSpeedComponent(5f));
         obj.addComponent(new DriveTireComponent(25, 5));
         obj.addComponent(new TorqueableComponent(30));
-        if (!stationary) {
-            obj.addComponent(new FuelComponent(1, 0));
-        }
         obj.addComponent(new SizeComponent(1f, 1f));
         obj.addComponent(new BreakableObjectComponent("person/flyForward", 30, 1f, 1.5f, ParticleFactory.ParticleChoice.BLOOD));
         obj.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.person")));
         obj.addComponent(new PersonComponent());
-        obj.addComponent(new AIControlComponent());
+        if (!stationary) {
+            obj.addComponent(new FuelComponent(1, 0));
+            obj.addComponent(new AIControlComponent());
+        }
 
         return obj;
     }
@@ -334,7 +337,7 @@ public class GameObjectFactory {
         zone.addComponent(zComp);
     }
 
-    private static void addDynamicObjectiveZone(MyGameObject zone, Consumer<MyGameObject> modifyGameObj){
+    private static void addDynamicObjectiveZone(MyGameObject zone, Consumer<MyGameObject> modifyGameObj) {
         ZoneComponent zComp = new ZoneComponent((gameObj) -> {
             zone.getComponent(ZoneComponent.class).get().active = false;
             zone.addComponent(new RemoveNowComponent());
@@ -346,10 +349,11 @@ public class GameObjectFactory {
         zone.addComponent(zComp);
     }
 
-    public static MyGameObject createZone(float x, float y, float width, float length, float rotation, ZoneType zoneType, Consumer<MyGameObject> modifyGameObj){
+    public static MyGameObject createZone(float x, float y, float width, float length, float rotation, ZoneType zoneType, Consumer<MyGameObject> modifyGameObj) {
         return createZone(null, x, y, width, length, rotation, zoneType, modifyGameObj);
     }
-    public static MyGameObject createZone(MyGameObject followTarget, float x, float y, float width, float length, float rotation, ZoneType zoneType, Consumer<MyGameObject> modifyGameObj){
+
+    public static MyGameObject createZone(MyGameObject followTarget, float x, float y, float width, float length, float rotation, ZoneType zoneType, Consumer<MyGameObject> modifyGameObj) {
         MyGameObject zone = new MyGameObject();
         zone.addComponent(new NameComponent("Zone<" + zoneType + ">"));
 
@@ -370,7 +374,7 @@ public class GameObjectFactory {
         WaypointComponent waypoint = new WaypointComponent(zoneType);
         zone.addComponent(waypoint);
 
-        if(followTarget != null) {
+        if (followTarget != null) {
             FollowComponent followComp = new FollowComponent(followTarget);
             zone.addComponent(followComp);
         }
@@ -475,7 +479,7 @@ public class GameObjectFactory {
 
         CircleShape mass = new CircleShape();
         mass.setRadius(.5f);
-        mass.setPosition(new Vector2(0, .5f) );
+        mass.setPosition(new Vector2(0, .5f));
 
         carBody.createFixture(mass, 20);
 
@@ -603,7 +607,6 @@ public class GameObjectFactory {
         RevoluteJoint backRightTireJoint = (RevoluteJoint) phys.world.createJoint(backRightTireJointDef);
 
 
-
         MyGameObject BRtire = makeTireObject(backRightTire, backRightTireJoint, rearTireData, type, true, true);
         BRtire.addComponent(sharedFuelComponent);
 
@@ -690,9 +693,9 @@ public class GameObjectFactory {
         tire.addComponent(tirePhysics);
         tire.addComponent(new TireFrictionComponent(tireData));
         if (CarType.CLOWN.equals(type) && rear) {
-                tire.addComponent(new RevoluteJointComponent(joint));
+            tire.addComponent(new RevoluteJointComponent(joint));
         } else if (!CarType.CLOWN.equals(type) && !rear) {
-                tire.addComponent(new RevoluteJointComponent(joint));
+            tire.addComponent(new RevoluteJointComponent(joint));
         }
         tire.addComponent(new PositionComponent(0, 0));
         String path;
@@ -701,7 +704,7 @@ public class GameObjectFactory {
         tire.addComponent(new AnimatedImageComponent(path, 0.0f));
         tire.addComponent(new VelocityBasedAnimationSpeedComponent(1f));
         tire.addComponent(new DrawOrderComponent(Launcher.conf.getInt("drawOrder.tire")));
-        tire.addComponent(new SizeComponent(.25f, 2/3.0f));
+        tire.addComponent(new SizeComponent(.25f, 2 / 3.0f));
         tire.addComponent(new RotationComponent(0));
         tire.addComponent(new OriginComponent(.5f, .5f));
         return tire;
@@ -720,7 +723,7 @@ public class GameObjectFactory {
         carBodyDef.position.set(pos.x, pos.y);
 
         Body carBody = world.createBody(carBodyDef);
-        carBody.setTransform(pos,rotationAngle);
+        carBody.setTransform(pos, rotationAngle);
 
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(halfWidth, halfHeight);

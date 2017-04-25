@@ -1,6 +1,7 @@
 package com.bitdecay.game.room;
 
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -92,7 +93,6 @@ public class DemoRoom extends AbstractRoom {
         new TireSteeringSystem(this);
         new DriveTireSystem(this);
         new TireFrictionSystem(this);
-        new PlayerControlSoundSystem(this,contactDistrib);
         new EBrakeSystem(this);
         new TimerSystem(this);
         new SimpleUpdateSystem(this);
@@ -142,15 +142,15 @@ public class DemoRoom extends AbstractRoom {
 
         new RespawnGameOverSystem(this, Array.with(car1, car2, car3, car4));
 
-
         GameObjectFactory.createCarCass(gobs, phys.world, new Vector2(5, 20), 0);
 
-//        for (int x = -3; x < 3; x++) for (int y = -3; y < 3; y++) gobs.add(GameObjectFactory.makePerson(phys, x * 5 + 100, y * 5 + 100, false));
+        gobs.add(GameObjectFactory.createZone(66, 47, 10, 6, 0, ZoneType.FOOD, null));
+        gobs.add(GameObjectFactory.createZone(160, 112, 6, 10, 0, ZoneType.FOOD, null));
+        gobs.add(GameObjectFactory.createZone(60, 186, 10, 6, 0, ZoneType.FOOD, null));
 
-        gobs.add(GameObjectFactory.createZone(10, 0, 6, 10, 0, ZoneType.BATHROOM, null));
-        gobs.add(GameObjectFactory.createZone(20, 16, 6, 10, 0, ZoneType.FUEL, null));
-        gobs.add(GameObjectFactory.createZone(-10, 0, 6, 10, 0, ZoneType.FOOD, null));
-        gobs.add(GameObjectFactory.createZone(-20, 0, 6, 10, 0, ZoneType.REPAIR, null));
+        gobs.add(GameObjectFactory.createZone(135, 36, 6, 10, 0, ZoneType.REPAIR, null));
+
+        gobs.add(GameObjectFactory.createZone(29, 79, 6, 10, 0, ZoneType.FUEL, null));
 
         loadTileMapAndStartingObjects();
 
@@ -303,6 +303,7 @@ public class DemoRoom extends AbstractRoom {
                 break;
             case "potty":
                 gobs.add(GameObjectFactory.makeToilet(phys, x, y));
+                gobs.add(GameObjectFactory.createZone(x, y, 6, 10, 0, ZoneType.BATHROOM, null));
                 break;
             case "cart":
                 gobs.add(GameObjectFactory.makeCart(phys, x, y));

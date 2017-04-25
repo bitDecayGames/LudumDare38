@@ -10,6 +10,7 @@ import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.AbstractRoom;
 import com.bitdecay.game.system.abstracted.AbstractSystem;
 import com.bitdecay.game.util.ContactDistributer;
+import com.bitdecay.game.util.SoundLibrary;
 
 /**
  * Created by Luke on 4/22/2017.
@@ -70,6 +71,7 @@ public class HealthSystem extends AbstractSystem implements ContactListener {
             if(!attacked.hasComponent(InvincibleComponent.class) && !attacked.hasFreshComponent(InvincibleComponent.class)){
                 InvincibleComponent i = new InvincibleComponent(attacked.getComponent(DrawableComponent.class).map((d)->d.color.cpy()).orElse(Color.WHITE.cpy()));
                 attacked.addComponent(i);
+                SoundLibrary.playSound(i.sound);
                 attacked.addComponent(new TimerComponent(2, ()->{
 
                     attacked.forEachComponentDo(InvincibleComponent.class, grace -> attacked.forEachComponentDo(DrawableComponent.class, draw -> {

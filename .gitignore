@@ -12,5 +12,6 @@
 classes
 dependency-reduced-pom.xml
 logs/
+**.log
 
 src/main/resources/img/packed/

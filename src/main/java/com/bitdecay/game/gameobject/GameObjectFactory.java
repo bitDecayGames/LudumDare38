@@ -11,7 +11,6 @@ import com.bitdecay.game.component.money.MoneyDiffComponent;
 import com.bitdecay.game.physics.FrictionDataFactory;
 import com.bitdecay.game.physics.TireFrictionData;
 import com.bitdecay.game.system.PhysicsSystem;
-import com.bitdecay.game.ui.HUD;
 import com.bitdecay.game.util.CarType;
 import com.bitdecay.game.util.SoundLibrary;
 import com.bitdecay.game.util.ZoneType;

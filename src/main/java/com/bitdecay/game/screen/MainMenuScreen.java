@@ -19,7 +19,6 @@ import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.Launcher;
 import com.bitdecay.game.MyGame;
 import com.bitdecay.game.util.InputHelper;
-import com.bitdecay.game.util.SoundLibrary;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +40,8 @@ public class MainMenuScreen implements Screen {
 
     public MainMenuScreen(MyGame game) {
         this.game = game;
+
+        Gdx.input.setInputProcessor(stage);
 
         menuSelection = 0;
 
@@ -68,7 +69,6 @@ public class MainMenuScreen implements Screen {
         stage.addActor(background);
         stage.addActor(menu);
 
-        Gdx.input.setInputProcessor(stage);
         updateMenuSelection(0);
     }
 

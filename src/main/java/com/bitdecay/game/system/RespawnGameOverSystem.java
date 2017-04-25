@@ -30,17 +30,22 @@ public class RespawnGameOverSystem extends AbstractUpdatableSystem {
             timeWithoutPlayer += delta;
         }
 
-        if (timeWithoutPlayer >= 2) {
-            timeWithoutPlayer = 0;
+        if (timeWithoutPlayer >= 3) {
 
             if (playerCars.size > 0) {
                 MyGameObject nextLife = playerCars.get(MathUtils.random(0, playerCars.size - 1));
                 createPlayerCar(nextLife);
                 playerCars.removeValue(nextLife, true);
+                timeWithoutPlayer = 0;
             } else {
                 HUD.instance().gameOver.setVisible(true);
                 Gdx.input.setInputProcessor(null);
 
+                if (timeWithoutPlayer > 5) {
+                    MyGameObject toHighScoreObj = new MyGameObject();
+                    toHighScoreObj.addComponent(new GoToHighScoreComponent());
+                    room.getGameObjects().add(toHighScoreObj);
+                }
             }
         }
     }

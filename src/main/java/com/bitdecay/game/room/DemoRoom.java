@@ -125,6 +125,8 @@ public class DemoRoom extends AbstractRoom {
         new NodeSystem(this);
         new AIControlSystem(this, graph);
 
+        new GoToNameEntryScreenSystem(this);
+
         Body carBody;
 
         MyGameObject car1 = GameObjectFactory.createCar(gobs, phys, new Vector2(43, 87.5f), CarType.TAXI, false);

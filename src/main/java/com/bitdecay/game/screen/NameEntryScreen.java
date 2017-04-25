@@ -33,6 +33,8 @@ public class NameEntryScreen implements Screen {
         this.game = game;
         this.score = score;
 
+        Gdx.input.setInputProcessor(stage);
+
         skin = new Skin();
         skin.add("pixel", MyGame.ASSET_MANAGER.get("font/acknowtt.ttf"), BitmapFont.class);
         skin.load(Gdx.files.classpath(Launcher.conf.getString("highscore.skin")));
@@ -67,8 +69,6 @@ public class NameEntryScreen implements Screen {
         stage.addActor(background);
         stage.addActor(text);
         stage.addActor(l);
-
-        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -93,7 +93,9 @@ public class NameEntryScreen implements Screen {
         if (InputHelper.isKeyJustPressed(Input.Keys.ENTER)) gotoHighscores(text.getText());
     }
 
-    private void gotoHighscores(String text) { game.setScreen(new HighscoresScreen(game, text, score)); }
+    private void gotoHighscores(String text) {
+        game.setScreen(new HighscoresScreen(game, text, score));
+    }
 
     @Override
     public void resize(int width, int height) {

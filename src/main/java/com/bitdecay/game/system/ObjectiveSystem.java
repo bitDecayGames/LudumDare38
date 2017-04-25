@@ -2,15 +2,11 @@ package com.bitdecay.game.system;
 
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.Launcher;
-import com.bitdecay.game.component.PersonComponent;
-import com.bitdecay.game.component.RemoveNowComponent;
-import com.bitdecay.game.component.WaypointComponent;
-import com.bitdecay.game.component.ZoneComponent;
+import com.bitdecay.game.component.*;
 import com.bitdecay.game.component.money.MoneyDiffComponent;
 import com.bitdecay.game.gameobject.GameObjectFactory;
 import com.bitdecay.game.gameobject.MyGameObject;
 import com.bitdecay.game.room.DemoRoom;
-import com.bitdecay.game.screen.MainMenuScreen;
 import com.bitdecay.game.system.abstracted.AbstractUpdatableSystem;
 import com.bitdecay.game.ui.HUD;
 import com.bitdecay.game.util.ObjectiveZone;
@@ -88,7 +84,9 @@ public class ObjectiveSystem extends AbstractUpdatableSystem{
         }
 
         if (currentObjectives <= 0) {
-            room.gameScreen.setScreen(new MainMenuScreen(room.gameScreen.game));
+            MyGameObject toHighScoreObj = new MyGameObject();
+            toHighScoreObj.addComponent(new GoToHighScoreComponent());
+            room.getGameObjects().add(toHighScoreObj);
         }
 
         gobs.forEach(gob -> gob.getComponent(WaypointComponent.class).ifPresent(w -> {

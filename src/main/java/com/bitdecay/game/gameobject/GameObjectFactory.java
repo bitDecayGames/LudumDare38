@@ -132,6 +132,7 @@ public class GameObjectFactory {
         cart.addComponent(new StaticImageComponent("collidables/cart"));
         cart.addComponent(new SizeComponent(1, 1.6f));
         cart.addComponent(new TireFrictionComponent(FrictionDataFactory.getCartFriction()));
+        cart.addComponent(new BreakableObjectComponent("collidables/cart", 3, 1.0f, 1.6f, ParticleFactory.ParticleChoice.NONE, "HitMetal"));
 
         return cart;
     }

@@ -58,12 +58,12 @@ public class NameEntryScreen implements Screen {
         text.setPosition(0, Gdx.graphics.getHeight() * 0.5f);
         text.setMaxLength(20);
 
-        Label l = new Label("Then press [ENTER]", skin);
+        Label l = new Label("Press [ENTER] after you", skin);
         l.setWidth(Gdx.graphics.getWidth());
         l.setFontScale(8);
-        l.setColor(Color.BLACK);
+        l.setColor(Color.WHITE);
         l.setAlignment(Align.center);
-        l.setPosition(0, Gdx.graphics.getHeight() * 0.1f);
+        l.setPosition(0, Gdx.graphics.getHeight() * 0.8f);
 
 
         stage.addActor(background);

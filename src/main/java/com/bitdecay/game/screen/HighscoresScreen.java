@@ -27,7 +27,7 @@ import java.util.List;
 public class HighscoresScreen implements Screen {
 
     private static String SPACE_AFTER_TITLE = "\n\n\n";
-    private static String SPACE_AFTER_NAME = "\n\n";
+    private static String SPACE_AFTER_NAME = "\n";
 
     private MyGame game;
     private Stage stage = new Stage();
@@ -73,7 +73,7 @@ public class HighscoresScreen implements Screen {
                 skin);
         lblScores.setFontScale(Launcher.conf.getInt("highscore.fontSize"));
         lblScores.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        lblScores.setAlignment(Align.center, Align.bottom);
+        lblScores.setAlignment(Align.top);
         lblScores.setColor(Color.WHITE);
 
 

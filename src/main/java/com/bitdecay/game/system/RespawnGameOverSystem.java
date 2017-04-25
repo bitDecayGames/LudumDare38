@@ -19,9 +19,12 @@ public class RespawnGameOverSystem extends AbstractUpdatableSystem {
 
     private Array<MyGameObject> playerCars;
 
+    public MoneyComponent playerMoney = new MoneyComponent(100);
+
     public RespawnGameOverSystem(AbstractRoom room, Array<MyGameObject> playerCars) {
         super(room);
         this.playerCars = playerCars;
+        timeWithoutPlayer = 2;
     }
 
     @Override
@@ -30,17 +33,22 @@ public class RespawnGameOverSystem extends AbstractUpdatableSystem {
             timeWithoutPlayer += delta;
         }
 
-        if (timeWithoutPlayer >= 2) {
-            timeWithoutPlayer = 0;
+        if (timeWithoutPlayer >= 3) {
 
             if (playerCars.size > 0) {
                 MyGameObject nextLife = playerCars.get(MathUtils.random(0, playerCars.size - 1));
                 createPlayerCar(nextLife);
                 playerCars.removeValue(nextLife, true);
+                timeWithoutPlayer = 0;
             } else {
                 HUD.instance().gameOver.setVisible(true);
                 Gdx.input.setInputProcessor(null);
 
+                if (timeWithoutPlayer > 5) {
+                    MyGameObject toHighScoreObj = new MyGameObject();
+                    toHighScoreObj.addComponent(new GoToHighScoreComponent());
+                    room.getGameObjects().add(toHighScoreObj);
+                }
             }
         }
     }
@@ -51,10 +59,10 @@ public class RespawnGameOverSystem extends AbstractUpdatableSystem {
 
         // Add camera and other stats
         car.addComponent(new CameraFollowComponent());
-        car.addComponent(new PlayerControlComponent("HitMetal"));
+        car.addComponent(new PlayerControlComponent());
         car.addComponent(new HungerComponent(40, 0.5f));
         car.addComponent(new PoopooComponent(60, 0.5f));
-        car.addComponent(new MoneyComponent(100));
+        car.addComponent(playerMoney);
         car.addComponent(new PlayerBodyComponent());
 
         PhysicsComponent p = car.getComponent(PhysicsComponent.class).get();

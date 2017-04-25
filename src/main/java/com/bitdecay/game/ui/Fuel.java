@@ -25,10 +25,6 @@ public class Fuel extends Group {
         fuel = new Image(normalGauge);
         needle = new Image(MyGame.ATLAS.findRegion("uiStuff/gasNeedle"));
 
-//        float scale = size.y /12 / fuel.getHeight();
-//        fuel.scaleBy(scale);
-//        fuel.moveBy(size.x - fuel.getWidth(), 0);
-
         needle.setOrigin(needle.getWidth()/2, needle.getWidth()/2);
         needle.moveBy((fuel.getWidth()/2 - needle.getWidth()/2), (fuel.getHeight()/2 - needle.getWidth()/2));
         needle.setRotation(emptyRotation);

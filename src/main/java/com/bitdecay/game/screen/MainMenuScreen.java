@@ -19,7 +19,6 @@ import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.Launcher;
 import com.bitdecay.game.MyGame;
 import com.bitdecay.game.util.InputHelper;
-import com.bitdecay.game.util.SoundLibrary;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +41,8 @@ public class MainMenuScreen implements Screen {
     public MainMenuScreen(MyGame game) {
         this.game = game;
 
+        Gdx.input.setInputProcessor(stage);
+
         menuSelection = 0;
 
         skin = new Skin(Gdx.files.classpath(Launcher.conf.getString("menu.skin")));
@@ -56,6 +57,7 @@ public class MainMenuScreen implements Screen {
         // Here is where you add more menu options
         // ////////////////////////////////////////////////
         menu.add(buildNewMenuOption("Start", this::gotoGame)).height(60).padBottom(20).padTop(150).row();
+        menu.add(buildNewMenuOption("Instructions", this::gotoInstructions)).height(60).padBottom(20).row();
         menu.add(buildNewMenuOption("Highscores", this::gotoHighscores)).height(60).padBottom(20).row();
         menu.add(buildNewMenuOption("Credits", this::gotoCredits)).height(60).padBottom(20).row();
         menu.add(buildNewMenuOption("Quit", this::exitGame)).height(60).padBottom(20).row();
@@ -67,7 +69,6 @@ public class MainMenuScreen implements Screen {
         stage.addActor(background);
         stage.addActor(menu);
 
-        Gdx.input.setInputProcessor(stage);
         updateMenuSelection(0);
     }
 
@@ -119,18 +120,22 @@ public class MainMenuScreen implements Screen {
         game.setScreen(new GameScreen(game));
     }
 
+    private void gotoInstructions(){
+        game.setScreen(new InstructionsScreen(game));
+    }
+
     private void gotoCredits() {
         game.setScreen(new CreditsScreen(game));
     }
 
-    private void gotoHighscores() { game.setScreen(new HighscoresScreen(game)); }
+    private void gotoHighscores() { game.setScreen(new HighscoresScreen(game, null, 0)); }
 
     private void exitGame() {
         Gdx.app.exit();
     }
 
     private void makeSelection(){
-        SoundLibrary.playSound(Launcher.conf.getString("menu.selectSoundFx"));
+//        SoundLibrary.playSound(Launcher.conf.getString("menu.selectSoundFx"));
 
         menuOptions.get(menuSelection).runnable.run();
     }

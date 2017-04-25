@@ -18,7 +18,7 @@ import com.bitdecay.game.util.SoundLibrary;
  */
 public class GameScreen implements Screen, IHasScreenSize, ICanSetScreen, ICanSetRoom {
 
-    private MyGame game;
+    public MyGame game;
     private com.bitdecay.game.room.AbstractRoom room;
 
     public GameScreen(MyGame game){

@@ -19,7 +19,6 @@ public class InvincibleSystem extends AbstractForEachUpdatableSystem {
     @Override
     protected void forEach(float delta, MyGameObject gob) {
             gob.forEach(DrawableComponent.class, draw -> {
-
                     draw.color.r = 1;
                     draw.color.b = 0;
                     draw.color.g = 0;

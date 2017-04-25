@@ -1,7 +1,9 @@
 package com.bitdecay.game.system;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.component.EBrakeComponent;
+import com.bitdecay.game.component.PhysicsComponent;
 import com.bitdecay.game.component.PlayerTireComponent;
 import com.bitdecay.game.component.TireFrictionComponent;
 import com.bitdecay.game.gameobject.MyGameObject;
@@ -35,6 +37,8 @@ public class EBrakeSystem extends AbstractForEachUpdatableSystem {
             boolean brakesEngaged = InputHelper.isKeyPressed(Input.Keys.SPACE) || InputHelper.isButtonPressed(Xbox360Pad.X);
             friction.tireLocked = brakesEngaged;
             if (brakesEngaged) {
+//                Vector2 coords = gob.getComponent(PhysicsComponent.class).get().body.getPosition();
+//                System.out.println("coords: " + coords);
                 drive.skidParticle.requestStart = true;
             } else {
                 drive.skidParticle.requestStop = true;

@@ -10,6 +10,7 @@ import com.bitdecay.game.MyGame;
 public class Money extends Table {
 
     private Label text;
+    public float moneyValue;
 
     public Money(float fontScale) {
         add(new ImageButton(new TextureRegionDrawable(MyGame.ATLAS.findRegion("uiStuff/btc-512"))));
@@ -20,6 +21,7 @@ public class Money extends Table {
     }
 
     public void setMoney(float value) {
+        moneyValue = value;
         text.setText(Float.toString(value));
     }
 }

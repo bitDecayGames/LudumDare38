@@ -3,8 +3,12 @@ package com.bitdecay.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.utils.GdxNativesLoader;
 import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.screen.SplashScreen;
@@ -34,7 +38,16 @@ public class MyGame extends Game implements ICanSetScreen{
 
     public void queueAssetsForLoad() {
         ASSET_MANAGER.setLoader(AnimagicTextureAtlas.class, new AnimagicTextureAtlasLoader(new InternalFileHandleResolver()));
+        FileHandleResolver resolver = new InternalFileHandleResolver();
+        ASSET_MANAGER.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
+        ASSET_MANAGER.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
         ASSET_MANAGER.load("img/packed/main.atlas", AnimagicTextureAtlas.class);
+
+        FreetypeFontLoader.FreeTypeFontLoaderParameter myBigFont = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+        myBigFont.fontFileName = "font/acknowtt.ttf";
+        myBigFont.fontParameters.size = 100;
+        ASSET_MANAGER.load("font/acknowtt.ttf", BitmapFont.class, myBigFont);
+
         FONT = new BitmapFont(Gdx.files.internal("font/bit.fnt"));
     }
 

@@ -1,7 +1,10 @@
 package com.bitdecay.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.bitdecay.game.util.RunMode;
 import com.bitdecay.game.util.TexturePackerUtils;
 import com.typesafe.config.Config;

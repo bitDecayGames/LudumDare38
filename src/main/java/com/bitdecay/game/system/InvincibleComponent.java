@@ -10,6 +10,8 @@ import com.bitdecay.game.gameobject.MyGameObject;
  */
 public class InvincibleComponent extends AbstractComponent{
         public Color origColor;
+        public String sound = "HitMetal";
+
     public InvincibleComponent(Color original){
         origColor = original;
     }

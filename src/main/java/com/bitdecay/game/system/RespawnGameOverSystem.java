@@ -22,6 +22,7 @@ public class RespawnGameOverSystem extends AbstractUpdatableSystem {
     public RespawnGameOverSystem(AbstractRoom room, Array<MyGameObject> playerCars) {
         super(room);
         this.playerCars = playerCars;
+        timeWithoutPlayer = 2;
     }
 
     @Override
@@ -56,7 +57,7 @@ public class RespawnGameOverSystem extends AbstractUpdatableSystem {
 
         // Add camera and other stats
         car.addComponent(new CameraFollowComponent());
-        car.addComponent(new PlayerControlComponent("HitMetal"));
+        car.addComponent(new PlayerControlComponent());
         car.addComponent(new HungerComponent(40, 0.5f));
         car.addComponent(new PoopooComponent(60, 0.5f));
         car.addComponent(new MoneyComponent(100));

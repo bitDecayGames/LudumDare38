@@ -311,6 +311,9 @@ public class DemoRoom extends AbstractRoom {
             case "cart":
                 gobs.add(GameObjectFactory.makeCart(phys, x, y));
                 break;
+            case "stone":
+                gobs.add(GameObjectFactory.makeHeadstone(phys, x, y));
+                break;
             default:
                 log.info("Item name({}) not recognized. Not spawning in an object", name);
         }

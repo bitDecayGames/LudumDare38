@@ -57,7 +57,7 @@ public class MyGame extends Game implements ICanSetScreen{
         ASSET_MANAGER.finishLoading();
         ATLAS = ASSET_MANAGER.get("img/packed/main.atlas", AnimagicTextureAtlas.class);
 
-        if (RUN_MODE == RunMode.DEV) setScreen(new GameScreen(this));
+        if (RUN_MODE == RunMode.DEV) setScreen(new GameScreen(this, "Developer #1"));
         else if (RUN_MODE == RunMode.PROD) setScreen(new SplashScreen(this));
     }
 }

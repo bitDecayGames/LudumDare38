@@ -20,9 +20,11 @@ public class GameScreen implements Screen, IHasScreenSize, ICanSetScreen, ICanSe
 
     public MyGame game;
     private com.bitdecay.game.room.AbstractRoom room;
+    public String playerName;
 
-    public GameScreen(MyGame game){
+    public GameScreen(MyGame game, String name){
         this.game = game;
+        this.playerName = name;
         setRoom(new DemoRoom(this));
     }
     public GameScreen(MyGame game, com.bitdecay.game.room.AbstractRoom room){

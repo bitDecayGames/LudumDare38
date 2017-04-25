@@ -339,7 +339,7 @@ public class DemoRoom extends AbstractRoom {
     private void createStage() {
         this.stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
-        SoundLibrary.playMusic("BackgroundMusic");
+        SoundLibrary.loopMusic("BackgroundMusic");
 
         new HUD();
         stage.addActor(HUD.instance());

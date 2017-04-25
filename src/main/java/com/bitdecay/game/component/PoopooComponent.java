@@ -8,6 +8,8 @@ public class PoopooComponent extends AbstractComponent {
     public float maxPoopoo;
     public float currentPoopoo;
     public float poopooCreationRate;
+    public boolean poopSoundPlayed = false;
+    public boolean deathPoop = false;
 
     public PoopooComponent(float maxPoopoo, float poopooCreationRate) {
         this.maxPoopoo = maxPoopoo;

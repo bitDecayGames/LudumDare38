@@ -8,6 +8,7 @@ public class FuelComponent extends AbstractComponent {
     public float maxFuel;
     public float currentFuel;
     public float fuelBurnRate;
+    public boolean carStallSound = false;
 
     public FuelComponent(float max, float burnRate){
         maxFuel = max;

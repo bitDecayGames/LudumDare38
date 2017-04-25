@@ -7,6 +7,8 @@ public class HungerComponent extends AbstractComponent {
     public float maxFullness;
     public float currentFullness;
     public float digestionRate;
+    public boolean hungerSoundPlayed =false;
+    public boolean starvingSound = false;
 
     public HungerComponent(float maxFullness, float digestionRate) {
         this.maxFullness = maxFullness;

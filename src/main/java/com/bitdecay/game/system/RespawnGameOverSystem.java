@@ -22,6 +22,7 @@ public class RespawnGameOverSystem extends AbstractUpdatableSystem {
     public RespawnGameOverSystem(AbstractRoom room, Array<MyGameObject> playerCars) {
         super(room);
         this.playerCars = playerCars;
+        timeWithoutPlayer = 2;
     }
 
     @Override

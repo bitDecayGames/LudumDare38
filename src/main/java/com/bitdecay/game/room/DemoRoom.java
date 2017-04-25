@@ -140,6 +140,7 @@ public class DemoRoom extends AbstractRoom {
         carBody = car4.getFreshComponent(PhysicsComponent.class).get().body;
         carBody.setTransform(carBody.getPosition(), -MathUtils.PI/2);
 
+
         new RespawnGameOverSystem(this, Array.with(car1, car2, car3, car4));
 
         GameObjectFactory.createCarCass(gobs, phys.world, new Vector2(5, 20), 0);

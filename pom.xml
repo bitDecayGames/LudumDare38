@@ -4,10 +4,10 @@
 
     <groupId>com.bitdecay</groupId>
     <!-- TODO -->
-    <artifactId>project-name</artifactId>
+    <artifactId>belaruse-panic</artifactId>
     <version>1.0</version>
-    <name>project-name</name>
-    <description>project description...</description>
+    <name>Belaruse Panic</name>
+    <description></description>
 
     <packaging>jar</packaging>
 

@@ -56,7 +56,7 @@ public class MainMenuScreen implements Screen {
         // ////////////////////////////////////////////////
         // Here is where you add more menu options
         // ////////////////////////////////////////////////
-        menu.add(buildNewMenuOption("Start", this::gotoGame)).height(60).padBottom(20).padTop(150).row();
+        menu.add(buildNewMenuOption("Start", this::gotoNameEntry)).height(60).padBottom(20).padTop(150).row();
         menu.add(buildNewMenuOption("Instructions", this::gotoInstructions)).height(60).padBottom(20).row();
         menu.add(buildNewMenuOption("Highscores", this::gotoHighscores)).height(60).padBottom(20).row();
         menu.add(buildNewMenuOption("Credits", this::gotoCredits)).height(60).padBottom(20).row();
@@ -75,7 +75,7 @@ public class MainMenuScreen implements Screen {
     private Label buildNewMenuOption(String itemText, Runnable runnable){
         Label l = new Label(itemText, skin);
         l.setFontScale(8);
-        l.setColor(Color.BLACK);
+        l.setColor(Color.WHITE);
         l.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -117,7 +117,11 @@ public class MainMenuScreen implements Screen {
     }
 
     private void gotoGame() {
-        game.setScreen(new GameScreen(game));
+        game.setScreen(new GameScreen(game, ""));
+    }
+
+    private void gotoNameEntry() {
+        game.setScreen(new NameEntryScreen(game, 0));
     }
 
     private void gotoInstructions(){
@@ -146,7 +150,7 @@ public class MainMenuScreen implements Screen {
         else if (menuSelection < 0) menuSelection = menuOptions.size() - 1;
         for (int i = 0; i < menuOptions.size(); i++){
             if (menuSelection == i) menuOptions.get(i).label.setColor(Color.GREEN);
-            else menuOptions.get(i).label.setColor(Color.BLACK);
+            else menuOptions.get(i).label.setColor(Color.WHITE);
         }
     }
 

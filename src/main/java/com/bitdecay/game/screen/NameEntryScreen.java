@@ -90,12 +90,13 @@ public class NameEntryScreen implements Screen {
         stage.act();
         stage.draw();
 
-        if (InputHelper.isKeyJustPressed(Input.Keys.ENTER)) gotoHighscores(text.getText());
+        if (InputHelper.isKeyJustPressed(Input.Keys.ENTER)) gotoGameScreen(text.getText());
     }
 
     private void gotoHighscores(String text) {
         game.setScreen(new HighscoresScreen(game, text, score));
     }
+    private void gotoGameScreen(String text) { game.setScreen(new GameScreen(game, text)); }
 
     @Override
     public void resize(int width, int height) {

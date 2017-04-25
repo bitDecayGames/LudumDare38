@@ -571,7 +571,7 @@ public class GameObjectFactory {
         TireFrictionData rearTireData = FrictionDataFactory.getStreetFriction();
         rearTireData.weightOnTire = carBody.getMass() / 10;
 
-        FuelComponent sharedFuelComponent = new FuelComponent(100, 0.25f);
+        FuelComponent sharedFuelComponent = new FuelComponent(100, 0.60f);
 
 
         // /////////////////////////////////

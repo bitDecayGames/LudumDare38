@@ -19,6 +19,8 @@ public class RespawnGameOverSystem extends AbstractUpdatableSystem {
 
     private Array<MyGameObject> playerCars;
 
+    public MoneyComponent playerMoney = new MoneyComponent(100);
+
     public RespawnGameOverSystem(AbstractRoom room, Array<MyGameObject> playerCars) {
         super(room);
         this.playerCars = playerCars;
@@ -60,7 +62,7 @@ public class RespawnGameOverSystem extends AbstractUpdatableSystem {
         car.addComponent(new PlayerControlComponent());
         car.addComponent(new HungerComponent(40, 0.5f));
         car.addComponent(new PoopooComponent(60, 0.5f));
-        car.addComponent(new MoneyComponent(100));
+        car.addComponent(playerMoney);
         car.addComponent(new PlayerBodyComponent());
 
         PhysicsComponent p = car.getComponent(PhysicsComponent.class).get();
